@@ -79,7 +79,6 @@ class About(BaseModel):
 
 class Feedbacks(BaseModel):
     message = RichTextField()
-
     # user = models.ForiegnKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
