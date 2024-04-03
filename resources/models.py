@@ -1,5 +1,4 @@
 from django.db import models
-from ckeditor.fields import RichTextField
 
 
 class BaseModel(models.Model):
@@ -25,7 +24,7 @@ class Category(BaseModel):
 
 
 class PeriodFilter(BaseModel):
-    title = RichTextField(null=True, blank=True)
+    title = models.CharField(max_length=255)
 
     class Meta:
         verbose_name = 'Period Filter'
@@ -60,7 +59,15 @@ class Filters(BaseModel):
     def __str__(self):
         return self.title
 
+class Province(BaseModel):
+    title = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Province'
+        verbose_name_plural = 'Provinces'
 class Resource(BaseModel):
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True,
                                  related_name='category')
@@ -71,13 +78,12 @@ class Resource(BaseModel):
     period_filter = models.ForeignKey(PeriodFilter, on_delete=models.SET_NULL, null=True,
                                       related_name='period_filter')
     title = models.CharField(max_length=255)
-    image = models.ImageField(upload_to='media/images/resource', blank=True, null=True)
-    content = RichTextField()
+    image = models.ImageField(upload_to='media/images/resource',blank=True,null=True)
+    content = models.TextField()  # Richtextfild
     statehood = models.BooleanField()
-    province = models.CharField(max_length=255)  # type 12 ta viloyat
-    interive_content = models.CharField(max_length=255)  # buni type qilib vedio,audio,
-    interive_title = models.CharField(max_length=255)  # bu ham inline va counti bilan
-    interive_file = models.FileField(upload_to='media/files/resource', blank=True, null=True)
+    province = models.ForeignKey(Province, on_delete=models.SET_NULL, null=True,
+                                 related_name='select_province')
+
 
     class Meta:
         verbose_name = 'Resource'
@@ -87,6 +93,41 @@ class Resource(BaseModel):
         return self.title
 
 
+
+
+class Interive(BaseModel):
+
+
+    class Status(models.TextChoices):
+        GALLERY = 'Gl', 'Gallery'
+        AUDIO = 'AU', 'Audio'
+        FILE = 'Fl', 'File'
+        VIRTUAL_REALITY = 'VR', 'Virtual_reality'
+        VIDEO = 'VD', 'Video'
+        LOCATION = 'LN','Location'
+
+
+    status = models.CharField(max_length=2,
+                              choices=Status.choices,
+                              default=Status.GALLERY)
+    title = models.CharField(max_length=155)
+    file = models.FileField(upload_to='media/files/resource',blank=True,null=True)
+    link = models.URLField(blank=True, null=True)
+    latitude = models.CharField(max_length=500, blank=True, null=True)
+    longitude = models.CharField(max_length=500, blank=True, null=True)
+
+
+
+
+
+
+
+
+
+
+
+
+
 class Attributes(BaseModel):
     resource_attribute = models.ForeignKey(Resource, on_delete=models.SET_NULL, null=True,
                                            related_name='resource_attribute')
@@ -94,8 +135,17 @@ class Attributes(BaseModel):
     attributes_description = models.CharField(max_length=255)
 
 
+
 class Contents(BaseModel):
     resource_content = models.ForeignKey(Resource, on_delete=models.SET_NULL, null=True,
                                          related_name='resource_content')
     contents_title = models.CharField(max_length=255)
-    contents_description = models.TextField()
+    contents_description = models.TextField() #RIchtextfild
+
+
+
+
+
+# interive_content = models.CharField(max_length=255)  # buni type qilib vedio,audio,
+# interive_title = models.CharField(max_length=255)  # bu ham inline va counti bilan
+# interive_file = models.FileField(upload_to='media/files/resource',blank=True,null=True)
