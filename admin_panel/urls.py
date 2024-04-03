@@ -1,5 +1,7 @@
-from django.urls import path
-# library 
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+
+# library
 from admin_panel.crud.library import LibraryListCreate, LibraryRetrieveUpdateDestroy
 # library_cat 
 from admin_panel.crud.library_category import Library_CategoryListCreate, Library_CategoryRetrieveUpdateDestroy
@@ -7,6 +9,7 @@ from admin_panel.crud.library_category import Library_CategoryListCreate, Librar
 from admin_panel.crud.news import NewsListCreate, NewsRetrieveUpdateDestroy
 # event 
 from admin_panel.crud.event import EventListCreate, EventRetrieveUpdateDestroy
+from admin_panel.crud.resources import CategoryModelViewSet
 # sliders 
 from admin_panel.crud.sliders import SlidersListCreate, SlidersRetrieveUpdateDestroy
 # connection 
@@ -18,6 +21,9 @@ from admin_panel.crud.feedback import FeedbacksListCreate, FeedbacksRetrieveUpda
 # comment 
 from admin_panel.crud.comment import CommentsListCreate, CommentsRetrieveUpdateDestroy
 
+
+router = DefaultRouter()
+router.register("api/v1/categoryapi/", CategoryModelViewSet, basename='category')
 
 
 urlpatterns = [
@@ -64,5 +70,8 @@ urlpatterns = [
     # Comment
     path('comments/', CommentsListCreate.as_view(), name='comments_list_create'),
     path('comments/<int:pk>/', CommentsRetrieveUpdateDestroy.as_view(), name='comments_retrieve_update_destroy'),
+
+    #Resource
+    path("", include(router.urls)),
 
 ]
