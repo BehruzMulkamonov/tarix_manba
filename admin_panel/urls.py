@@ -9,7 +9,9 @@ from admin_panel.crud.library_category import Library_CategoryListCreate, Librar
 from admin_panel.crud.news import NewsListCreate, NewsRetrieveUpdateDestroy
 # event 
 from admin_panel.crud.event import EventListCreate, EventRetrieveUpdateDestroy
-from admin_panel.crud.resources import CategoryModelViewSet
+from admin_panel.crud.resources import CategoryModelViewSet, PeriodFilterModelViewSet, FilterCategoriesModelViewSet, \
+    FiltersModelViewSet, ProvinceModelViewSet, ResourceModelViewSet, InteriveModelViewSet, AttributesModelViewSet, \
+    ContentsModelViewSet
 # sliders 
 from admin_panel.crud.sliders import SlidersListCreate, SlidersRetrieveUpdateDestroy
 # connection 
@@ -24,6 +26,14 @@ from admin_panel.crud.comment import CommentsListCreate, CommentsRetrieveUpdateD
 
 router = DefaultRouter()
 router.register("api/v1/categoryapi/", CategoryModelViewSet, basename='category')
+router.register("api/v1/period_filter/", PeriodFilterModelViewSet, basename='period_filter')
+router.register("api/v1/filter_cat/", FilterCategoriesModelViewSet, basename='filter_cat')
+router.register("api/v1/filter/", FiltersModelViewSet, basename='filter')
+router.register("api/v1/province/", ProvinceModelViewSet, basename='province')
+router.register("api/v1/resource/", ResourceModelViewSet, basename='resource')
+router.register("api/v1/interive/", InteriveModelViewSet, basename='interive')
+router.register("api/v1/attributes/", AttributesModelViewSet, basename='attributes')
+router.register("api/v1/contents/", ContentsModelViewSet, basename='contents')
 
 
 urlpatterns = [
