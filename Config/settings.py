@@ -40,7 +40,11 @@ INSTALLED_APPS = [
     # Additional library
     'rest_framework',
     'ckeditor',
-    'ckeditor_uploader'
+    'ckeditor_uploader',    
+    'django_filters',
+    'rest_framework_swagger',       # Swagger 
+    'drf_yasg',                      # Yet Another Swagger generator
+
 ]
 
 MIDDLEWARE = [
@@ -137,6 +141,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        
+    ]
+}
 
 # CK Editor RichField uchun
 
