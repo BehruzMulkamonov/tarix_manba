@@ -13,6 +13,12 @@ from admin_panel.crud.news import list_news, create_news, update_news, delete_ne
 # event 
 # from admin_panel.crud.event import EventListCreate, EventRetrieveUpdateDestroy
 from admin_panel.crud.event import create_event, list_events, update_event, delete_event
+from admin_panel.crud.resources import categoryList, createCategory, categoryDetail, updateCategory, deleteCategory, \
+    periodFilterList, periodFilterDetail, updatePeriodFilter, deletePeriodFilter, createPeriodFilter, \
+    filterCategoriesList, filterCategoriesDetail, createFilterCategories, updateFilterCategories, \
+    deleteFilterCategories, filtersList, filtersDetail, createFilters, updateFilters, deleteFilters, provinceList, \
+    provinceDetail, createProvince, updateProvince, deleteProvince, resourceList, resourceDetail, createResource, \
+    updateResource, deleteResource
 # sliders 
 # from admin_panel.crud.sliders import SlidersListCreate, SlidersRetrieveUpdateDestroy
 from admin_panel.crud.sliders import list_sliders, create_slider, update_slider, delete_slider
@@ -29,20 +35,7 @@ from admin_panel.crud.feedback import list_feedbacks, create_feedback, update_fe
 # from admin_panel.crud.comment import CommentsListCreate, CommentsRetrieveUpdateDestroy
 from admin_panel.crud.comment import create_comment, update_comment, list_comments, delete_comment
 # resource 
-from admin_panel.crud.resources import CategoryModelViewSet, PeriodFilterModelViewSet, FilterCategoriesModelViewSet, \
-    FiltersModelViewSet, ProvinceModelViewSet, ResourceModelViewSet, InteriveModelViewSet, AttributesModelViewSet, \
-    ContentsModelViewSet
 
-router = DefaultRouter()
-router.register("api/v1/categoryapi/", CategoryModelViewSet, basename='category')
-router.register("api/v1/period_filter/", PeriodFilterModelViewSet, basename='period_filter')
-router.register("api/v1/filter_cat/", FilterCategoriesModelViewSet, basename='filter_cat')
-router.register("api/v1/filter/", FiltersModelViewSet, basename='filter')
-router.register("api/v1/province/", ProvinceModelViewSet, basename='province')
-router.register("api/v1/resource/", ResourceModelViewSet, basename='resource')
-router.register("api/v1/interive/", InteriveModelViewSet, basename='interive')
-router.register("api/v1/attributes/", AttributesModelViewSet, basename='attributes')
-router.register("api/v1/contents/", ContentsModelViewSet, basename='contents')
 
 
 urlpatterns = [
@@ -128,7 +121,45 @@ urlpatterns = [
     path('comment/update/<int:pk>/', update_comment, name='update_comment'),
     path('comment/delete/<int:pk>/', delete_comment, name='delete_comment'),
 
-    #Resource
-    path("", include(router.urls)),
+    #Resource   category
+    path('category/',categoryList,name='cat-list'),
+    path('category/<int:pk>/detail/',categoryDetail,name='cat-detail'),
+    path('category/<int:pk>/update/',updateCategory,name='cat-update'),
+    path('category/<int:pk>/delete/',deleteCategory,name='cat-delete'),
+    path('category/create/',createCategory,name='cat-create'),
 
+    # Resource periodfilter
+    path('period_filter/',periodFilterList,name='period-filter-list'),
+    path('period_filter/<int:pk>/detail/',periodFilterDetail,name='period-filter-detail'),
+    path('period_filter/<int:pk>/update/',updatePeriodFilter,name='period-filter-update'),
+    path('period_filter/<int:pk>/delete/',deletePeriodFilter,name='period-filter-delete'),
+    path('period_filter/create/',createPeriodFilter,name='period-filter-create'),
+
+    # Resource filter-category
+    path('filter_category/', filterCategoriesList, name='filter-category-list'),
+    path('filter_category/<int:pk>/detail/', filterCategoriesDetail, name='filter-category-detail'),
+    path('filter_category/create/', createFilterCategories, name='filter-category-create'),
+    path('filter_category/<int:pk>/update/', updateFilterCategories, name='filter-category-update'),
+    path('filter_category/<int:pk>/delete/', deleteFilterCategories, name='filter-category-delete'),
+
+    # Resource filters
+    path('filters/', filtersList, name='filters-list'),
+    path('filters/<int:pk>/detail/', filtersDetail, name='filters-detail'),
+    path('filters/create/', createFilters, name='filters-create'),
+    path('filters/<int:pk>/update/', updateFilters, name='filters-update'),
+    path('filters/<int:pk>/delete/', deleteFilters, name='filters-delete'),
+
+    # Resource province
+    path('province/', provinceList, name='province-list'),
+    path('province/<int:pk>/detail/', provinceDetail, name='province-detail'),
+    path('province/create/', createProvince, name='province-create'),
+    path('province/<int:pk>/update/', updateProvince, name='province-update'),
+    path('province/<int:pk>/delete/', deleteProvince, name='province-delete'),
+
+    # Resource
+    path('resource/', resourceList, name='resource-list'),
+    path('resource/<int:pk>/detail/', resourceDetail, name='resource-detail'),
+    path('resource/create/', createResource, name='resource-create'),
+    path('resource/<int:pk>/update/', updateResource, name='resource-update'),
+    path('resource/<int:pk>/delete/', deleteResource, name='resource-delete'),
 ]
