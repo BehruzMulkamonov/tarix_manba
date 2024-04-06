@@ -1,3 +1,4 @@
+from django.http import Http404
 from rest_framework import generics
 from admin_panel.pagination import ResultsSetPagination
 from other_app.models import Comments
@@ -35,6 +36,17 @@ def create_comment(request):
 def list_comments(request):
     comments = Comments.objects.all().order_by("id")
     serializer = CommentsAdminSerializer(comments, many=True)
+    return Response(serializer.data)
+
+# Detail
+@api_view(['GET'])
+def comment_detail(request, pk):
+    try:
+        comment = Comments.objects.get(pk=pk)
+    except Comments.DoesNotExist:
+        raise Http404
+
+    serializer = CommentsAdminSerializer(comment)
     return Response(serializer.data)
 
 # Update (Yangilash)

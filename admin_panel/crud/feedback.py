@@ -1,3 +1,4 @@
+from django.http import Http404
 from rest_framework import generics
 from admin_panel.pagination import ResultsSetPagination
 from other_app.models import Feedbacks
@@ -39,6 +40,16 @@ def list_feedbacks(request):
     serializer = FeedbacksAdminSerializer(feedbacks, many=True)
     return Response(serializer.data)
 
+# Detail
+@api_view(['GET'])
+def feedbacks_detail(request, pk):
+    try:
+        feedback = Feedbacks.objects.get(pk=pk)
+    except Feedbacks.DoesNotExist:
+        raise Http404
+
+    serializer = FeedbacksAdminSerializer(feedback)
+    return Response(serializer.data)
 # Update (Yangilash)
 @api_view(['PUT'])
 def update_feedback(request, pk):

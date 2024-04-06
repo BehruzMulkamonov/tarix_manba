@@ -1,3 +1,4 @@
+from django.http import Http404
 from rest_framework import generics
 from admin_panel.pagination import ResultsSetPagination
 from other_app.models import Library_Category
@@ -35,6 +36,17 @@ def create_library_category(request):
 def list_library_categories(request):
     categories = Library_Category.objects.all().order_by("id")
     serializer = Library_CategoryAdminSerializer(categories, many=True)
+    return Response(serializer.data)
+
+# Detail
+@api_view(['GET'])
+def library_category_detail(request, pk):
+    try:
+        category = Library_Category.objects.get(pk=pk)
+    except Library_Category.DoesNotExist:
+        raise Http404
+
+    serializer = Library_CategoryAdminSerializer(category)
     return Response(serializer.data)
 
 # Update (Yangilash)

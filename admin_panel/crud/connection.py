@@ -1,3 +1,4 @@
+from django.http import Http404
 from admin_panel.pagination import ResultsSetPagination
 from other_app.models import Connection
 from admin_panel.serializer.connection import ConnectionAdminSerializer
@@ -40,6 +41,17 @@ def list_connections(request):
     # paginator = ResultsSetPagination()
     return Response(serializer.data)
     # return paginator.get_paginated_response(serializer.data)
+
+# Detail
+@api_view(['GET'])
+def connection_detail(request, pk):
+    try:
+        connection = Connection.objects.get(pk=pk)
+    except Connection.DoesNotExist:
+        raise Http404
+
+    serializer = ConnectionAdminSerializer(connection)
+    return Response(serializer.data)
 
 # Update (Yangilash)
 @api_view(['PUT'])

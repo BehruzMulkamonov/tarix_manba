@@ -1,3 +1,4 @@
+from django.http import Http404
 from rest_framework import generics
 from admin_panel.pagination import ResultsSetPagination
 from other_app.models import Event
@@ -36,6 +37,17 @@ def create_event(request):
 def list_events(request):
     events = Event.objects.all().order_by("id")
     serializer = EventAdminSerializer(events, many=True)
+    return Response(serializer.data)
+
+# Detail
+@api_view(['GET'])
+def event_detail(request, pk):
+    try:
+        event = Event.objects.get(pk=pk)
+    except Event.DoesNotExist:
+        raise Http404
+
+    serializer = EventAdminSerializer(event)
     return Response(serializer.data)
 
 # Update (Yangilash)

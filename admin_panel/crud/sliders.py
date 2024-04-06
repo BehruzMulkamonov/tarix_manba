@@ -1,3 +1,4 @@
+from django.http import Http404
 from rest_framework import generics
 from admin_panel.pagination import ResultsSetPagination
 from other_app.models import Sliders
@@ -36,6 +37,17 @@ def create_slider(request):
 def list_sliders(request):
     sliders = Sliders.objects.all().order_by("id")
     serializer = SlidersAdminSerializer(sliders, many=True)
+    return Response(serializer.data)
+
+# Detail
+@api_view(['GET'])
+def sliders_detail(request, pk):
+    try:
+        slider = Sliders.objects.get(pk=pk)
+    except Sliders.DoesNotExist:
+        raise Http404
+
+    serializer = SlidersAdminSerializer(slider)
     return Response(serializer.data)
 
 # Update (Yangilash)

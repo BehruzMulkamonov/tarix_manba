@@ -1,3 +1,4 @@
+from django.http import Http404
 from rest_framework import generics
 from other_app.models import About
 from admin_panel.serializer.about import AboutAdminSerializer
@@ -36,6 +37,17 @@ def create_about(request):
 def list_abouts(request):
     abouts = About.objects.all().order_by("id")
     serializer = AboutAdminSerializer(abouts, many=True)
+    return Response(serializer.data)
+
+# Detail 
+@api_view(['GET'])
+def about_detail(request, pk):
+    try:
+        about = About.objects.get(pk=pk)
+    except About.DoesNotExist:
+        raise Http404
+
+    serializer = AboutAdminSerializer(about)
     return Response(serializer.data)
 
 # Update (Yangilash)

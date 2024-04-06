@@ -1,3 +1,4 @@
+from django.http import Http404
 from rest_framework import generics
 from admin_panel.pagination import ResultsSetPagination
 from other_app.models import Library
@@ -36,6 +37,17 @@ def create_library(request):
 def list_libraries(request):
     libraries = Library.objects.all().order_by("id")
     serializer = LibraryAdminSerializer(libraries, many=True)
+    return Response(serializer.data)
+
+# Detail
+@api_view(['GET'])
+def library_detail(request, pk):
+    try:
+        library = Library.objects.get(pk=pk)
+    except Library.DoesNotExist:
+        raise Http404
+
+    serializer = LibraryAdminSerializer(library)
     return Response(serializer.data)
 
 # Update (Yangilash)

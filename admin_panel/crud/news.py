@@ -1,3 +1,4 @@
+from django.http import Http404
 from rest_framework import generics
 from admin_panel.pagination import ResultsSetPagination
 from other_app.models import News
@@ -37,6 +38,18 @@ def list_news(request):
     news = News.objects.all().order_by("id")
     serializer = NewsAdminSerializer(news, many=True)
     return Response(serializer.data)
+
+# Detail
+@api_view(['GET'])
+def news_detail(request, pk):
+    try:
+        news = News.objects.get(pk=pk)
+    except News.DoesNotExist:
+        raise Http404
+
+    serializer = NewsAdminSerializer(news)
+    return Response(serializer.data)
+
 
 # Update (Yangilash)
 @api_view(['PUT'])
