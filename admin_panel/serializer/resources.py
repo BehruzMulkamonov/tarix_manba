@@ -3,14 +3,14 @@ from rest_framework import serializers
 from resources.models import Category, PeriodFilter, Filters, Resource, Province, Interive, Attributes, Contents
 
 
-class CategorySerializer(serializers.ModelSerializer):
+class CategoryAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ('id', 'title', 'icon', 'order', 'interactive',)
 
 
 
-class PeriodFilterSerializer(serializers.ModelSerializer):
+class PeriodFilterAdminSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PeriodFilter
@@ -18,16 +18,16 @@ class PeriodFilterSerializer(serializers.ModelSerializer):
 
 
 
-class FilterCategoriesSerializer(serializers.ModelSerializer):
-    category = CategorySerializer(many=True, read_only=True)
+class FilterCategoriesAdminSerializer(serializers.ModelSerializer):
+    category = CategoryAdminSerializer(many=True, read_only=True)
 
     class Meta:
         model = Category
         fields = ('id', 'title',  'category',)
 
 
-class FiltersSerializer(serializers.ModelSerializer):
-    filter_category = FilterCategoriesSerializer(many=True, read_only=True)
+class FiltersAdminSerializer(serializers.ModelSerializer):
+    filter_category = FilterCategoriesAdminSerializer(many=True, read_only=True)
 
 
     class Meta:
@@ -35,33 +35,33 @@ class FiltersSerializer(serializers.ModelSerializer):
         fields = ('id', 'title','filter_category',)
 
 
-class ProvinceSerializer(serializers.ModelSerializer):
+class ProvinceAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Province
         fields = ('id', 'title',)
 
 
-class InteriveSerializer(serializers.ModelSerializer):
+class InteriveAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Interive
         fields = ['status', 'title', 'file', 'link', 'latitude', 'longitude']
 
-class AttributesSerializer(serializers.ModelSerializer):
+class AttributesAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Attributes
         fields = ['resource_attribute', 'attributes_title', 'attributes_description']
 
 
-class ContentsSerializer(serializers.ModelSerializer):
+class ContentsAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contents
         fields = ['resource_content', 'contents_title', 'contents_description']
 
 
-class ResourceSerializer(serializers.ModelSerializer):
-    interive = InteriveSerializer(many=True)
-    attributes = AttributesSerializer(many=True)
-    contents = ContentsSerializer(many=True)
+class ResourceAdminSerializer(serializers.ModelSerializer):
+    interive = InteriveAdminSerializer(many=True)
+    attributes = AttributesAdminSerializer(many=True)
+    contents = ContentsAdminSerializer(many=True)
 
     class Meta:
         model = Resource
