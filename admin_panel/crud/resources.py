@@ -9,15 +9,19 @@ from rest_framework.pagination import PageNumberPagination
 
 
 
-class CategoryList(generics.ListAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategoryAdminSerializer
+
+
 
 @api_view(['GET'])
 def categoryList(request):
+    paginator = PageNumberPagination()
+    paginator.page_size = 10
     cats = Category.objects.all()
-    serializer = CategoryAdminSerializer(cats, many=True)
-    return Response(serializer.data)
+
+    result_page = paginator.paginate_queryset(cats, request)
+    serializer = CategoryAdminSerializer(result_page, many=True)
+
+    return paginator.get_paginated_response(serializer.data)
 
 @api_view(['GET'])
 def categoryDetail(request, pk):
@@ -58,11 +62,18 @@ def deleteCategory(request, pk):
     cat.delete()
     return Response(status=204)
 
+
 @api_view(['GET'])
 def periodFilterList(request):
+    paginator = PageNumberPagination()
+    paginator.page_size = 10
     periodfilter = PeriodFilter.objects.all()
-    serializer = PeriodFilterAdminSerializer(periodfilter, many=True)
-    return Response(serializer.data)
+    result_page = paginator.paginate_queryset(periodfilter, request)
+    serializer = PeriodFilterAdminSerializer(result_page, many=True)
+
+    return paginator.get_paginated_response(serializer.data)
+
+    return pa
 
 @api_view(['GET'])
 def periodFilterDetail(request, pk):
@@ -104,9 +115,14 @@ def deletePeriodFilter(request, pk):
 
 @api_view(['GET'])
 def filterCategoriesList(request):
+    paginator = PageNumberPagination()
+    paginator.page_size = 10
+
     filter_categories = FilterCategories.objects.all()
-    serializer = FilterCategoriesAdminSerializer(filter_categories, many=True)
-    return Response(serializer.data)
+    result_page = paginator.paginate_queryset(filter_categories, request)
+
+    serializer = FilterCategoriesAdminSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
 
 @api_view(['GET'])
 def filterCategoriesDetail(request, pk):
@@ -146,13 +162,16 @@ def deleteFilterCategories(request, pk):
     return Response(status=204)
 
 
-
 @api_view(['GET'])
 def filtersList(request):
-    filters = Filters.objects.all()
-    serializer = FiltersAdminSerializer(filters, many=True)
-    return Response(serializer.data)
+    paginator = PageNumberPagination()
+    paginator.page_size = 10
 
+    filters = Filters.objects.all()
+    result_page = paginator.paginate_queryset(filters, request)
+
+    serializer = FiltersAdminSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
 @api_view(['GET'])
 def filtersDetail(request, pk):
     filters = Filters.objects.get(pk=pk)
@@ -191,12 +210,14 @@ def deleteFilters(request, pk):
     return Response(status=204)
 
 
-
 @api_view(['GET'])
 def provinceList(request):
-    province = Province.objects.all()
-    serializer = ProvinceAdminSerializer(province, many=True)
-    return Response(serializer.data)
+    paginator = PageNumberPagination()
+    paginator.page_size = 10
+    provinces = Province.objects.all()
+    result_page = paginator.paginate_queryset(provinces, request)
+    serializer = ProvinceAdminSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
 
 @api_view(['GET'])
 def provinceDetail(request, pk):
@@ -235,11 +256,15 @@ def deleteProvince(request, pk):
     province.delete()
     return Response(status=204)
 
+
 @api_view(['GET'])
 def resourceList(request):
-    resource = Resource.objects.all()
-    serializer = ResourceAdminSerializer(resource, many=True)
-    return Response(serializer.data)
+    paginator = PageNumberPagination()
+    paginator.page_size = 10
+    resources = Resource.objects.all()
+    result_page = paginator.paginate_queryset(resources, request)
+    serializer = ResourceAdminSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
 
 @api_view(['GET'])
 def resourceDetail(request, pk):
