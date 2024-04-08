@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework_swagger',       # Swagger 
     'drf_yasg',                      # Yet Another Swagger generator
+    'corsheaders',
 
 ]
 
@@ -55,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'Config.urls'
@@ -144,6 +146,7 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 2,
 }
 
+CORS_ORIGIN_ALLOW_ALL = True
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_RESTRICT_BY_USER = True
