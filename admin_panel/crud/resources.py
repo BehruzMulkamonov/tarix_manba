@@ -1,10 +1,17 @@
+from rest_framework import generics
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from admin_panel.serializer.resources import CategoryAdminSerializer, PeriodFilterAdminSerializer, \
     FilterCategoriesAdminSerializer, FiltersAdminSerializer, ProvinceAdminSerializer, ResourceAdminSerializer
 from resources.models import Category, PeriodFilter, FilterCategories, Filters, Province, Resource
+from rest_framework.pagination import PageNumberPagination
 
+
+
+class CategoryList(generics.ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategoryAdminSerializer
 
 @api_view(['GET'])
 def categoryList(request):

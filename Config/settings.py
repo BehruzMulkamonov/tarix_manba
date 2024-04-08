@@ -16,7 +16,7 @@ SECRET_KEY = 'django-insecure-(no#j@8q@)2)&e)=pdl$a5h*8gvn=%c8g*bt-3(g#&x3lk#$r&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["*", ]
 
 
 # Application definition
@@ -39,8 +39,6 @@ INSTALLED_APPS = [
 
     # Additional library
     'rest_framework',
-    'ckeditor',
-    # 'ckeditor_uploader',    
     'django_filters',
     'rest_framework_swagger',       # Swagger 
     'drf_yasg',                      # Yet Another Swagger generator
@@ -127,8 +125,6 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-STATICFILES_DIRS = [BASE_DIR / 'static', ]
-
 
 
 # Default primary key field type
@@ -140,9 +136,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',
         
-    ]
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 1,
 }
-
-
-
-

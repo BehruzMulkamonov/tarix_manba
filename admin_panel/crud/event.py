@@ -1,27 +1,9 @@
 from django.http import Http404
-from rest_framework import generics
-from admin_panel.pagination import ResultsSetPagination
 from other_app.models import Event
 from admin_panel.serializer.event import EventAdminSerializer
-from rest_framework import filters
-from django_filters.rest_framework import DjangoFilterBackend
-
-# class EventListCreate(generics.ListCreateAPIView):
-#     queryset = Event.objects.all()
-#     serializer_class = EventAdminSerializer
-#     filterset_fields = ['id', ]
-#     search_fields = ['title']
-#     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
-#     pagination_class = ResultsSetPagination
-
-
-# class EventRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Event.objects.all()
-#     serializer_class = EventAdminSerializer
-
-
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 
 # Create (Yaratish)
 @api_view(['POST'])
@@ -35,9 +17,12 @@ def create_event(request):
 # Read (O'qish)
 @api_view(['GET'])
 def list_events(request):
+    paginator = PageNumberPagination()
+    paginator.page_size = 10
     events = Event.objects.all().order_by("id")
-    serializer = EventAdminSerializer(events, many=True)
-    return Response(serializer.data)
+    result_page = paginator.paginate_queryset(events, request)
+    serializer = EventAdminSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
 
 # Detail
 @api_view(['GET'])

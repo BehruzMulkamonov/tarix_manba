@@ -1,25 +1,7 @@
 from django.http import Http404
-from rest_framework import generics
 from other_app.models import About
 from admin_panel.serializer.about import AboutAdminSerializer
-from admin_panel.pagination import ResultsSetPagination
-from rest_framework import filters
-from django_filters.rest_framework import DjangoFilterBackend
-
-
-# class AboutListCreate(generics.ListCreateAPIView):
-#     queryset = About.objects.all()
-#     filterset_fields = ['id', ]
-#     search_fields = ['title']
-#     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
-#     serializer_class = AboutAdminSerializer
-#     pagination_class = ResultsSetPagination
-
-
-# class AboutRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = About.objects.all()
-#     serializer_class = AboutAdminSerializer
-
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -35,9 +17,12 @@ def create_about(request):
 # Read (O'qish)
 @api_view(['GET'])
 def list_abouts(request):
+    paginator = PageNumberPagination()
+    paginator.page_size = 1
     abouts = About.objects.all().order_by("id")
-    serializer = AboutAdminSerializer(abouts, many=True)
-    return Response(serializer.data)
+    result_page = paginator.paginate_queryset(abouts, request)
+    serializer = AboutAdminSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
 
 # Detail 
 @api_view(['GET'])

@@ -1,27 +1,9 @@
 from django.http import Http404
-from rest_framework import generics
-from admin_panel.pagination import ResultsSetPagination
 from other_app.models import Library
 from admin_panel.serializer.library import LibraryAdminSerializer
-from rest_framework import filters
-from django_filters.rest_framework import DjangoFilterBackend
-
-# class LibraryListCreate(generics.ListCreateAPIView):
-#     queryset = Library.objects.all()
-#     serializer_class = LibraryAdminSerializer
-#     filterset_fields = ['id', ]
-#     search_fields = ['title']
-#     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
-#     pagination_class = ResultsSetPagination
-
-# class LibraryRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Library.objects.all()
-#     serializer_class = LibraryAdminSerializer
-
-
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-
+from rest_framework.pagination import PageNumberPagination
 
 # Create (Yaratish)
 @api_view(['POST'])
@@ -35,9 +17,12 @@ def create_library(request):
 # Read (O'qish)
 @api_view(['GET'])
 def list_libraries(request):
+    paginator = PageNumberPagination()
+    paginator.page_size = 10
     libraries = Library.objects.all().order_by("id")
-    serializer = LibraryAdminSerializer(libraries, many=True)
-    return Response(serializer.data)
+    result_page = paginator.paginate_queryset(libraries, request)
+    serializer = LibraryAdminSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
 
 # Detail
 @api_view(['GET'])

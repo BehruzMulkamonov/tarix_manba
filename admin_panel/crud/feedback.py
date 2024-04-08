@@ -1,28 +1,10 @@
 from django.http import Http404
-from rest_framework import generics
-from admin_panel.pagination import ResultsSetPagination
 from other_app.models import Feedbacks
 from admin_panel.serializer.feedback import FeedbacksAdminSerializer
 from rest_framework import filters
-from django_filters.rest_framework import DjangoFilterBackend
-
-# class FeedbacksListCreate(generics.ListCreateAPIView):
-#     queryset = Feedbacks.objects.all()
-#     serializer_class = FeedbacksAdminSerializer
-#     filterset_fields = ['id', ]
-#     search_fields = ['message']
-#     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
-#     pagination_class = ResultsSetPagination
-
-
-# class FeedbacksRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Feedbacks.objects.all()
-#     serializer_class = FeedbacksAdminSerializer
-
-
-
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 
 # Create (Yaratish)
 @api_view(['POST'])
@@ -36,9 +18,12 @@ def create_feedback(request):
 # Read (O'qish)
 @api_view(['GET'])
 def list_feedbacks(request):
+    paginator = PageNumberPagination()
+    paginator.page_size = 10
     feedbacks = Feedbacks.objects.all().order_by("id")
-    serializer = FeedbacksAdminSerializer(feedbacks, many=True)
-    return Response(serializer.data)
+    result_page = paginator.paginate_queryset(feedbacks, request)
+    serializer = FeedbacksAdminSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
 
 # Detail
 @api_view(['GET'])

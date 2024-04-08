@@ -1,28 +1,9 @@
 from django.http import Http404
-from admin_panel.pagination import ResultsSetPagination
 from other_app.models import Connection
 from admin_panel.serializer.connection import ConnectionAdminSerializer
-from rest_framework import filters
-from django_filters.rest_framework import DjangoFilterBackend
-
-
-# class ConnectionListCreate(generics.ListCreateAPIView):
-#     queryset = Connection.objects.all()
-#     serializer_class = ConnectionAdminSerializer
-#     filterset_fields = ['id', ]
-#     search_fields = ['email']
-#     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
-#     pagination_class = ResultsSetPagination
-
-
-# class ConnectionRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Connection.objects.all()
-#     serializer_class = ConnectionAdminSerializer
-
-
-###############
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 
 # Create (Yaratish)
 @api_view(['POST'])
@@ -36,11 +17,12 @@ def create_connection(request):
 # Read (O'qish)
 @api_view(['GET'])
 def list_connections(request):
+    paginator = PageNumberPagination()
+    paginator.page_size = 10
     connections = Connection.objects.all().order_by("id")
-    serializer = ConnectionAdminSerializer(connections, many=True)
-    # paginator = ResultsSetPagination()
-    return Response(serializer.data)
-    # return paginator.get_paginated_response(serializer.data)
+    result_page = paginator.paginate_queryset(connections, request)
+    serializer = ConnectionAdminSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
 
 # Detail
 @api_view(['GET'])
