@@ -1,5 +1,4 @@
 from django.db import models
-from ckeditor.fields import RichTextField
 
 
 class BaseModel(models.Model):
@@ -80,7 +79,7 @@ class Resource(BaseModel):
                                       related_name='period_filter')
     title = models.CharField(max_length=255)
     image = models.ImageField(upload_to='media/images/resource',blank=True,null=True)
-    content = RichTextField()
+    content = models.TextField()
     statehood = models.BooleanField()
     province = models.ForeignKey(Province, on_delete=models.SET_NULL, null=True,
                                  related_name='select_province')
@@ -141,7 +140,7 @@ class Contents(BaseModel):
     resource_content = models.ForeignKey(Resource, on_delete=models.SET_NULL, null=True,
                                          related_name='resource_content')
     contents_title = models.CharField(max_length=255)
-    contents_description = RichTextField()
+    contents_description = models.TextField()
 
 
 
