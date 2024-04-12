@@ -4,5 +4,5 @@ from other_app.models import About
 class AboutAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = About
-        fields = '__all__'
+        fields = ['id','title', 'content', 'created_time', 'updated_time']
         

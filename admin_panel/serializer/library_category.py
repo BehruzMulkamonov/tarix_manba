@@ -4,4 +4,4 @@ from other_app.models import Library_Category
 class Library_CategoryAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Library_Category
-        fields = '__all__'
+        fields = ['id','title', 'created_time', 'updated_time']

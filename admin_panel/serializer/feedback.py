@@ -4,4 +4,4 @@ from other_app.models import Feedbacks
 class FeedbacksAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feedbacks
-        fields = '__all__'
+        fields = ['id', 'message', 'created_time', 'updated_time']

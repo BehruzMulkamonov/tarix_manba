@@ -4,4 +4,4 @@ from other_app.models import Sliders
 class SlidersAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sliders
-        fields = '__all__'
+        fields = ['id','title', 'file', 'link', 'created_time', 'updated_time']
