@@ -40,8 +40,6 @@ INSTALLED_APPS = [
 
     # Additional library
     'rest_framework',
-    'ckeditor',
-    'ckeditor_uploader',    
     'django_filters',
     'rest_framework_swagger',       # Swagger 
     'drf_yasg',                      # Yet Another Swagger generator
@@ -125,12 +123,11 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
+
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-STATICFILES_DIRS = [BASE_DIR / 'static', ]
-
 
 
 # Default primary key field type
@@ -149,13 +146,7 @@ REST_FRAMEWORK = {
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-CKEDITOR_UPLOAD_PATH = "uploads/"
-CKEDITOR_RESTRICT_BY_USER = True
-CKEDITOR_CONFIGS = {
-    'default': {
-        'toolbar': 'full',
-    },
-}
+
 
 CORS_ALLOW_HEADERS = list(default_headers) + [
     'language-code',

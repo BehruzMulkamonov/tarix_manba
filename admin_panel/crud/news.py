@@ -1,26 +1,9 @@
-from rest_framework import generics
-from admin_panel.pagination import ResultsSetPagination
+from django.http import Http404
 from other_app.models import News
 from admin_panel.serializer.news import NewsAdminSerializer
-from rest_framework import filters
-from django_filters.rest_framework import DjangoFilterBackend
-
-# class NewsListCreate(generics.ListCreateAPIView):
-#     queryset = News.objects.all()
-#     serializer_class = NewsAdminSerializer
-#     filterset_fields = ['id', ]
-#     search_fields = ['title']
-#     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
-#     pagination_class = ResultsSetPagination
-
-# class NewsRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = News.objects.all()
-#     serializer_class = NewsAdminSerializer
-
-
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-
+from rest_framework.pagination import PageNumberPagination
 
 # Create (Yaratish)
 @api_view(['POST'])
@@ -34,9 +17,24 @@ def create_news(request):
 # Read (O'qish)
 @api_view(['GET'])
 def list_news(request):
+    paginator = PageNumberPagination()
+    paginator.page_size = 10
     news = News.objects.all().order_by("id")
-    serializer = NewsAdminSerializer(news, many=True)
+    result_page = paginator.paginate_queryset(news, request)
+    serializer = NewsAdminSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
+
+# Detail
+@api_view(['GET'])
+def news_detail(request, pk):
+    try:
+        news = News.objects.get(pk=pk)
+    except News.DoesNotExist:
+        raise Http404
+
+    serializer = NewsAdminSerializer(news)
     return Response(serializer.data)
+
 
 # Update (Yangilash)
 @api_view(['PUT'])

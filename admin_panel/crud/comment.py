@@ -1,25 +1,10 @@
-from rest_framework import generics
-from admin_panel.pagination import ResultsSetPagination
+from django.http import Http404
 from other_app.models import Comments
 from admin_panel.serializer.comment import CommentsAdminSerializer
 from rest_framework import filters
-from django_filters.rest_framework import DjangoFilterBackend
-
-
-# class CommentsListCreate(generics.ListCreateAPIView):
-#     queryset = Comments.objects.all()
-#     filterset_fields = ['id', ]
-#     search_fields = ['message']
-#     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
-#     pagination_class = ResultsSetPagination
-#     serializer_class = CommentsAdminSerializer
-
-# class CommentsRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Comments.objects.all()
-#     serializer_class = CommentsAdminSerializer
-
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 
 # Create (Yaratish)
 @api_view(['POST'])
@@ -33,8 +18,22 @@ def create_comment(request):
 # Read (O'qish)
 @api_view(['GET'])
 def list_comments(request):
+    paginator = PageNumberPagination()
+    paginator.page_size = 10
     comments = Comments.objects.all().order_by("id")
-    serializer = CommentsAdminSerializer(comments, many=True)
+    result_page = paginator.paginate_queryset(comments, request)
+    serializer = CommentsAdminSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
+
+# Detail
+@api_view(['GET'])
+def comment_detail(request, pk):
+    try:
+        comment = Comments.objects.get(pk=pk)
+    except Comments.DoesNotExist:
+        raise Http404
+
+    serializer = CommentsAdminSerializer(comment)
     return Response(serializer.data)
 
 # Update (Yangilash)

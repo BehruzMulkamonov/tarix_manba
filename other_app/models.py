@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from ckeditor.fields import RichTextField
 
 
 class BaseModel(models.Model):
@@ -32,7 +31,7 @@ class Library(BaseModel):
 
 class News(BaseModel):
     title = models.CharField(max_length=255)
-    content = RichTextField()
+    content = models.TextField()
     file = models.FileField(upload_to='files/', blank=True, null=True)
 
     def __str__(self):
@@ -41,7 +40,7 @@ class News(BaseModel):
 
 class Event(BaseModel):
     title = models.CharField(max_length=255)
-    content = RichTextField()
+    content = models.TextField()
     image = models.ImageField(upload_to='images/', blank=True, null=True)
 
     def __str__(self):
@@ -71,14 +70,14 @@ class Connection(BaseModel):
 
 class About(BaseModel):
     title = models.CharField(max_length=255)
-    content = RichTextField()
+    content = models.TextField()
 
     def __str__(self):
         return self.title
 
 
 class Feedbacks(BaseModel):
-    message = RichTextField()
+    message = models.TextField()
     # user = models.ForiegnKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -86,7 +85,7 @@ class Feedbacks(BaseModel):
 
 
 class Comments(BaseModel):
-    message = RichTextField()
+    message = models.TextField()
 
     # user = models.ForiegnKey(User, on_delete=models.CASCADE)
 
