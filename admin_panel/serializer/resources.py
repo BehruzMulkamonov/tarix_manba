@@ -6,7 +6,7 @@ from resources.models import Category, PeriodFilter, Filters, Resource, Province
 class CategoryAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ('id', 'title', 'icon', 'order', 'interactive',)
+        fields = ('id', 'title', 'icon', 'order', 'interactive','created_time','updated_time')
 
 
 
@@ -14,7 +14,7 @@ class PeriodFilterAdminSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PeriodFilter
-        fields = ('id', 'title', )
+        fields = ('id', 'title','created_time','updated_time' )
 
 
 
@@ -23,7 +23,7 @@ class FilterCategoriesAdminSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ('id', 'title',  'category',)
+        fields = ('id', 'title',  'category','created_time','updated_time')
 
 
 class FiltersAdminSerializer(serializers.ModelSerializer):
@@ -32,30 +32,30 @@ class FiltersAdminSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Filters
-        fields = ('id', 'title','filter_category',)
+        fields = ('id', 'title','filter_category','created_time','updated_time')
 
 
 class ProvinceAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Province
-        fields = ('id', 'title',)
+        fields = ('id', 'title','created_time','updated_time')
 
 
 class InteriveAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Interive
-        fields = ['status', 'title', 'file', 'link', 'latitude', 'longitude']
+        fields = ['status', 'title', 'file', 'link', 'latitude', 'longitude','created_time','updated_time']
 
 class AttributesAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Attributes
-        fields = ['resource_attribute', 'attributes_title', 'attributes_description']
+        fields = ['resource_attribute', 'attributes_title', 'attributes_description','created_time','updated_time']
 
 
 class ContentsAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contents
-        fields = ['resource_content', 'contents_title', 'contents_description']
+        fields = ['resource_content', 'contents_title', 'contents_description','created_time','updated_time']
 
 
 class ResourceAdminSerializer(serializers.ModelSerializer):
@@ -67,7 +67,7 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         model = Resource
         fields = (
         'id', 'category', 'filter_category', 'filters', 'period_filter', 'title', 'image', 'content', 'statehood',
-        'province', 'interive', 'attributes', 'contents')
+        'province', 'interive', 'attributes', 'contents','created_time','updated_time')
 
     def create(self, validated_data):
         interive_data = validated_data.pop('interive')
