@@ -90,7 +90,7 @@ WSGI_APPLICATION = 'Config.wsgi.application'
 # }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'tarixmanba_db',
         'USER': 'tarixmanba_user',
         'PASSWORD': 'tarixmanba_password',
