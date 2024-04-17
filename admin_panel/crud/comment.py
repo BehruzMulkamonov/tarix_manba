@@ -1,6 +1,6 @@
 from django.http import Http404
 from other_app.models import Comments
-from admin_panel.serializer.comment import CommentsAdminSerializer
+from admin_panel.serializer.comment import CommentsAdminSerializer, CommentsAdminSerializerList
 from rest_framework import filters
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -22,7 +22,7 @@ def list_comments(request):
     paginator.page_size = 10
     comments = Comments.objects.all().order_by("id")
     result_page = paginator.paginate_queryset(comments, request)
-    serializer = CommentsAdminSerializer(result_page, many=True)
+    serializer = CommentsAdminSerializerList(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
 # Detail
@@ -33,7 +33,7 @@ def comment_detail(request, pk):
     except Comments.DoesNotExist:
         raise Http404
 
-    serializer = CommentsAdminSerializer(comment)
+    serializer = CommentsAdminSerializerList(comment)
     return Response(serializer.data)
 
 # Update (Yangilash)

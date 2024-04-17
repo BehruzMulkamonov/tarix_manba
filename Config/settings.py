@@ -44,14 +44,16 @@ INSTALLED_APPS = [
     'rest_framework_swagger',       # Swagger 
     'drf_yasg',                      # Yet Another Swagger generator
     'corsheaders',
+    'modeltranslation',
 
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -130,6 +132,12 @@ USE_I18N = True
 
 USE_TZ = True
 
+LANGUAGES = (
+    ('en', 'English'),
+    ('ru', 'Russian'),
+    ('uz', 'Uzbek'),
+)
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
@@ -150,8 +158,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         
     ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 2,
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    # 'PAGE_SIZE': 2,
 }
 
 CORS_ORIGIN_ALLOW_ALL = True

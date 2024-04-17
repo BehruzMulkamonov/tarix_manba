@@ -9,7 +9,7 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('register/', RegisterView.as_view(), name='auth_register'),
 
-        # User
+    # User
     re_path(r'^user/$', UserView.as_view(), name='user_view'),
     path('user/<int:pk>/', UserDetailView.as_view(), name='user_detail_view'),
 
