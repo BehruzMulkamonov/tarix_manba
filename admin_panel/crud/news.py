@@ -1,6 +1,6 @@
 from django.http import Http404
 from other_app.models import News
-from admin_panel.serializer.news import NewsAdminSerializer, News, NewsAdminSerializerList
+from admin_panel.serializer.news import NewsAdminSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
@@ -21,7 +21,7 @@ def list_news(request):
     paginator.page_size = 10
     news = News.objects.all().order_by("id")
     result_page = paginator.paginate_queryset(news, request)
-    serializer = NewsAdminSerializerList(result_page, many=True)
+    serializer = NewsAdminSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
 # Detail

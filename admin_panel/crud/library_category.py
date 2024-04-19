@@ -1,6 +1,6 @@
 from django.http import Http404
 from other_app.models import Library_Category
-from admin_panel.serializer.library_category import Library_CategoryAdminSerializer, Library_CategoryAdminSerializerList
+from admin_panel.serializer.library_category import Library_CategoryAdminSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
@@ -21,7 +21,7 @@ def list_library_categories(request):
     paginator.page_size = 10
     categories = Library_Category.objects.all().order_by("id")
     result_page = paginator.paginate_queryset(categories, request)
-    serializer = Library_CategoryAdminSerializerList(result_page, many=True)
+    serializer = Library_CategoryAdminSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
 # Detail
@@ -32,7 +32,7 @@ def library_category_detail(request, pk):
     except Library_Category.DoesNotExist:
         raise Http404
 
-    serializer = Library_CategoryAdminSerializerList(category)
+    serializer = Library_CategoryAdminSerializer(category)
     return Response(serializer.data)
 
 # Update (Yangilash)

@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.http import Http404
 from other_app.models import About
-from admin_panel.serializer.about import AboutAdminSerializer, AboutAdminSerializerList
+from admin_panel.serializer.about import AboutAdminSerializer
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -23,7 +23,7 @@ def list_abouts(request):
     paginator.page_size = 10
     abouts = About.objects.all().order_by("id")
     result_page = paginator.paginate_queryset(abouts, request)
-    serializer = AboutAdminSerializerList(result_page, many=True)
+    serializer = AboutAdminSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
 # Detail 
@@ -34,7 +34,7 @@ def about_detail(request, pk):
     except About.DoesNotExist:
         raise Http404
 
-    serializer = AboutAdminSerializerList(about)
+    serializer = AboutAdminSerializer(about)
     return Response(serializer.data)
 
 # Update (Yangilash)

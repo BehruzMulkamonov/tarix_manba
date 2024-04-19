@@ -1,6 +1,6 @@
 from django.http import Http404
 from other_app.models import Sliders
-from admin_panel.serializer.sliders import SlidersAdminSerializer, SlidersAdminSerializerList
+from admin_panel.serializer.sliders import SlidersAdminSerializer
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -21,7 +21,7 @@ def list_sliders(request):
     paginator.page_size = 10
     sliders = Sliders.objects.all().order_by("id")
     result_page = paginator.paginate_queryset(sliders, request)
-    serializer = SlidersAdminSerializerList(result_page, many=True)
+    serializer = SlidersAdminSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
 # Detail
@@ -32,7 +32,7 @@ def sliders_detail(request, pk):
     except Sliders.DoesNotExist:
         raise Http404
 
-    serializer = SlidersAdminSerializerList(slider)
+    serializer = SlidersAdminSerializer(slider)
     return Response(serializer.data)
 
 # Update (Yangilash)
