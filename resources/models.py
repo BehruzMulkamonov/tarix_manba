@@ -11,7 +11,7 @@ class BaseModel(models.Model):
 
 class Category(BaseModel):
     title = models.CharField(max_length=255)
-    icon = models.CharField(max_length=255)  # shunga iconca kodi yozilidi
+    icon = models.FileField(blank=True, null=True , upload_to="icons/")  # shunga iconca kodi yozilidi
     order = models.IntegerField()
     interactive = models.BooleanField()
 
