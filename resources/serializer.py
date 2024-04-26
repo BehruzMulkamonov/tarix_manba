@@ -53,7 +53,28 @@ class ContentsSerializer(serializers.ModelSerializer):
 
 
 class ResourceSerializer(serializers.ModelSerializer):
+    category_name = serializers.SerializerMethodField()
+    filter_category_title = serializers.SerializerMethodField()
+    filters_title = serializers.SerializerMethodField()
+
     class Meta:
         model = Resource
         fields = ['category', 'filter_category', 'filters', 'period_filter', 'title',
-                  'image', 'content', 'statehood', 'province']
+                  'image', 'content', 'statehood', 'province','category_name','filter_category_title',
+                  'filters_title']
+
+    def get_category_name(self, obj):
+        return obj.category.title
+
+    def get_filter_category_title(self, obj):
+        filter_category=obj.filter_category
+
+        if filter_category:
+            filter_category_obj=Category.objects.filter(title=filter_category.category)
+            return filter_category_obj[0].title
+
+
+    def get_filters_title(self, obj):
+        return obj.filters.title
+
+

@@ -1,61 +1,65 @@
 from rest_framework import serializers
 
-from resources.models import Category, PeriodFilter, Filters, Resource, Province, Interive, Attributes, Contents
-
-
-class CategoryAdminSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = ('id', 'title', 'icon', 'order', 'interactive','created_time','updated_time')
-
-
-
-class PeriodFilterAdminSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = PeriodFilter
-        fields = ('id', 'title','created_time','updated_time' )
-
-
-
-class FilterCategoriesAdminSerializer(serializers.ModelSerializer):
-    category = CategoryAdminSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Category
-        fields = ('id', 'title',  'category','created_time','updated_time')
+from resources.models import Category, PeriodFilter, Filters, Resource, Province, Interive, Attributes, Contents, \
+    FilterCategories
 
 
 class FiltersAdminSerializer(serializers.ModelSerializer):
-    filter_category = FilterCategoriesAdminSerializer(many=True, read_only=True)
-
-
     class Meta:
         model = Filters
-        fields = ('id', 'title','filter_category','created_time','updated_time')
+        fields = ('id', 'title', 'filter_category', 'created_time', 'updated_time')
+
+
+class FilterCategoriesAdminSerializer(serializers.ModelSerializer):
+    filters_category = FiltersAdminSerializer(many=True)
+
+    class Meta:
+        model = FilterCategories
+        fields = ('id', 'title', 'category', 'created_time', 'updated_time', 'filters_category')
+
+    def get_filters_category(self, obj):
+        return obj.filters_category.all()
+
+
+class CategoryAdminSerializer(serializers.ModelSerializer):
+    categories = FilterCategoriesAdminSerializer(many=True)
+
+    class Meta:
+        model = Category
+        fields = ('id', 'title', 'icon', 'order', 'interactive', 'created_time', 'updated_time', 'categories')
+
+    def get_categories(self, obj):
+        return obj.categories.all()
+
+
+class PeriodFilterAdminSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PeriodFilter
+        fields = ('id', 'title', 'created_time', 'updated_time')
 
 
 class ProvinceAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Province
-        fields = ('id', 'title','created_time','updated_time')
+        fields = ('id', 'title', 'created_time', 'updated_time')
 
 
 class InteriveAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Interive
-        fields = ['status', 'title', 'file', 'link', 'latitude', 'longitude','created_time','updated_time']
+        fields = ['status', 'title', 'file', 'link', 'latitude', 'longitude', 'created_time', 'updated_time']
+
 
 class AttributesAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Attributes
-        fields = ['resource_attribute', 'attributes_title', 'attributes_description','created_time','updated_time']
+        fields = ['resource_attribute', 'attributes_title', 'attributes_description', 'created_time', 'updated_time']
 
 
 class ContentsAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contents
-        fields = ['resource_content', 'contents_title', 'contents_description','created_time','updated_time']
+        fields = ['resource_content', 'contents_title', 'contents_description', 'created_time', 'updated_time']
 
 
 class ResourceAdminSerializer(serializers.ModelSerializer):
@@ -66,8 +70,8 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Resource
         fields = (
-        'id', 'category', 'filter_category', 'filters', 'period_filter', 'title', 'image', 'content', 'statehood',
-        'province', 'interive', 'attributes', 'contents','created_time','updated_time')
+            'id', 'category', 'filter_category', 'filters', 'period_filter', 'title', 'image', 'content', 'statehood',
+            'province', 'interive', 'attributes', 'contents', 'created_time', 'updated_time')
 
     def create(self, validated_data):
         interive_data = validated_data.pop('interive')

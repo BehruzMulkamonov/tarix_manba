@@ -129,14 +129,14 @@ urlpatterns = [
     # Resource filter-category
     path('filter_category/', filterCategoriesList, name='filter-category-list'),
     path('filter_category/<int:pk>/detail/', filterCategoriesDetail, name='filter-category-detail'),
-    path('filter_category/create/', createFilterCategories, name='filter-category-create'),
+    path('filter_category/create/', createFilterCategories.as_view(), name='filter-category-create'),
     path('filter_category/<int:pk>/update/', updateFilterCategories, name='filter-category-update'),
     path('filter_category/<int:pk>/delete/', deleteFilterCategories, name='filter-category-delete'),
 
     # Resource filters
     path('filters/', filtersList, name='filters-list'),
     path('filters/<int:pk>/detail/', filtersDetail, name='filters-detail'),
-    path('filters/create/', createFilters, name='filters-create'),
+    path('filters/create/', createFilters.as_view(), name='filters-create'),
     path('filters/<int:pk>/update/', updateFilters, name='filters-update'),
     path('filters/<int:pk>/delete/', deleteFilters, name='filters-delete'),
 
