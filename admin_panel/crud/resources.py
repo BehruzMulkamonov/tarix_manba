@@ -71,7 +71,6 @@ def periodFilterList(request):
 
     return paginator.get_paginated_response(serializer.data)
 
-    return pa
 
 
 @api_view(['GET'])
@@ -143,9 +142,6 @@ def createFilterCategories(request):
     return Response(serializer.errors, status=400)
 
 
-class createFilterCategories(generics.CreateAPIView):
-    serializer_class = FilterCategoriesAdminSerializer
-    queryset = FilterCategories
 
 
 @api_view(['PUT'])
