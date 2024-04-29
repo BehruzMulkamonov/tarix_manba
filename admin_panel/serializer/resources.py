@@ -22,7 +22,7 @@ class FilterCategoriesAdminSerializer(serializers.ModelSerializer):
 
 
 class CategoryAdminSerializer(serializers.ModelSerializer):
-    categories = FilterCategoriesAdminSerializer(many=True)
+    categories = FilterCategoriesAdminSerializer(many=True, read_only=True)
 
     class Meta:
         model = Category
