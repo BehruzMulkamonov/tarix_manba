@@ -8,10 +8,6 @@ from resources.models import Category, PeriodFilter, FilterCategories, Filters, 
 from rest_framework.pagination import PageNumberPagination
 
 
-
-
-
-
 @api_view(['GET'])
 def categoryList(request):
     paginator = PageNumberPagination()
@@ -22,6 +18,7 @@ def categoryList(request):
     serializer = CategoryAdminSerializer(result_page, many=True)
 
     return paginator.get_paginated_response(serializer.data)
+
 
 @api_view(['GET'])
 def categoryDetail(request, pk):
@@ -52,6 +49,7 @@ def updateCategory(request, pk):
         return Response(serializer.data)
     return Response(serializer.errors, status=400)
 
+
 @api_view(['DELETE'])
 def deleteCategory(request, pk):
     try:
@@ -73,13 +71,14 @@ def periodFilterList(request):
 
     return paginator.get_paginated_response(serializer.data)
 
-    return pa
+
 
 @api_view(['GET'])
 def periodFilterDetail(request, pk):
     periodfilter = PeriodFilter.objects.get(pk=pk)
     serializer = PeriodFilterAdminSerializer(periodfilter, many=False)
     return Response(serializer.data)
+
 
 @api_view(['POST'])
 def createPeriodFilter(request):
@@ -88,6 +87,7 @@ def createPeriodFilter(request):
         serializer.save()
         return Response(serializer.data)
     return Response(serializer.errors, status=400)
+
 
 @api_view(['PUT'])
 def updatePeriodFilter(request, pk):
@@ -101,6 +101,7 @@ def updatePeriodFilter(request, pk):
         serializer.save()
         return Response(serializer.data)
     return Response(serializer.errors, status=400)
+
 
 @api_view(['DELETE'])
 def deletePeriodFilter(request, pk):
@@ -124,11 +125,13 @@ def filterCategoriesList(request):
     serializer = FilterCategoriesAdminSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
+
 @api_view(['GET'])
 def filterCategoriesDetail(request, pk):
     filter_categories = FilterCategories.objects.get(pk=pk)
     serializer = FilterCategoriesAdminSerializer(filter_categories, many=False)
     return Response(serializer.data)
+
 
 @api_view(['POST'])
 def createFilterCategories(request):
@@ -137,6 +140,9 @@ def createFilterCategories(request):
         serializer.save()
         return Response(serializer.data)
     return Response(serializer.errors, status=400)
+
+
+
 
 @api_view(['PUT'])
 def updateFilterCategories(request, pk):
@@ -150,6 +156,7 @@ def updateFilterCategories(request, pk):
         serializer.save()
         return Response(serializer.data)
     return Response(serializer.errors, status=400)
+
 
 @api_view(['DELETE'])
 def deleteFilterCategories(request, pk):
@@ -172,11 +179,14 @@ def filtersList(request):
 
     serializer = FiltersAdminSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
+
+
 @api_view(['GET'])
 def filtersDetail(request, pk):
     filters = Filters.objects.get(pk=pk)
     serializer = FiltersAdminSerializer(filters, many=False)
     return Response(serializer.data)
+
 
 @api_view(['POST'])
 def createFilters(request):
@@ -185,6 +195,7 @@ def createFilters(request):
         serializer.save()
         return Response(serializer.data)
     return Response(serializer.errors, status=400)
+
 
 @api_view(['PUT'])
 def updateFilters(request, pk):
@@ -198,6 +209,7 @@ def updateFilters(request, pk):
         serializer.save()
         return Response(serializer.data)
     return Response(serializer.errors, status=400)
+
 
 @api_view(['DELETE'])
 def deleteFilters(request, pk):
@@ -219,11 +231,13 @@ def provinceList(request):
     serializer = ProvinceAdminSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
+
 @api_view(['GET'])
 def provinceDetail(request, pk):
     province = Province.objects.get(pk=pk)
     serializer = ProvinceAdminSerializer(province, many=False)
     return Response(serializer.data)
+
 
 @api_view(['POST'])
 def createProvince(request):
@@ -232,6 +246,7 @@ def createProvince(request):
         serializer.save()
         return Response(serializer.data)
     return Response(serializer.errors, status=400)
+
 
 @api_view(['PUT'])
 def updateProvince(request, pk):
@@ -245,6 +260,7 @@ def updateProvince(request, pk):
         serializer.save()
         return Response(serializer.data)
     return Response(serializer.errors, status=400)
+
 
 @api_view(['DELETE'])
 def deleteProvince(request, pk):
@@ -266,11 +282,13 @@ def resourceList(request):
     serializer = ResourceAdminSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
+
 @api_view(['GET'])
 def resourceDetail(request, pk):
     resource = Resource.objects.get(pk=pk)
     serializer = ResourceAdminSerializer(resource, many=False)
     return Response(serializer.data)
+
 
 @api_view(['POST'])
 def createResource(request):
@@ -279,6 +297,7 @@ def createResource(request):
         serializer.save()
         return Response(serializer.data)
     return Response(serializer.errors, status=400)
+
 
 @api_view(['PUT'])
 def updateResource(request, pk):
@@ -293,6 +312,7 @@ def updateResource(request, pk):
         return Response(serializer.data)
     return Response(serializer.errors, status=400)
 
+
 @api_view(['DELETE'])
 def deleteResource(request, pk):
     try:
@@ -302,10 +322,3 @@ def deleteResource(request, pk):
 
     resource.delete()
     return Response(status=204)
-
-
-
-
-
-
-
