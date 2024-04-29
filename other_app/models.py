@@ -91,3 +91,12 @@ class Comments(BaseModel):
 
     def __str__(self):
         return self.message
+
+
+class Connection_Category(models.Model):
+    title= models.CharField(max_length=255)
+
+
+class Connection_Value(models.Model):
+    connection_category = models.ForeignKey(Connection_Category, on_delete=models.CASCADE)
+    value = models.CharField(max_length=255)

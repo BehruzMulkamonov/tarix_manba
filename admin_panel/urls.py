@@ -26,7 +26,10 @@ from admin_panel.crud.feedback import feedbacks_detail, list_feedbacks, create_f
 # comment 
 from admin_panel.crud.comment import create_comment, update_comment, list_comments, delete_comment, comment_detail
 # resource 
-
+# connection_category
+from admin_panel.crud.connection_category import connection_category_detail, create_connection_category, delete_connection_category, list_connection_category, update_connection_category
+# connection_value 
+from admin_panel.crud.connection_value import connection_value_detail, create_connection_value, delete_connection_value, list_connection_value, update_connection_value
 
 
 urlpatterns = [
@@ -153,4 +156,18 @@ urlpatterns = [
     path('resource/create/', createResource, name='resource-create'),
     path('resource/<int:pk>/update/', updateResource, name='resource-update'),
     path('resource/<int:pk>/delete/', deleteResource, name='resource-delete'),
+
+    # Connection-category
+    path('connection_category/', list_connection_category, name='connectin-category-list'),
+    path('connection_category/<int:pk>/detail/', connection_category_detail, name='connectin-category-detail'),
+    path('connection_category/create/', create_connection_category, name='connectin-category-create'),
+    path('connection_category/<int:pk>/update/', update_connection_category, name='connectin-category-update'),
+    path('connection_category/<int:pk>/delete/', delete_connection_category, name='connectin-category-delete'),
+
+    # Connection-value
+    path('connection_value/', list_connection_value, name='connectin-value-list'),
+    path('connection_value/<int:pk>/detail/', connection_value_detail, name='connectin-value-detail'),
+    path('connection_value/create/', create_connection_value, name='connectin-value-create'),
+    path('connection_value/<int:pk>/update/', update_connection_value, name='connectin-value-update'),
+    path('connection_value/<int:pk>/delete/', delete_connection_value, name='connectin-value-delete'),
 ]
