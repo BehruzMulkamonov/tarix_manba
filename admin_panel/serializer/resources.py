@@ -22,11 +22,12 @@ class FilterCategoriesAdminSerializer(serializers.ModelSerializer):
 
 
 class CategoryAdminSerializer(serializers.ModelSerializer):
-    categories = FilterCategoriesAdminSerializer(many=True)
+    categories = FilterCategoriesAdminSerializer(many=True,read_only=True)
 
     class Meta:
         model = Category
         fields = ('id', 'title', 'icon', 'order', 'interactive', 'created_time', 'updated_time', 'categories')
+
 
     def get_categories(self, obj):
         return obj.categories.all()
