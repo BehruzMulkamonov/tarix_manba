@@ -5,17 +5,21 @@ from resources.models import Category, PeriodFilter, Filters, Resource, Province
 
 
 class FiltersAdminSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Filters
         fields = ('id', 'title', 'filter_category', 'created_time', 'updated_time')
 
 
 class FilterCategoriesAdminSerializer(serializers.ModelSerializer):
-    filters_category = FiltersAdminSerializer(many=True)
+    filters_category = FiltersAdminSerializer(many=True,read_only=True)
 
     class Meta:
         model = FilterCategories
         fields = ('id', 'title', 'category', 'created_time', 'updated_time', 'filters_category')
+        extra_kwargs = {
+            'filters_category': {'read_only': True, 'required': False},
+        }
 
     def get_filters_category(self, obj):
         return obj.filters_category.all()
