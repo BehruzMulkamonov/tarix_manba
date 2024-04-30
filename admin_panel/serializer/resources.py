@@ -27,6 +27,9 @@ class CategoryAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ('id', 'title', 'icon', 'order', 'interactive', 'created_time', 'updated_time', 'categories')
+        extra_kwargs = {
+            'categories': {'read_only': True,'required': False},
+        }
 
 
     def get_categories(self, obj):
