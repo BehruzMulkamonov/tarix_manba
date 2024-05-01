@@ -5,18 +5,52 @@ from resources.models import Category, PeriodFilter, Filters, Resource, Province
 
 
 class FiltersAdminSerializer(serializers.ModelSerializer):
+    filter_categories_name = serializers.SerializerMethodField()
+    filter_cat_id = serializers.SerializerMethodField()
+    cat_id = serializers.SerializerMethodField()
+    cat_title = serializers.SerializerMethodField()
 
     class Meta:
         model = Filters
-        fields = ('id', 'title', 'filter_category', 'created_time', 'updated_time')
+        fields = ('id', 'title', 'filter_category', 'created_time',
+                  'updated_time','filter_cat_id','filter_categories_name','cat_id',
+                  'cat_title')
+
+    def get_filter_categories_name(self, obj):
+        if obj.filter_category:
+            return obj.filter_category.title
+    def get_filter_cat_id(self, obj):
+        if obj.filter_category:
+            return obj.filter_category.id
+
+    def get_cat_id(self, obj):
+        if obj.filter_category:
+            cat = obj.filter_category.category
+            if cat:
+                return cat.id
+    def get_cat_title(self,obj):
+        if obj.filter_category:
+            cat = obj.filter_category.category
+            if cat:
+                return cat.title
+
+
+
+
+
+
+
+
 
 
 class FilterCategoriesAdminSerializer(serializers.ModelSerializer):
     filters_category = FiltersAdminSerializer(many=True,read_only=True)
+    cat_title = serializers.SerializerMethodField()
+    cat_id = serializers.SerializerMethodField()
 
     class Meta:
         model = FilterCategories
-        fields = ('id', 'title', 'category', 'created_time', 'updated_time', 'filters_category')
+        fields = ('id', 'title', 'category', 'created_time', 'updated_time', 'filters_category','cat_title','cat_id')
         extra_kwargs = {
             'filters_category': {'read_only': True, 'required': False},
         }
@@ -24,6 +58,15 @@ class FilterCategoriesAdminSerializer(serializers.ModelSerializer):
     def get_filters_category(self, obj):
         return obj.filters_category.all()
 
+    def get_cat_title(self,obj):
+        title = obj.category
+        if title:
+            return title.title
+
+    def get_cat_id(self,obj):
+        cat = obj.category
+        if cat:
+            return cat.id
 
 class CategoryAdminSerializer(serializers.ModelSerializer):
     categories = FilterCategoriesAdminSerializer(many=True,read_only=True)
@@ -38,6 +81,21 @@ class CategoryAdminSerializer(serializers.ModelSerializer):
 
     def get_categories(self, obj):
         return obj.categories.all()
+
+
+
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        icon = instance.icon
+
+        if icon:
+            request = self.context.get('request')
+            if request:
+                icon_url = request.build_absolute_uri(icon.url)
+                data['icon'] = icon_url
+
+        return data
 
 
 class PeriodFilterAdminSerializer(serializers.ModelSerializer):
