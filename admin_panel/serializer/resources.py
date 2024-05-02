@@ -13,44 +13,47 @@ class FiltersAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Filters
         fields = ('id', 'title', 'filter_category', 'created_time',
-                  'updated_time','filter_cat_id','filter_categories_name','cat_id',
+                  'updated_time', 'filter_cat_id', 'filter_categories_name', 'cat_id',
                   'cat_title')
 
     def get_filter_categories_name(self, obj):
-        if obj.filter_category:
-            return obj.filter_category.title
+        filter_cat = obj.filter_category
+        if filter_cat:
+            return filter_cat.title
+
     def get_filter_cat_id(self, obj):
-        if obj.filter_category:
-            return obj.filter_category.id
+        filter_cat = obj.filter_category
+        if filter_cat:
+            return filter_cat.id
 
     def get_cat_id(self, obj):
-        if obj.filter_category:
-            cat = obj.filter_category.category
+        cat_id = obj.filter_category
+        if cat_id:
+            cat = cat_id.category
             if cat:
                 return cat.id
-    def get_cat_title(self,obj):
-        if obj.filter_category:
-            cat = obj.filter_category.category
+
+    def get_cat_title(self, obj):
+        cat_name = obj.filter_category
+        if cat_name:
+            cat = cat_name.category
             if cat:
                 return cat.title
 
-
-
-
-
-
-
-
+    # def get_category_ti(self, obj):
+    #     all_data_objects = AllData.objects.filter(main_data__category=obj, status=Status.APPROVED)
+    #     serializer = AlldateCategorySerializer(all_data_objects, many=True)
+    #     return serializer.data
 
 
 class FilterCategoriesAdminSerializer(serializers.ModelSerializer):
-    filters_category = FiltersAdminSerializer(many=True,read_only=True)
+    filters_category = FiltersAdminSerializer(many=True, read_only=True)
     cat_title = serializers.SerializerMethodField()
     cat_id = serializers.SerializerMethodField()
 
     class Meta:
         model = FilterCategories
-        fields = ('id', 'title', 'category', 'created_time', 'updated_time', 'filters_category','cat_title','cat_id')
+        fields = ('id', 'title', 'category', 'created_time', 'updated_time', 'filters_category', 'cat_title', 'cat_id')
         extra_kwargs = {
             'filters_category': {'read_only': True, 'required': False},
         }
@@ -58,32 +61,29 @@ class FilterCategoriesAdminSerializer(serializers.ModelSerializer):
     def get_filters_category(self, obj):
         return obj.filters_category.all()
 
-    def get_cat_title(self,obj):
+    def get_cat_title(self, obj):
         title = obj.category
         if title:
             return title.title
 
-    def get_cat_id(self,obj):
+    def get_cat_id(self, obj):
         cat = obj.category
         if cat:
             return cat.id
 
+
 class CategoryAdminSerializer(serializers.ModelSerializer):
-    categories = FilterCategoriesAdminSerializer(many=True,read_only=True)
+    categories = FilterCategoriesAdminSerializer(many=True, read_only=True)
 
     class Meta:
         model = Category
         fields = ('id', 'title', 'icon', 'order', 'interactive', 'created_time', 'updated_time', 'categories')
         extra_kwargs = {
-            'categories': {'read_only': True,'required': False},
+            'categories': {'read_only': True, 'required': False},
         }
-
 
     def get_categories(self, obj):
         return obj.categories.all()
-
-
-
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
