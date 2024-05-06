@@ -4,6 +4,8 @@ from rest_framework.response import Response
 
 from admin_panel.serializer.resources import CategoryAdminSerializer, PeriodFilterAdminSerializer, \
     FilterCategoriesAdminSerializer, FiltersAdminSerializer, ProvinceAdminSerializer, ResourceAdminSerializer
+from resources.filters import CategoryFilter, PeriodFilterSubFilter, FilterCategoriesSubFilter, FiltersSubFilter, \
+    ProvinceFilter, ResourceFilter
 from resources.models import Category, PeriodFilter, FilterCategories, Filters, Province, Resource
 from rest_framework.pagination import PageNumberPagination
 
@@ -12,14 +14,15 @@ from rest_framework.pagination import PageNumberPagination
 def categoryList(request):
     paginator = PageNumberPagination()
     paginator.page_size = 10
-    cats = Category.objects.all()
+    cats = Category.objects.all().order_by("id")
 
-    result_page = paginator.paginate_queryset(cats, request)
+    user_filter = CategoryFilter(request.GET, queryset=cats)
+
+    result_page = paginator.paginate_queryset(user_filter.qs, request)
+
     serializer = CategoryAdminSerializer(result_page, many=True)
 
     return paginator.get_paginated_response(serializer.data)
-
-
 @api_view(['GET'])
 def categoryDetail(request, pk):
     cat = Category.objects.get(pk=pk)
@@ -65,8 +68,9 @@ def deleteCategory(request, pk):
 def periodFilterList(request):
     paginator = PageNumberPagination()
     paginator.page_size = 10
-    periodfilter = PeriodFilter.objects.all()
-    result_page = paginator.paginate_queryset(periodfilter, request)
+    period_filter = PeriodFilter.objects.all().order_by('id')
+    search_filter = PeriodFilterSubFilter(request.GET,queryset=period_filter)
+    result_page = paginator.paginate_queryset(search_filter.qs, request)
     serializer = PeriodFilterAdminSerializer(result_page, many=True)
 
     return paginator.get_paginated_response(serializer.data)
@@ -120,7 +124,8 @@ def filterCategoriesList(request):
     paginator.page_size = 10
 
     filter_categories = FilterCategories.objects.all()
-    result_page = paginator.paginate_queryset(filter_categories, request)
+    filter_sub = FilterCategoriesSubFilter(request.GET,queryset=filter_categories)
+    result_page = paginator.paginate_queryset(filter_sub.qs, request)
 
     serializer = FilterCategoriesAdminSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
@@ -174,8 +179,9 @@ def filtersList(request):
     paginator = PageNumberPagination()
     paginator.page_size = 10
 
-    filters = Filters.objects.all()
-    result_page = paginator.paginate_queryset(filters, request)
+    filters = Filters.objects.all().order_by('id')
+    filter_sub = FiltersSubFilter(request.GET, queryset=filters)
+    result_page = paginator.paginate_queryset(filter_sub.qs, request)
 
     serializer = FiltersAdminSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
@@ -226,8 +232,9 @@ def deleteFilters(request, pk):
 def provinceList(request):
     paginator = PageNumberPagination()
     paginator.page_size = 10
-    provinces = Province.objects.all()
-    result_page = paginator.paginate_queryset(provinces, request)
+    provinces = Province.objects.all().order_by('id')
+    provinces_filter = ProvinceFilter(request.GET, queryset=provinces)
+    result_page = paginator.paginate_queryset(provinces_filter, request)
     serializer = ProvinceAdminSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
@@ -277,8 +284,9 @@ def deleteProvince(request, pk):
 def resourceList(request):
     paginator = PageNumberPagination()
     paginator.page_size = 10
-    resources = Resource.objects.all()
-    result_page = paginator.paginate_queryset(resources, request)
+    resources = Resource.objects.all().order_by('id')
+    resourcec_filter = ResourceFilter(request.GET,queryset=resources)
+    result_page = paginator.paginate_queryset(resourcec_filter, request)
     serializer = ResourceAdminSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
