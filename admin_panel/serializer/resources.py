@@ -14,7 +14,7 @@ class FiltersAdminSerializer(serializers.ModelSerializer):
         model = Filters
         fields = ('id', 'title', 'filter_category', 'created_time',
                   'updated_time', 'filter_cat_id', 'filter_categories_name', 'cat_id',
-                  'cat_title')
+                  'cat_title',)
 
     def get_filter_categories_name(self, obj):
         filter_cat = obj.filter_category
@@ -39,11 +39,6 @@ class FiltersAdminSerializer(serializers.ModelSerializer):
             cat = cat_name.category
             if cat:
                 return cat.title
-
-    # def get_category_ti(self, obj):
-    #     all_data_objects = AllData.objects.filter(main_data__category=obj, status=Status.APPROVED)
-    #     serializer = AlldateCategorySerializer(all_data_objects, many=True)
-    #     return serializer.data
 
 
 class FilterCategoriesAdminSerializer(serializers.ModelSerializer):
