@@ -5,6 +5,17 @@ from admin_panel.serializer.about import AboutAdminSerializer
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+import django_filters
+
+
+class AboutFilter(django_filters.FilterSet):
+    title = django_filters.CharFilter(field_name='title', lookup_expr='icontains')
+    content = django_filters.CharFilter(field_name='content', lookup_expr='icontains')  # content nomli maydon uchun filtirlash
+
+    class Meta:
+        model = About
+        fields = ['title', 'content']
+
 
 # Create (Yaratish)
 @api_view(['POST'])
@@ -22,7 +33,8 @@ def list_abouts(request):
     paginator = PageNumberPagination()
     paginator.page_size = 10
     abouts = About.objects.all().order_by("id")
-    result_page = paginator.paginate_queryset(abouts, request)
+    about_filter = AboutFilter(request.GET, queryset=abouts)
+    result_page = paginator.paginate_queryset(about_filter.qs, request)
     serializer = AboutAdminSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 

@@ -4,6 +4,17 @@ from admin_panel.serializer.library_category import Library_CategoryAdminSeriali
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
+import django_filters
+
+
+class LibraryCatFilter(django_filters.FilterSet):
+    title = django_filters.CharFilter(field_name='title', lookup_expr='icontains')
+
+    class Meta:
+        model = Library_Category
+        fields = ['title']
+
+
 
 # Create (Yaratish)
 @api_view(['POST'])
@@ -20,7 +31,8 @@ def list_library_categories(request):
     paginator = PageNumberPagination()
     paginator.page_size = 10
     categories = Library_Category.objects.all().order_by("id")
-    result_page = paginator.paginate_queryset(categories, request)
+    library_cat__filter = LibraryCatFilter(request.GET, queryset=categories)
+    result_page = paginator.paginate_queryset(library_cat__filter.qs, request)
     serializer = Library_CategoryAdminSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 

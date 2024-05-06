@@ -5,6 +5,16 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
+import django_filters
+
+
+class SlidersFilter(django_filters.FilterSet):
+    title = django_filters.CharFilter(field_name='title', lookup_expr='icontains')
+
+    class Meta:
+        model = Sliders
+        fields = ['title']
+
 
 # Create (Yaratish)
 @api_view(['POST'])
@@ -22,7 +32,8 @@ def list_sliders(request):
     paginator = PageNumberPagination()
     paginator.page_size = 10
     sliders = Sliders.objects.all().order_by("id")
-    result_page = paginator.paginate_queryset(sliders, request)
+    sliders_filter = SlidersFilter(request.GET, queryset=sliders)
+    result_page = paginator.paginate_queryset(sliders_filter.qs, request)
     serializer = SlidersAdminSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 

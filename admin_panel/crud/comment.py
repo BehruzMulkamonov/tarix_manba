@@ -5,6 +5,16 @@ from rest_framework import filters
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
+import django_filters
+
+
+class CommentFilter(django_filters.FilterSet):
+    message = django_filters.CharFilter(field_name='message', lookup_expr='icontains')
+
+    class Meta:
+        model = Comments
+        fields = ['message']
+
 
 # Create (Yaratish)
 @api_view(['POST'])
@@ -21,7 +31,8 @@ def list_comments(request):
     paginator = PageNumberPagination()
     paginator.page_size = 10
     comments = Comments.objects.all().order_by("id")
-    result_page = paginator.paginate_queryset(comments, request)
+    comment_filter = CommentFilter(request.GET, queryset=comments)
+    result_page = paginator.paginate_queryset(comment_filter.qs, request)
     serializer = CommentsAdminSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 

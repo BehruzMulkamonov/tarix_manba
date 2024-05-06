@@ -4,6 +4,16 @@ from admin_panel.serializer.connection import ConnectionCategorySerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
+import django_filters
+
+
+class ConnectionFilter(django_filters.FilterSet):
+    title = django_filters.CharFilter(field_name='title', lookup_expr='icontains')
+
+    class Meta:
+        model = Connection_Category
+        fields = ['title']
+
 
 # Create (Yaratish)
 @api_view(['POST'])
@@ -20,7 +30,8 @@ def list_connection_category(request):
     paginator = PageNumberPagination()
     paginator.page_size = 10
     connections = Connection_Category.objects.all().order_by("id")
-    result_page = paginator.paginate_queryset(connections, request)
+    connections_cat_filter = ConnectionFilter(request.GET, queryset=connections)
+    result_page = paginator.paginate_queryset(connections_cat_filter.qs, request)
     serializer = ConnectionCategorySerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 

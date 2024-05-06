@@ -4,7 +4,19 @@ from admin_panel.serializer.news import NewsAdminSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
+import django_filters
 
+
+class NewsFilter(django_filters.FilterSet):
+    title = django_filters.CharFilter(field_name='title', lookup_expr='icontains')
+    content = django_filters.CharFilter(field_name='content', lookup_expr='icontains')
+
+    class Meta:
+        model = News
+        fields = ['title', 'content']
+
+
+# Create 
 # Create (Yaratish)
 @api_view(['POST'])
 def create_news(request):
@@ -20,7 +32,8 @@ def list_news(request):
     paginator = PageNumberPagination()
     paginator.page_size = 10
     news = News.objects.all().order_by("id")
-    result_page = paginator.paginate_queryset(news, request)
+    news_filter = NewsFilter(request.GET, queryset=news)
+    result_page = paginator.paginate_queryset(news_filter.qs, request)
     serializer = NewsAdminSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 

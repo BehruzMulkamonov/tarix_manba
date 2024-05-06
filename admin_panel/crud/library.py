@@ -4,6 +4,17 @@ from admin_panel.serializer.library import LibraryAdminSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
+import django_filters
+
+
+class LibraryFilter(django_filters.FilterSet):
+    title = django_filters.CharFilter(field_name='title', lookup_expr='icontains')
+
+    class Meta:
+        model = Library
+        fields = ['title']
+
+
 
 # Create (Yaratish)
 @api_view(['POST'])
@@ -20,7 +31,8 @@ def list_libraries(request):
     paginator = PageNumberPagination()
     paginator.page_size = 10
     libraries = Library.objects.all().order_by("id")
-    result_page = paginator.paginate_queryset(libraries, request)
+    library_filter = LibraryFilter(request.GET, queryset=libraries)
+    result_page = paginator.paginate_queryset(library_filter.qs, request)
     serializer = LibraryAdminSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
