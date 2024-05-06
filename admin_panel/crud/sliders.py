@@ -2,11 +2,13 @@ from django.http import Http404
 from other_app.models import Sliders
 from admin_panel.serializer.sliders import SlidersAdminSerializer
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
 
 # Create (Yaratish)
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def create_slider(request):
     serializer = SlidersAdminSerializer(data=request.data)
     if serializer.is_valid():
