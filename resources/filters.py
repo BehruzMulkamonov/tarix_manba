@@ -5,7 +5,8 @@ from resources.models import Category, PeriodFilter, FilterCategories, Filters, 
 
 class CategoryFilter(django_filters.FilterSet):
     title = django_filters.CharFilter(field_name='title', lookup_expr='icontains')
-    order = django_filters.CharFilter(field_name='order', lookup_expr='icontains')  # content nomli maydon uchun filtirlash
+    order = django_filters.CharFilter(field_name='order',
+                                      lookup_expr='icontains')  # content nomli maydon uchun filtirlash
 
     class Meta:
         model = Category
@@ -17,8 +18,7 @@ class PeriodFilterSubFilter(django_filters.FilterSet):
 
     class Meta:
         model = PeriodFilter
-        fields = ['title',]
-
+        fields = ['title', ]
 
 
 class FilterCategoriesSubFilter(django_filters.FilterSet):
@@ -26,8 +26,7 @@ class FilterCategoriesSubFilter(django_filters.FilterSet):
 
     class Meta:
         model = FilterCategories
-        fields = ['title',]
-
+        fields = ['title', ]
 
 
 class FiltersSubFilter(django_filters.FilterSet):
@@ -35,7 +34,7 @@ class FiltersSubFilter(django_filters.FilterSet):
 
     class Meta:
         model = Filters
-        fields = ['title',]
+        fields = ['title', ]
 
 
 class ProvinceFilter(django_filters.FilterSet):
@@ -52,9 +51,4 @@ class ResourceFilter(django_filters.FilterSet):
 
     class Meta:
         model = Resource
-        fields = ['title','content',]
-
-
-
-
-
+        fields = ['title', 'content', ]
