@@ -52,3 +52,5 @@ class ResourceFilter(django_filters.FilterSet):
     class Meta:
         model = Resource
         fields = ['title', 'content', ]
+
+
