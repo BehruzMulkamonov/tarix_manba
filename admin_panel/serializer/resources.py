@@ -127,12 +127,23 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
     interive = InteriveAdminSerializer(many=True)
     attributes = AttributesAdminSerializer(many=True)
     contents = ContentsAdminSerializer(many=True)
+    category = CategoryAdminSerializer(many=True)
+    period_filter = PeriodFilterAdminSerializer(many=True)
+    filters = FiltersAdminSerializer(many=True)
+    filter_category = FilterCategoriesAdminSerializer(many=True)
+
+
 
     class Meta:
         model = Resource
         fields = (
-            'id', 'category', 'filter_category', 'filters', 'period_filter', 'title', 'image', 'content', 'statehood',
+            'id', 'category','filter_category', 'filters', 'period_filter', 'title', 'image', 'content', 'statehood',
             'province', 'interive', 'attributes', 'contents', 'created_time', 'updated_time')
+
+
+
+
+
 
     def create(self, validated_data):
         interive_data = validated_data.pop('interive')

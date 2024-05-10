@@ -286,7 +286,7 @@ def resourceList(request):
     paginator.page_size = 10
     resources = Resource.objects.all().order_by('id')
     resourcec_filter = ResourceFilter(request.GET,queryset=resources)
-    result_page = paginator.paginate_queryset(resourcec_filter, request)
+    result_page = paginator.paginate_queryset(resourcec_filter.qs, request)
     serializer = ResourceAdminSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
@@ -330,3 +330,5 @@ def deleteResource(request, pk):
 
     resource.delete()
     return Response(status=204)
+
+
