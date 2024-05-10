@@ -127,10 +127,10 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
     interive = InteriveAdminSerializer(many=True)
     attributes = AttributesAdminSerializer(many=True)
     contents = ContentsAdminSerializer(many=True)
-    category = CategoryAdminSerializer(many=True)
-    period_filter = PeriodFilterAdminSerializer(many=True)
-    filters = FiltersAdminSerializer(many=True)
-    filter_category = FilterCategoriesAdminSerializer(many=True)
+    category = CategoryAdminSerializer()
+    period_filter = PeriodFilterAdminSerializer()
+    filters = FiltersAdminSerializer()
+    filter_category = FilterCategoriesAdminSerializer()
 
 
 
