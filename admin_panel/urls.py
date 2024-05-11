@@ -37,7 +37,7 @@ urlpatterns = [
     path('library_category/create/', create_library_category, name='create_library_category'),
     path('library_category/update/<int:pk>/', update_library_category, name='update_library_category'),
     path('library_category/delete/<int:pk>/', delete_library_category, name='delete_library_category'),
-    path('library-categories/<int:pk>/', library_category_detail, name='library-category-detail'),
+    path('library-categories/<int:pk>/detail/', library_category_detail, name='library-category-detail'),
 
 
 
@@ -47,7 +47,7 @@ urlpatterns = [
     path('library/create/', create_library, name='create_library'),
     path('library/update/<int:pk>/', update_library, name='update_library'),
     path('library/delete/<int:pk>/', delete_library, name='delete_library'),
-    path('libraries/<int:pk>/', library_detail, name='library-detail'),
+    path('libraries/<int:pk>/detail/', library_detail, name='library-detail'),
 
 
 
@@ -57,7 +57,7 @@ urlpatterns = [
     path('news/create/', create_news, name='create_news'),
     path('news/update/<int:pk>/', update_news, name='update_news'),
     path('news/delete/<int:pk>/', delete_news, name='delete_news'),
-    path('news/<int:pk>/', news_detail, name='news-detail'),
+    path('news/<int:pk>/detail/', news_detail, name='news-detail'),
 
 
 
@@ -66,7 +66,7 @@ urlpatterns = [
     path('event/create/', create_event, name='create_event'),
     path('event/update/<int:pk>/', update_event, name='update_event'),
     path('event/delete/<int:pk>/', delete_event, name='delete_event'),
-    path('events/<int:pk>/', event_detail, name='event-detail'),
+    path('events/<int:pk>/detail/', event_detail, name='event-detail'),
 
     
 
@@ -75,7 +75,7 @@ urlpatterns = [
     path('sliders/create/', create_slider, name='create_slider'),
     path('sliders/update/<int:pk>/', update_slider, name='update_slider'),
     path('sliders/delete/<int:pk>/', delete_slider, name='delete_slider'),
-    path('sliders/<int:pk>/', sliders_detail, name='sliders-detail'),
+    path('sliders/<int:pk>/detail/', sliders_detail, name='sliders-detail'),
 
 
 
@@ -84,7 +84,7 @@ urlpatterns = [
     path('connections/create/', create_connection, name='create-connection'),
     path('connections/update/<int:pk>/', update_connection, name='update-connection'),
     path('connections/delete/<int:pk>/', delete_connection, name='delete-connection'),
-    path('connection/<int:pk>/', connection_detail, name='connection-detail'),
+    path('connection/<int:pk>/detail/', connection_detail, name='connection-detail'),
 
 
 
@@ -93,7 +93,7 @@ urlpatterns = [
     path('about/create/', create_about, name='create_about'),
     path('about/update/<int:pk>/', update_about, name='update_about'),
     path('about/delete/<int:pk>/', delete_about, name='delete_about'),
-    path('about/<int:pk>/', about_detail, name='about-detail'),
+    path('about/<int:pk>/detail/', about_detail, name='about-detail'),
 
 
 
@@ -102,7 +102,7 @@ urlpatterns = [
     path('feedback/create/', create_feedback, name='create_feedback'),
     path('feedback/update/<int:pk>/', update_feedback, name='update_feedback'),
     path('feedback/delete/<int:pk>/', delete_feedback, name='delete_feedback'),
-    path('feedbacks/<int:pk>/', feedbacks_detail, name='feedbacks-detail'),
+    path('feedbacks/<int:pk>/detail/', feedbacks_detail, name='feedbacks-detail'),
 
 
 
@@ -112,7 +112,7 @@ urlpatterns = [
     path('comment/create/', create_comment, name='create_comment'),
     path('comment/update/<int:pk>/', update_comment, name='update_comment'),
     path('comment/delete/<int:pk>/', delete_comment, name='delete_comment'),
-    path('comment/<int:pk>/', comment_detail, name='comment-detail'),
+    path('comment/<int:pk>/detail/', comment_detail, name='comment-detail'),
 
 
     #Resource   category

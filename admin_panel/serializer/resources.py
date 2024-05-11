@@ -1,5 +1,7 @@
 from rest_framework import serializers
+from rest_framework.request import Request
 
+from Config import settings
 from resources.models import Category, PeriodFilter, Filters, Resource, Province, Interive, Attributes, Contents, \
     FilterCategories
 
@@ -70,12 +72,15 @@ class FilterCategoriesAdminSerializer(serializers.ModelSerializer):
 class CategoryAdminSerializer(serializers.ModelSerializer):
     categories = FilterCategoriesAdminSerializer(many=True, read_only=True)
 
+
     class Meta:
         model = Category
-        fields = ('id', 'title', 'icon', 'order', 'interactive', 'created_time', 'updated_time', 'categories')
+        fields = ('id', 'title', 'icon', 'order', 'interactive', 'created_time', 'updated_time', 'categories',)
         extra_kwargs = {
             'categories': {'read_only': True, 'required': False},
         }
+
+
 
     def get_categories(self, obj):
         return obj.categories.all()
@@ -86,11 +91,22 @@ class CategoryAdminSerializer(serializers.ModelSerializer):
 
         if icon:
             request = self.context.get('request')
-            if request:
-                icon_url = request.build_absolute_uri(icon.url)
-                data['icon'] = icon_url
+            if isinstance(request, Request):
+                data['images'] = request.build_absolute_uri(icon.url)
 
         return data
+
+    # def to_representation(self, instance):
+    #     data = super().to_representation(instance)
+    #     icon = instance.icon
+    #
+    #     if icon:
+    #         request = self.context.get('request')
+    #         if request:
+    #             icon_url = request.build_absolute_uri(icon.url)
+    #             data['icon'] = icon_url
+    #
+    #     return data
 
 
 class PeriodFilterAdminSerializer(serializers.ModelSerializer):
