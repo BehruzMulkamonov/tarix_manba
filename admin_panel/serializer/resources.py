@@ -71,6 +71,8 @@ class FilterCategoriesAdminSerializer(serializers.ModelSerializer):
 
 class CategoryAdminSerializer(serializers.ModelSerializer):
     categories = FilterCategoriesAdminSerializer(many=True, read_only=True)
+    icon = serializers.ImageField(max_length=None,allow_empty_file=False,
+                                  allow_null=False,use_url=True,required=False)
 
 
     class Meta:
@@ -85,28 +87,9 @@ class CategoryAdminSerializer(serializers.ModelSerializer):
     def get_categories(self, obj):
         return obj.categories.all()
 
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        icon = instance.icon
 
-        if icon:
-            request = self.context.get('request')
-            if isinstance(request, Request):
-                data['images'] = request.build_absolute_uri(icon.url)
 
-        return data
 
-    # def to_representation(self, instance):
-    #     data = super().to_representation(instance)
-    #     icon = instance.icon
-    #
-    #     if icon:
-    #         request = self.context.get('request')
-    #         if request:
-    #             icon_url = request.build_absolute_uri(icon.url)
-    #             data['icon'] = icon_url
-    #
-    #     return data
 
 
 class PeriodFilterAdminSerializer(serializers.ModelSerializer):
