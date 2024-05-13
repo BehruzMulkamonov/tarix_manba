@@ -10,6 +10,7 @@ from resources.models import Category, PeriodFilter, FilterCategories, Filters, 
 from rest_framework.pagination import PageNumberPagination
 
 
+
 @api_view(['GET'])
 def categoryList(request):
     paginator = PageNumberPagination()
@@ -17,17 +18,28 @@ def categoryList(request):
     cats = Category.objects.all().order_by("id")
 
     user_filter = CategoryFilter(request.GET, queryset=cats)
-
     result_page = paginator.paginate_queryset(user_filter.qs, request)
 
-    serializer = CategoryAdminSerializer(result_page, many=True)
+    serializer = CategoryAdminSerializer(result_page, many=True, context={'request': request})  # Context ni uzaytiramiz
+    serialized_data = serializer.data
 
-    return paginator.get_paginated_response(serializer.data)
+    # Rasmning URL manzilini qo'shib ko'ramiz
+    for data in serialized_data:
+        if data.get('icon'):
+            data['icon'] = request.build_absolute_uri(data['icon'])
+
+    return paginator.get_paginated_response(serialized_data)
 @api_view(['GET'])
 def categoryDetail(request, pk):
     cat = Category.objects.get(pk=pk)
     serializer = CategoryAdminSerializer(cat, many=False)
-    return Response(serializer.data)
+    serialized_data = serializer.data
+
+    # Rasmning URL manzilini qo'shib ko'ramiz
+    if serialized_data.get('icon'):
+        serialized_data['icon'] = request.build_absolute_uri(serialized_data['icon'])
+
+    return Response(serialized_data)
 
 
 @api_view(['POST'])
@@ -288,7 +300,12 @@ def resourceList(request):
     resourcec_filter = ResourceFilter(request.GET,queryset=resources)
     result_page = paginator.paginate_queryset(resourcec_filter.qs, request)
     serializer = ResourceAdminSerializer(result_page, many=True)
-    return paginator.get_paginated_response(serializer.data)
+    serialized_data = serializer.data
+
+    for data in serialized_data:
+        if data.get('image'):
+            data['image'] = request.build_absolute_uri(data['image'])
+    return paginator.get_paginated_response(serialized_data)
 
 
 @api_view(['GET'])

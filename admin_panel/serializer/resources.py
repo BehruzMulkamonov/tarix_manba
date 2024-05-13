@@ -71,8 +71,7 @@ class FilterCategoriesAdminSerializer(serializers.ModelSerializer):
 
 class CategoryAdminSerializer(serializers.ModelSerializer):
     categories = FilterCategoriesAdminSerializer(many=True, read_only=True)
-    icon = serializers.ImageField(max_length=None,allow_empty_file=False,
-                                  allow_null=False,use_url=True,required=False)
+
 
 
     class Meta:
@@ -86,6 +85,8 @@ class CategoryAdminSerializer(serializers.ModelSerializer):
 
     def get_categories(self, obj):
         return obj.categories.all()
+
+
 
 
 
