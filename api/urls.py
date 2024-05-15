@@ -1,20 +1,43 @@
 from django.urls import path
-from api.view.other_app import LibrariesListViews, LibraryCategoryListViews, AboutListViews, CommentListViews, \
-    ConnectionListViews, EventListViews, FeedbackListViews, NewsListViews, SlidersListViews
+from api.view.other_app import about_detail, connection_value_detail, event_detail, feedbacks_detail, library_category_detail, library_detail, list_abouts, list_connection_value, list_events, list_feedbacks, list_libraries, list_library_categories, list_news, list_sliders, news_detail, sliders_detail 
 from api.view.resources import categoryListView, categoryDetailView, periodFilterListView, periodFilterDetailView, \
     filterCategoriesListView, filterCategoriesDetailView, filtersListView, filtersDetailView, provinceListView, \
     provinceDetailView, resourceListView, resourceDetailView
 
 urlpatterns = [
-    path('library/', LibrariesListViews.as_view()),
-    path('library_cat/', LibraryCategoryListViews.as_view()),
-    path('about/', AboutListViews.as_view()),
-    path('even/', EventListViews.as_view()),
-    path('news/', NewsListViews.as_view()),
-    path('slider/', SlidersListViews.as_view()),
-    path('comment/', CommentListViews.as_view()),
-    path('feedback/', FeedbackListViews.as_view()),
-    path('connection/', ConnectionListViews.as_view()),
+    # Library
+    path('libraries/', list_libraries, name='list_libraries'),
+    path('libraries/<int:pk>/', library_detail, name='library_detail'),
+
+    # Library Category
+    path('library-categories/', list_library_categories, name='list_library_categories'),
+    path('library-categories/<int:pk>/', library_category_detail, name='library_category_detail'),
+
+    # About
+    path('abouts/', list_abouts, name='list_abouts'),
+    path('abouts/<int:pk>/', about_detail, name='about_detail'),
+
+    # Event
+    path('events/', list_events, name='list_events'),
+    path('events/<int:pk>/', event_detail, name='event_detail'),
+
+    # News
+    path('news/', list_news, name='list_news'),
+    path('news/<int:pk>/', news_detail, name='news_detail'),
+
+    # Sliders
+    path('sliders/', list_sliders, name='list_sliders'),
+    path('sliders/<int:pk>/', sliders_detail, name='sliders_detail'),
+
+    # Connection Value
+    path('connection-values/', list_connection_value, name='list_connection_value'),
+    path('connection-values/<int:pk>/', connection_value_detail, name='connection_value_detail'),
+
+    # Feedbacks
+    path('feedbacks/', list_feedbacks, name='list_feedbacks'),
+    path('feedbacks/<int:pk>/', feedbacks_detail, name='feedbacks_detail'),
+
+
 
     # Resources   url
     # category

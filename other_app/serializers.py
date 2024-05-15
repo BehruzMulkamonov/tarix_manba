@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Library, Comments, Library_Category, About, Feedbacks, Connection, Event, News, Sliders
+from .models import Connection_Value, Library, Comments, Library_Category, About, Feedbacks, Connection, Event, News, Sliders
 
 
 class LibrariesSerializer(serializers.ModelSerializer):
@@ -66,3 +66,10 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comments
         fields = ['id', 'message']
+
+
+class ConnectionValueSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Connection_Value
+        fields = ['id', 'connection_category', 'value']
