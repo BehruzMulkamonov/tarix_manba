@@ -131,6 +131,7 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
 
 
 
+
     class Meta:
         model = Resource
         fields = (
@@ -150,7 +151,7 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         resource = Resource.objects.create(**validated_data)
 
         for interive_item in interive_data:
-            Interive.objects.create(resource_content=resource, **interive_item)
+            Interive.objects.create(resource_interive=resource, **interive_item)
 
         for attributes_item in attributes_data:
             Attributes.objects.create(resource_attribute=resource, **attributes_item)
