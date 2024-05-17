@@ -102,7 +102,7 @@ class PeriodFilterAdminSerializer(serializers.ModelSerializer):
 class ProvinceAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Province
-        fields = ('id', 'title', 'created_time', 'updated_time')
+        fields = ('id', 'title','latitude', 'longitude', 'created_time', 'updated_time')
 
 
 class InteriveAdminSerializer(serializers.ModelSerializer):
