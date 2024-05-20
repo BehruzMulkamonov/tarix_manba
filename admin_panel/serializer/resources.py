@@ -126,6 +126,9 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
     interive = InteriveAdminSerializer(many=True, read_only=True)
     attributes = AttributesAdminSerializer(many=True, read_only=True)
     contents = ContentsAdminSerializer(many=True, read_only=True)
+    interive_list = serializers.SerializerMethodField()
+    attributes_list = serializers.SerializerMethodField()
+    contents_list = serializers.SerializerMethodField()
     contents_title_list = serializers.ListField(
         child=serializers.CharField(max_length=None),
         write_only=True
@@ -176,7 +179,16 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
             'id', 'category', 'filter_category', 'filters', 'period_filter', 'title', 'image', 'content', 'statehood',
             'province','interive','status_list','interive_title_list',
             'interive_file_list','link_list','latitude_list','longitude_list',
-            'attributes_title_list', 'attributes_description_list','attributes','contents_title_list', 'contents_description_list','contents', 'created_time', 'updated_time')
+            'attributes_title_list', 'attributes_description_list','attributes',
+            'contents_title_list', 'contents_description_list','contents',
+            'interive_list','attributes_list','contents_list', 'created_time', 'updated_time')
+    def get_interive_list(self, obj):
+        return InteriveAdminSerializer(obj.resource_interives.all(), many=True).data
+
+    def get_attributes_list(self, obj):
+        return AttributesAdminSerializer(obj.resource_attribute.all(), many=True).data
+    def get_contents_list(self, obj):
+        return ContentsAdminSerializer(obj.resource_content.all(), many=True).data
 
     def create(self, validated_data):
         contents_title_list = validated_data.pop('contents_title_list', [])
