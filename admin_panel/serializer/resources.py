@@ -108,7 +108,7 @@ class ProvinceAdminSerializer(serializers.ModelSerializer):
 class InteriveAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Interive
-        fields = ['status', 'title', 'file', 'link', 'latitude', 'longitude', 'created_time', 'updated_time']
+        fields = ['resource_interive','status', 'title', 'file', 'link', 'latitude', 'longitude', 'created_time', 'updated_time']
 
 
 class AttributesAdminSerializer(serializers.ModelSerializer):
@@ -134,21 +134,76 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         child=serializers.CharField(max_length=None),
         write_only=True
     )
+    attributes_title_list = serializers.ListField(
+        child=serializers.CharField(max_length=None),
+        write_only=True
+    )
+    attributes_description_list = serializers.ListField(
+        child=serializers.CharField(max_length=None),
+        write_only=True
+    )
+    status_list = serializers.ListField(
+        child=serializers.CharField(max_length=None),
+        write_only=True
+    )
+    interive_title_list = serializers.ListField(
+        child=serializers.CharField(max_length=None),
+        write_only=True
+    )
+
+    interive_file_list = serializers.ListField(
+        child=serializers.ImageField(max_length=1000, allow_empty_file=False, use_url=False),
+        write_only=True
+    )
+    link_list = serializers.ListField(
+        child=serializers.URLField(max_length=2000, allow_blank=True),
+        write_only=True
+    )
+    latitude_list = serializers.ListField(
+        child=serializers.FloatField(max_value=90, min_value=-90),
+        write_only=True
+    )
+    longitude_list = serializers.ListField(
+        child=serializers.FloatField(max_value=180, min_value=-180),
+        write_only=True
+    )
+
+
 
     class Meta:
         model = Resource
         fields = (
             'id', 'category', 'filter_category', 'filters', 'period_filter', 'title', 'image', 'content', 'statehood',
-            'province', 'contents_title_list', 'contents_description_list','contents', 'created_time', 'updated_time')
+            'province','interive','status_list','interive_title_list',
+            'interive_file_list','link_list','latitude_list','longitude_list',
+            'attributes_title_list', 'attributes_description_list','attributes','contents_title_list', 'contents_description_list','contents', 'created_time', 'updated_time')
 
     def create(self, validated_data):
         contents_title_list = validated_data.pop('contents_title_list', [])
         contents_description_list = validated_data.pop('contents_description_list', [])
+        attributes_title_list = validated_data.pop('attributes_title_list', [])
+        attributes_description_list = validated_data.pop('attributes_description_list', [])
+        status_list = validated_data.pop('status_list', [])
+        interive_title_list = validated_data.pop('interive_title_list', [])
+        interive_file_list = validated_data.pop('interive_file_list', [])
+        link_list = validated_data.pop('link_list', [])
+        latitude_list = validated_data.pop('latitude_list', [])
+        longitude_list = validated_data.pop('longitude_list', [])
+
 
         resource = Resource.objects.create(**validated_data)
+        for conetnts_title in contents_title_list:
+            for contents_description in contents_description_list:
+                Contents.objects.create(resource_content=resource, contents_title=conetnts_title, contents_description=contents_description)
 
-        # Iterate over the lists and create Contents objects for each pair of title and description
-        for title, description in zip(contents_title_list, contents_description_list):
-            Contents.objects.create(resource_content=resource, contents_title=title, contents_description=description)
+        for attributes_title in attributes_title_list:
+            for attributes_description in attributes_description_list:
+                Attributes.objects.create(resource_attribute=resource, attributes_title=attributes_title, attributes_description=attributes_description)
+
+        for status,title,file,link,latitude,longitude in zip(status_list,interive_title_list,interive_file_list,link_list,latitude_list,longitude_list):
+            Interive.objects.create(resource_interive=resource,status=status,title=title,file=file,link=link,latitude=latitude,longitude=longitude)
+
+
+
 
         return resource
