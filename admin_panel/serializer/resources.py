@@ -122,46 +122,33 @@ class ContentsAdminSerializer(serializers.ModelSerializer):
         model = Contents
         fields = ['resource_content', 'contents_title', 'contents_description', 'created_time', 'updated_time']
 
-
 class ResourceAdminSerializer(serializers.ModelSerializer):
-    interive = InteriveAdminSerializer(many=True)
-    attributes = AttributesAdminSerializer(many=True)
-    contents = ContentsAdminSerializer(many=True)
-
-
-
-
+    interive = InteriveAdminSerializer(many=True, read_only=True)
+    attributes = AttributesAdminSerializer(many=True, read_only=True)
+    contents = ContentsAdminSerializer(many=True, read_only=True)
+    contents_title_list = serializers.ListField(
+        child=serializers.CharField(max_length=None),
+        write_only=True
+    )
+    contents_description_list = serializers.ListField(
+        child=serializers.CharField(max_length=None),
+        write_only=True
+    )
 
     class Meta:
         model = Resource
         fields = (
-            'id', 'category','filter_category', 'filters', 'period_filter', 'title', 'image', 'content', 'statehood',
-            'province', 'interive', 'attributes', 'contents', 'created_time', 'updated_time')
-        extra_kwargs = {
-            'interive': {'read_only': True, 'required': False},
-            'attributes': {'read_only': True, 'required': False},
-            'contents': {'read_only': True, 'required': False},
-        }
-
-
-
-
-
+            'id', 'category', 'filter_category', 'filters', 'period_filter', 'title', 'image', 'content', 'statehood',
+            'province', 'contents_title_list', 'contents_description_list','contents', 'created_time', 'updated_time')
 
     def create(self, validated_data):
-        interive_data = validated_data.pop('interive',[])
-        attributes_data = validated_data.pop('attributes',[])
-        contents_data = validated_data.pop('contents',[])
+        contents_title_list = validated_data.pop('contents_title_list', [])
+        contents_description_list = validated_data.pop('contents_description_list', [])
 
         resource = Resource.objects.create(**validated_data)
 
-        for interive_item in interive_data:
-            Interive.objects.create(resource_interive=resource, **interive_item)
-
-        for attributes_item in attributes_data:
-            Attributes.objects.create(resource_attribute=resource, **attributes_item)
-
-        for contents_item in contents_data:
-            Contents.objects.create(resource_content=resource, **contents_item)
+        # Iterate over the lists and create Contents objects for each pair of title and description
+        for title, description in zip(contents_title_list, contents_description_list):
+            Contents.objects.create(resource_content=resource, contents_title=title, contents_description=description)
 
         return resource
