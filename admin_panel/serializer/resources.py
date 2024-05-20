@@ -137,6 +137,11 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'category','filter_category', 'filters', 'period_filter', 'title', 'image', 'content', 'statehood',
             'province', 'interive', 'attributes', 'contents', 'created_time', 'updated_time')
+        extra_kwargs = {
+            'interive': {'read_only': True, 'required': False},
+            'attributes': {'read_only': True, 'required': False},
+            'contents': {'read_only': True, 'required': False},
+        }
 
 
 
@@ -144,9 +149,9 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
 
 
     def create(self, validated_data):
-        interive_data = validated_data.pop('interive')
-        attributes_data = validated_data.pop('attributes')
-        contents_data = validated_data.pop('contents')
+        interive_data = validated_data.pop('interive',[])
+        attributes_data = validated_data.pop('attributes',[])
+        contents_data = validated_data.pop('contents',[])
 
         resource = Resource.objects.create(**validated_data)
 
