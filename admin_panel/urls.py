@@ -35,8 +35,8 @@ from admin_panel.crud.connection_value import connection_value_detail, create_co
 urlpatterns = [
     path('library_category/', list_library_categories, name='list_library_categories'),
     path('library_category/create/', create_library_category, name='create_library_category'),
-    path('library_category/update/<int:pk>/', update_library_category, name='update_library_category'),
-    path('library_category/delete/<int:pk>/', delete_library_category, name='delete_library_category'),
+    path('library_category/<int:pk>/update/', update_library_category, name='update_library_category'),
+    path('library_category/<int:pk>/delete/', delete_library_category, name='delete_library_category'),
     path('library-categories/<int:pk>/detail/', library_category_detail, name='library-category-detail'),
 
 
@@ -45,8 +45,8 @@ urlpatterns = [
     # Library 
     path('library/', list_libraries, name='list_libraries'),
     path('library/create/', create_library, name='create_library'),
-    path('library/update/<int:pk>/', update_library, name='update_library'),
-    path('library/delete/<int:pk>/', delete_library, name='delete_library'),
+    path('library/<int:pk>/update/', update_library, name='update_library'),
+    path('library/<int:pk>/delete/', delete_library, name='delete_library'),
     path('libraries/<int:pk>/detail/', library_detail, name='library-detail'),
 
 
@@ -55,8 +55,8 @@ urlpatterns = [
     # News
     path('news/', list_news, name='list_news'),
     path('news/create/', create_news, name='create_news'),
-    path('news/update/<int:pk>/', update_news, name='update_news'),
-    path('news/delete/<int:pk>/', delete_news, name='delete_news'),
+    path('news/<int:pk>/update/', update_news, name='update_news'),
+    path('news/<int:pk>/delete/', delete_news, name='delete_news'),
     path('news/<int:pk>/detail/', news_detail, name='news-detail'),
 
 
@@ -64,8 +64,8 @@ urlpatterns = [
     # event 
     path('event/', list_events, name='list_events'),
     path('event/create/', create_event, name='create_event'),
-    path('event/update/<int:pk>/', update_event, name='update_event'),
-    path('event/delete/<int:pk>/', delete_event, name='delete_event'),
+    path('event/<int:pk>/update/', update_event, name='update_event'),
+    path('event/<int:pk>/delete/', delete_event, name='delete_event'),
     path('events/<int:pk>/detail/', event_detail, name='event-detail'),
 
     
@@ -73,8 +73,8 @@ urlpatterns = [
     # sliders
     path('sliders/', list_sliders, name='list_sliders'),
     path('sliders/create/', create_slider, name='create_slider'),
-    path('sliders/update/<int:pk>/', update_slider, name='update_slider'),
-    path('sliders/delete/<int:pk>/', delete_slider, name='delete_slider'),
+    path('sliders/<int:pk>/update/', update_slider, name='update_slider'),
+    path('sliders/<int:pk>/delete/', delete_slider, name='delete_slider'),
     path('sliders/<int:pk>/detail/', sliders_detail, name='sliders-detail'),
 
 
@@ -82,8 +82,8 @@ urlpatterns = [
     # connection 
     path('connections/', list_connections, name='list-connections'),
     path('connections/create/', create_connection, name='create-connection'),
-    path('connections/update/<int:pk>/', update_connection, name='update-connection'),
-    path('connections/delete/<int:pk>/', delete_connection, name='delete-connection'),
+    path('connections/<int:pk>/update/', update_connection, name='update-connection'),
+    path('connections/<int:pk>/delete/', delete_connection, name='delete-connection'),
     path('connection/<int:pk>/detail/', connection_detail, name='connection-detail'),
 
 
@@ -91,8 +91,8 @@ urlpatterns = [
     # About 
     path('about/', list_abouts, name='list_abouts'),
     path('about/create/', create_about, name='create_about'),
-    path('about/update/<int:pk>/', update_about, name='update_about'),
-    path('about/delete/<int:pk>/', delete_about, name='delete_about'),
+    path('about/<int:pk>/update/', update_about, name='update_about'),
+    path('about/<int:pk>/delete/', delete_about, name='delete_about'),
     path('about/<int:pk>/detail/', about_detail, name='about-detail'),
 
 
@@ -100,8 +100,8 @@ urlpatterns = [
     # Feedback
     path('feedback/', list_feedbacks, name='list_feedbacks'),
     path('feedback/create/', create_feedback, name='create_feedback'),
-    path('feedback/update/<int:pk>/', update_feedback, name='update_feedback'),
-    path('feedback/delete/<int:pk>/', delete_feedback, name='delete_feedback'),
+    path('feedback/<int:pk>/update/', update_feedback, name='update_feedback'),
+    path('feedback/<int:pk>/delete/', delete_feedback, name='delete_feedback'),
     path('feedbacks/<int:pk>/detail/', feedbacks_detail, name='feedbacks-detail'),
 
 
@@ -110,8 +110,8 @@ urlpatterns = [
     # Comment
     path('comment/', list_comments, name='list_comments'),
     path('comment/create/', create_comment, name='create_comment'),
-    path('comment/update/<int:pk>/', update_comment, name='update_comment'),
-    path('comment/delete/<int:pk>/', delete_comment, name='delete_comment'),
+    path('comment/<int:pk>/update/', update_comment, name='update_comment'),
+    path('comment/<int:pk>/delete/', delete_comment, name='delete_comment'),
     path('comment/<int:pk>/detail/', comment_detail, name='comment-detail'),
 
 

@@ -60,7 +60,9 @@ class Filters(BaseModel):
         return self.title
 
 class Province(BaseModel):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255,blank=True, null=True)
+    latitude = models.CharField(max_length=500, blank=True, null=True)
+    longitude = models.CharField(max_length=500, blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -115,6 +117,8 @@ class Interive(BaseModel):
     link = models.URLField(blank=True, null=True)
     latitude = models.CharField(max_length=500, blank=True, null=True)
     longitude = models.CharField(max_length=500, blank=True, null=True)
+    resource_interive = models.ForeignKey(Resource, on_delete=models.SET_NULL, null=True,
+                                           related_name='resource_interives')
 
 
 

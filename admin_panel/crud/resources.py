@@ -23,7 +23,6 @@ def categoryList(request):
     serializer = CategoryAdminSerializer(result_page, many=True, context={'request': request})  # Context ni uzaytiramiz
     serialized_data = serializer.data
 
-    # Rasmning URL manzilini qo'shib ko'ramiz
     for data in serialized_data:
         if data.get('icon'):
             data['icon'] = request.build_absolute_uri(data['icon'])
@@ -246,7 +245,7 @@ def provinceList(request):
     paginator.page_size = 10
     provinces = Province.objects.all().order_by('id')
     provinces_filter = ProvinceFilter(request.GET, queryset=provinces)
-    result_page = paginator.paginate_queryset(provinces_filter, request)
+    result_page = paginator.paginate_queryset(provinces_filter.qs, request)
     serializer = ProvinceAdminSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
