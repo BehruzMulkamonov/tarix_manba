@@ -182,6 +182,19 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
             'attributes_title_list', 'attributes_description_list','attributes',
             'contents_title_list', 'contents_description_list','contents',
             'interive_list','attributes_list','contents_list', 'created_time', 'updated_time')
+
+        extra_kwargs = {
+            'status_list': {'required': False},
+            'interive_title_list': {'required': False},
+            'interive_file_list': {'required': False},
+            'link_list': {'required': False},
+            'interive': {'required': False},
+            'latitude_list': {'required': False},
+            'longitude_list': {'required': False},
+            'interive_list': {'required': False, 'read_only': True},
+            'attributes_list': {'required': False, 'read_only': True},
+            'contents_list': {'required': False, 'read_only': True},
+        }
     def get_interive_list(self, obj):
         return InteriveAdminSerializer(obj.resource_interives.all(), many=True).data
 
