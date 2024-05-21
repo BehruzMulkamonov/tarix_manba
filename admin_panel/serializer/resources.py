@@ -126,49 +126,63 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
     interive = InteriveAdminSerializer(many=True, read_only=True)
     attributes = AttributesAdminSerializer(many=True, read_only=True)
     contents = ContentsAdminSerializer(many=True, read_only=True)
-    interive_list = serializers.SerializerMethodField()
-    attributes_list = serializers.SerializerMethodField()
-    contents_list = serializers.SerializerMethodField()
+    interive_list = serializers.SerializerMethodField(required=False, read_only=True)
+    attributes_list = serializers.SerializerMethodField(required=False, read_only=True)
+    contents_list = serializers.SerializerMethodField(required=False, read_only=True)
     contents_title_list = serializers.ListField(
-        child=serializers.CharField(max_length=None),
-        write_only=True
+        child=serializers.CharField(max_length=None,required=False),
+        write_only=True,
+        required=False
+
     )
     contents_description_list = serializers.ListField(
-        child=serializers.CharField(max_length=None),
-        write_only=True
+        child=serializers.CharField(max_length=None,required=False),
+        write_only=True,
+        required=False
+
     )
     attributes_title_list = serializers.ListField(
-        child=serializers.CharField(max_length=None),
-        write_only=True
+        child=serializers.CharField(max_length=None,required=False),
+        write_only=True,
+        required=False
+
     )
     attributes_description_list = serializers.ListField(
-        child=serializers.CharField(max_length=None),
-        write_only=True
+        child=serializers.CharField(max_length=None,required=False),
+        write_only=True,
+        required=False
+
     )
     status_list = serializers.ListField(
-        child=serializers.CharField(max_length=None),
-        write_only=True
+        child=serializers.CharField(max_length=None,required=False),
+        write_only=True,
+        required=False
     )
     interive_title_list = serializers.ListField(
-        child=serializers.CharField(max_length=None),
-        write_only=True
+        child=serializers.CharField(max_length=None,required=False),
+        write_only=True,
+        required=False
     )
 
     interive_file_list = serializers.ListField(
         child=serializers.ImageField(max_length=1000, allow_empty_file=False, use_url=False),
-        write_only=True
+        write_only=True,
+        required=False
     )
     link_list = serializers.ListField(
-        child=serializers.URLField(max_length=2000, allow_blank=True),
-        write_only=True
+        child=serializers.URLField(max_length=2000, allow_blank=True,required=False),
+        write_only=True,
+        required=False
     )
     latitude_list = serializers.ListField(
-        child=serializers.FloatField(max_value=90, min_value=-90),
-        write_only=True
+        child=serializers.FloatField(max_value=90, min_value=-90,required=False),
+        write_only=True,
+        required=False
     )
     longitude_list = serializers.ListField(
-        child=serializers.FloatField(max_value=180, min_value=-180),
-        write_only=True
+        child=serializers.FloatField(max_value=180, min_value=-180,required=False),
+        write_only=True,
+        required=False
     )
 
 
@@ -183,18 +197,7 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
             'contents_title_list', 'contents_description_list','contents',
             'interive_list','attributes_list','contents_list', 'created_time', 'updated_time')
 
-        extra_kwargs = {
-            'status_list': {'required': False},
-            'interive_title_list': {'required': False},
-            'interive_file_list': {'required': False},
-            'link_list': {'required': False},
-            'interive': {'required': False},
-            'latitude_list': {'required': False},
-            'longitude_list': {'required': False},
-            'interive_list': {'required': False, 'read_only': True},
-            'attributes_list': {'required': False, 'read_only': True},
-            'contents_list': {'required': False, 'read_only': True},
-        }
+
     def get_interive_list(self, obj):
         return InteriveAdminSerializer(obj.resource_interives.all(), many=True).data
 
