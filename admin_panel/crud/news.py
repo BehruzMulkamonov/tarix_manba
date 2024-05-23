@@ -57,7 +57,7 @@ def update_news(request, pk):
     except News.DoesNotExist:
         return Response({'error': 'News not found'}, status=404)
 
-    serializer = NewsAdminSerializer(news, data=request.data)
+    serializer = NewsAdminSerializer(news, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data)
