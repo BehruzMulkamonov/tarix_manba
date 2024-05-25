@@ -129,6 +129,10 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
     interive_list = serializers.SerializerMethodField(required=False, read_only=True)
     attributes_list = serializers.SerializerMethodField(required=False, read_only=True)
     contents_list = serializers.SerializerMethodField(required=False, read_only=True)
+    cat_name = serializers.SerializerMethodField(required=False, read_only=True)
+    filter_category_name = serializers.SerializerMethodField(required=False, read_only=True)
+    filters_name = serializers.SerializerMethodField(required=False, read_only=True)
+    period_filter_name = serializers.SerializerMethodField(required=False, read_only=True)
     contents_title_list = serializers.ListField(
         child=serializers.CharField(max_length=None,required=False),
         write_only=True,
@@ -195,7 +199,9 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
             'interive_file_list','link_list','latitude_list','longitude_list',
             'attributes_title_list', 'attributes_description_list','attributes',
             'contents_title_list', 'contents_description_list','contents',
-            'interive_list','attributes_list','contents_list', 'created_time', 'updated_time')
+            'interive_list','attributes_list','contents_list',
+            'cat_name','filter_category_name','filters_name','period_filter_name',
+            'created_time', 'updated_time')
 
 
     def get_interive_list(self, obj):
@@ -205,6 +211,26 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         return AttributesAdminSerializer(obj.resource_attribute.all(), many=True).data
     def get_contents_list(self, obj):
         return ContentsAdminSerializer(obj.resource_content.all(), many=True).data
+
+    def get_cat_name(self, obj):
+        cat = obj.category
+        if cat:
+            return cat.title
+
+    def get_filter_category_name(self, obj):
+        title = obj.filter_category
+        if title:
+            return title.title
+
+    def get_filters_name(self, obj):
+        filters = obj.filters
+        if filters:
+            return filters.title
+
+    def get_period_filter_name(self, obj):
+        period = obj.period_filter
+        if period:
+            return period.title
 
     def create(self, validated_data):
         contents_title_list = validated_data.pop('contents_title_list', [])
