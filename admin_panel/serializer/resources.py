@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from rest_framework.request import Request
 
+import json
+
 from Config import settings
 from resources.models import Category, PeriodFilter, Filters, Resource, Province, Interive, Attributes, Contents, \
     FilterCategories
@@ -246,15 +248,26 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
 
 
         resource = Resource.objects.create(**validated_data)
-        for conetnts_title in contents_title_list:
-            for contents_description in contents_description_list:
+        con_title_list = json.loads(contents_title_list)
+        con_description_list = json.loads(contents_description_list)
+        for conetnts_title in con_title_list:
+            for contents_description in con_description_list:
                 Contents.objects.create(resource_content=resource, contents_title=conetnts_title, contents_description=contents_description)
 
-        for attributes_title in attributes_title_list:
-            for attributes_description in attributes_description_list:
+        att_title_list = json.loads(attributes_title_list)
+        att_description_list = json.loads(attributes_description_list)
+
+        for attributes_title in att_title_list:
+            for attributes_description in att_description_list:
                 Attributes.objects.create(resource_attribute=resource, attributes_title=attributes_title, attributes_description=attributes_description)
 
-        for status,title,file,link,latitude,longitude in zip(status_list,interive_title_list,interive_file_list,link_list,latitude_list,longitude_list):
+        stat_list = json.loads(status_list)
+        inter_title_list = json.loads(interive_title_list)
+        inter_file_list = json.loads(interive_file_list)
+        links_list = json.loads(link_list)
+        latit_list = json.loads(latitude_list)
+        long_list = json.loads(longitude_list)
+        for status,title,file,link,latitude,longitude in zip(stat_list,inter_title_list,inter_file_list,links_list,latit_list,long_list):
             Interive.objects.create(resource_interive=resource,status=status,title=title,file=file,link=link,latitude=latitude,longitude=longitude)
 
 
