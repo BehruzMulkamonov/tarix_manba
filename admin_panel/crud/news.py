@@ -76,19 +76,4 @@ def delete_news(request, pk):
 
 
 
-# myapp/views.py
-from rest_framework.views import APIView
-from rest_framework.response import Response
-import pdb
 
-class ExampleView(APIView):
-    def post(self, request, *args, **kwargs):
-        print(f"Method: {request.method}")
-        print(f"Path: {request.path}")
-        print(f"Headers: {request.headers}")
-        print(f"Body: {request.data}")
-
-        pdb.set_trace()  # breakpoint qo'yish
-
-        # Your logic here
-        return Response({"message": "Request received"})
