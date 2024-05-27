@@ -125,9 +125,9 @@ class ContentsAdminSerializer(serializers.ModelSerializer):
         fields = ['resource_content', 'contents_title', 'contents_description', 'created_time', 'updated_time']
 
 class ResourceAdminSerializer(serializers.ModelSerializer):
-    interive = InteriveAdminSerializer(many=True, read_only=True)
-    attributes = AttributesAdminSerializer(many=True, read_only=True)
-    contents = ContentsAdminSerializer(many=True, read_only=True)
+    # interive = InteriveAdminSerializer(many=True, read_only=True)
+    # attributes = AttributesAdminSerializer(many=True, read_only=True)
+    # contents = ContentsAdminSerializer(many=True, read_only=True)
     # interive_list = serializers.SerializerMethodField(required=False, read_only=True)
     # attributes_list = serializers.SerializerMethodField(required=False, read_only=True)
     # contents_list = serializers.SerializerMethodField(required=False, read_only=True)
@@ -206,7 +206,6 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
             'created_time', 'updated_time')
 
 
-<<<<<<< HEAD
     # def get_interive_list(self, obj):
     #     return InteriveAdminSerializer(obj.resource_interives.all(), many=True).data
     #
@@ -264,73 +263,71 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
     #
     #
     #     return resource
-=======
-    def get_interive_list(self, obj):
-        return InteriveAdminSerializer(obj.resource_interives.all(), many=True).data
+    # def get_interive_list(self, obj):
+    #     return InteriveAdminSerializer(obj.resource_interives.all(), many=True).data
+    #
+    # def get_attributes_list(self, obj):
+    #     return AttributesAdminSerializer(obj.resource_attribute.all(), many=True).data
+    # def get_contents_list(self, obj):
+    #     return ContentsAdminSerializer(obj.resource_content.all(), many=True).data
+    #
+    # def get_cat_name(self, obj):
+    #     cat = obj.category
+    #     if cat:
+    #         return cat.title
+    #
+    # def get_filter_category_name(self, obj):
+    #     title = obj.filter_category
+    #     if title:
+    #         return title.title
+    #
+    # def get_filters_name(self, obj):
+    #     filters = obj.filters
+    #     if filters:
+    #         return filters.title
+    #
+    # def get_period_filter_name(self, obj):
+    #     period = obj.period_filter
+    #     if period:
+    #         return period.title
 
-    def get_attributes_list(self, obj):
-        return AttributesAdminSerializer(obj.resource_attribute.all(), many=True).data
-    def get_contents_list(self, obj):
-        return ContentsAdminSerializer(obj.resource_content.all(), many=True).data
-
-    def get_cat_name(self, obj):
-        cat = obj.category
-        if cat:
-            return cat.title
-
-    def get_filter_category_name(self, obj):
-        title = obj.filter_category
-        if title:
-            return title.title
-
-    def get_filters_name(self, obj):
-        filters = obj.filters
-        if filters:
-            return filters.title
-
-    def get_period_filter_name(self, obj):
-        period = obj.period_filter
-        if period:
-            return period.title
-
-    def create(self, validated_data):
-        contents_title_list = validated_data.pop('contents_title_list', [])
-        contents_description_list = validated_data.pop('contents_description_list', [])
-        attributes_title_list = validated_data.pop('attributes_title_list', [])
-        attributes_description_list = validated_data.pop('attributes_description_list', [])
-        status_list = validated_data.pop('status_list', [])
-        interive_title_list = validated_data.pop('interive_title_list', [])
-        interive_file_list = validated_data.pop('interive_file_list', [])
-        link_list = validated_data.pop('link_list', [])
-        latitude_list = validated_data.pop('latitude_list', [])
-        longitude_list = validated_data.pop('longitude_list', [])
-
-
-        resource = Resource.objects.create(**validated_data)
-        con_title_list = json.loads(contents_title_list)
-        con_description_list = json.loads(contents_description_list)
-        for conetnts_title in con_title_list:
-            for contents_description in con_description_list:
-                Contents.objects.create(resource_content=resource, contents_title=conetnts_title, contents_description=contents_description)
-
-        att_title_list = json.loads(attributes_title_list)
-        att_description_list = json.loads(attributes_description_list)
-
-        for attributes_title in att_title_list:
-            for attributes_description in att_description_list:
-                Attributes.objects.create(resource_attribute=resource, attributes_title=attributes_title, attributes_description=attributes_description)
-
-        stat_list = json.loads(status_list)
-        inter_title_list = json.loads(interive_title_list)
-        inter_file_list = json.loads(interive_file_list)
-        links_list = json.loads(link_list)
-        latit_list = json.loads(latitude_list)
-        long_list = json.loads(longitude_list)
-        for status,title,file,link,latitude,longitude in zip(stat_list,inter_title_list,inter_file_list,links_list,latit_list,long_list):
-            Interive.objects.create(resource_interive=resource,status=status,title=title,file=file,link=link,latitude=latitude,longitude=longitude)
-
-
-
-
-        return resource
->>>>>>> 4f31b2bdb70b23a0caa4ea9850b62fcbcf7ac032
+    # def create(self, validated_data):
+    #     contents_title_list = validated_data.pop('contents_title_list', [])
+    #     contents_description_list = validated_data.pop('contents_description_list', [])
+    #     attributes_title_list = validated_data.pop('attributes_title_list', [])
+    #     attributes_description_list = validated_data.pop('attributes_description_list', [])
+    #     status_list = validated_data.pop('status_list', [])
+    #     interive_title_list = validated_data.pop('interive_title_list', [])
+    #     interive_file_list = validated_data.pop('interive_file_list', [])
+    #     link_list = validated_data.pop('link_list', [])
+    #     latitude_list = validated_data.pop('latitude_list', [])
+    #     longitude_list = validated_data.pop('longitude_list', [])
+    #
+    #
+    #     resource = Resource.objects.create(**validated_data)
+    #     con_title_list = json.loads(contents_title_list)
+    #     con_description_list = json.loads(contents_description_list)
+    #     for conetnts_title in con_title_list:
+    #         for contents_description in con_description_list:
+    #             Contents.objects.create(resource_content=resource, contents_title=conetnts_title, contents_description=contents_description)
+    #
+    #     att_title_list = json.loads(attributes_title_list)
+    #     att_description_list = json.loads(attributes_description_list)
+    #
+    #     for attributes_title in att_title_list:
+    #         for attributes_description in att_description_list:
+    #             Attributes.objects.create(resource_attribute=resource, attributes_title=attributes_title, attributes_description=attributes_description)
+    #
+    #     stat_list = json.loads(status_list)
+    #     inter_title_list = json.loads(interive_title_list)
+    #     inter_file_list = json.loads(interive_file_list)
+    #     links_list = json.loads(link_list)
+    #     latit_list = json.loads(latitude_list)
+    #     long_list = json.loads(longitude_list)
+    #     for status,title,file,link,latitude,longitude in zip(stat_list,inter_title_list,inter_file_list,links_list,latit_list,long_list):
+    #         Interive.objects.create(resource_interive=resource,status=status,title=title,file=file,link=link,latitude=latitude,longitude=longitude)
+    #
+    #
+    #
+    #
+    #     return resource
