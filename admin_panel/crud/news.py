@@ -73,3 +73,7 @@ def delete_news(request, pk):
 
     news.delete()
     return Response(status=204)
+
+
+
+
