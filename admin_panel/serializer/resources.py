@@ -6,8 +6,36 @@ import json
 from Config import settings
 from resources.models import Category, PeriodFilter, Filters, Resource, Province, Interive, Attributes, Contents, \
     FilterCategories
+import base64
+import six
+import uuid
 
+class Base64FileField(serializers.FileField):
+    def to_internal_value(self, data):
+        if isinstance(data, six.string_types):
+            if 'data:' in data and ';base64,' in data:
+                header, data = data.split(';base64,')
 
+            try:
+                decoded_file = base64.b64decode(data)
+            except TypeError:
+                self.fail('invalid_file')
+
+            file_name = str(uuid.uuid4())[:12]
+            file_extension = self.get_file_extension(file_name, decoded_file)
+            complete_file_name = f"{file_name}.{file_extension}"
+
+            data = ContentFile(decoded_file, name=complete_file_name)
+
+        return super(Base64FileField, self).to_internal_value(data)
+
+    def get_file_extension(self, file_name, decoded_file):
+        try:
+            import magic
+            file_mime_type = magic.from_buffer(decoded_file, mime=True)
+            return file_mime_type.split('/')[-1]
+        except ImportError:
+            return 'txt'
 class FiltersAdminSerializer(serializers.ModelSerializer):
     filter_categories_name = serializers.SerializerMethodField()
     filter_cat_id = serializers.SerializerMethodField()
@@ -207,7 +235,7 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
 
 
     def get_interive_list(self, obj):
-        return InteriveAdminSerializer(obj.resource_interives.all(), many=True).data
+        return InteriveAdminSerializer(obj.resource_interive.all(), many=True).data
 
     def get_attributes_list(self, obj):
         return AttributesAdminSerializer(obj.resource_attribute.all(), many=True).data

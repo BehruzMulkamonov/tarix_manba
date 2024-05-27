@@ -300,7 +300,6 @@ def resourceList(request):
     result_page = paginator.paginate_queryset(resourcec_filter.qs, request)
     serializer = ResourceAdminSerializer(result_page, many=True)
     serialized_data = serializer.data
-
     for data in serialized_data:
         if data.get('image'):
             data['image'] = request.build_absolute_uri(data['image'])

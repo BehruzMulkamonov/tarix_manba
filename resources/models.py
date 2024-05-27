@@ -118,7 +118,7 @@ class Interive(BaseModel):
     latitude = models.CharField(max_length=500, blank=True, null=True)
     longitude = models.CharField(max_length=500, blank=True, null=True)
     resource_interive = models.ForeignKey(Resource, on_delete=models.SET_NULL, null=True,
-                                           related_name='resource_interives')
+                                           related_name='resource_interive')
 
 
 
