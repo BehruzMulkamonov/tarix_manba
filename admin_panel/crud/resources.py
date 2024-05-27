@@ -357,10 +357,11 @@ import pdb
 
 class ExampleView(APIView):
     def post(self, request, *args, **kwargs):
-        print(f"Method: {request.method}")
-        print(f"Path: {request.path}")
-        print(f"Headers: {request.headers}")
-        print(f"Body: {request.data}")
+        print('data:', request.data)
+        # print(f"Method: {request.method}")
+        # print(f"Path: {request.path}")
+        # print(f"Headers: {request.headers}")
+        # print(f"Body: {request.data}")
 
         pdb.set_trace()  # breakpoint qo'yish
 
