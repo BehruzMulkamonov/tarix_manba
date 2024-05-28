@@ -78,3 +78,22 @@ class ResourceSerializer(serializers.ModelSerializer):
         return obj.filters.title
 
 
+class CatEventSerializer(serializers.ModelSerializer):
+    file = serializers.SerializerMethodField()
+    class Meta:
+        model = Category
+        fields = ['id','title','icon','file']
+
+
+    def get_file(self, obj):
+        resources = obj.category.all()
+        interive_image = Interive.objects.filter(resource_interive__in=resources).first()
+        if interive_image and interive_image.file:
+            return interive_image.file.url
+        return None
+
+
+
+
+
+

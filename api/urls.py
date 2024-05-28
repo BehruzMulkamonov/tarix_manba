@@ -2,7 +2,7 @@ from django.urls import path
 from api.view.other_app import about_detail, connection_value_detail, event_detail, feedbacks_detail, library_category_detail, library_detail, list_abouts, list_connection_value, list_events, list_feedbacks, list_libraries, list_library_categories, list_news, list_sliders, news_detail, sliders_detail 
 from api.view.resources import categoryListView, categoryDetailView, periodFilterListView, periodFilterDetailView, \
     filterCategoriesListView, filterCategoriesDetailView, filtersListView, filtersDetailView, provinceListView, \
-    provinceDetailView, resourceListView, resourceDetailView
+    provinceDetailView, resourceListView, resourceDetailView, catEventListView, cateventDetailView
 
 urlpatterns = [
     # Library
@@ -41,26 +41,28 @@ urlpatterns = [
 
     # Resources   url
     # category
-    path('category_api-list', categoryListView, name='category-list'),
+    path('category_api-list/', categoryListView, name='category-list'),
     path('category_api-detail/<int:pk>/', categoryDetailView, name='category-detail'),
+    path('cat_event_api-list/', catEventListView, name='cat_event-list'),
+    path('cat_event_api-list/<int:pk>/', cateventDetailView, name='cat_event-list'),
 
     # period_filter
-    path('period_api-list', periodFilterListView, name='period_api-list'),
+    path('period_api-list/', periodFilterListView, name='period_api-list'),
     path('period_api-detail/<int:pk>/', periodFilterDetailView, name='period_api-detail'),
 
     # filter_categories
-    path('filter_categories_api-list', filterCategoriesListView, name='filter_categories_api-list'),
+    path('filter_categories_api-list/', filterCategoriesListView, name='filter_categories_api-list'),
     path('filter_categories_api-detail/<int:pk>/', filterCategoriesDetailView, name='filter_categories_api-detail'),
 
     # filters
-    path('filters_api-list', filtersListView, name='filters_api-list'),
+    path('filters_api-list/', filtersListView, name='filters_api-list'),
     path('filters_api-detail/<int:pk>/', filtersDetailView, name='filters_api-detail'),
 
     # province
-    path('province_api-list', provinceListView, name='province_api-list'),
+    path('province_api-list/', provinceListView, name='province_api-list'),
     path('province_api-detail/<int:pk>/', provinceDetailView, name='province_api-detail'),
 
     # resource
-    path('resource_api-list', resourceListView, name='resource_api-list'),
+    path('resource_api-list/', resourceListView, name='resource_api-list'),
     path('resource_api-detail/<int:pk>/', resourceDetailView, name='resource_api-detail'),
 ]
