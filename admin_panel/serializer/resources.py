@@ -1,3 +1,4 @@
+from django.core.files.base import ContentFile
 from rest_framework import serializers
 from rest_framework.request import Request
 
@@ -6,9 +7,14 @@ import json
 from Config import settings
 from resources.models import Category, PeriodFilter, Filters, Resource, Province, Interive, Attributes, Contents, \
     FilterCategories
+import uuid
+
 import base64
 import six
-import uuid
+try:
+    import magic
+except ImportError:
+    magic = None
 
 class Base64FileField(serializers.FileField):
     def to_internal_value(self, data):
@@ -30,11 +36,10 @@ class Base64FileField(serializers.FileField):
         return super(Base64FileField, self).to_internal_value(data)
 
     def get_file_extension(self, file_name, decoded_file):
-        try:
-            import magic
+        if magic:
             file_mime_type = magic.from_buffer(decoded_file, mime=True)
             return file_mime_type.split('/')[-1]
-        except ImportError:
+        else:
             return 'txt'
 class FiltersAdminSerializer(serializers.ModelSerializer):
     filter_categories_name = serializers.SerializerMethodField()
@@ -163,6 +168,7 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
     filter_category_name = serializers.SerializerMethodField(required=False, read_only=True)
     filters_name = serializers.SerializerMethodField(required=False, read_only=True)
     period_filter_name = serializers.SerializerMethodField(required=False, read_only=True)
+    image = Base64FileField(required=False, read_only=True)
     contents_title_list = serializers.ListField(
         child=serializers.CharField(max_length=None,required=False),
         write_only=True,
@@ -199,7 +205,7 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
     )
 
     interive_file_list = serializers.ListField(
-        child=serializers.ImageField(max_length=1000, allow_empty_file=False, use_url=False),
+        child=Base64FileField(max_length=1000, allow_empty_file=False, use_url=False),
         write_only=True,
         required=False
     )
