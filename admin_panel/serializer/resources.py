@@ -11,10 +11,7 @@ import uuid
 
 import base64
 import six
-try:
-    import magic
-except ImportError:
-    magic = None
+
 
 class Base64FileField(serializers.FileField):
     def to_internal_value(self, data):
@@ -36,11 +33,13 @@ class Base64FileField(serializers.FileField):
         return super(Base64FileField, self).to_internal_value(data)
 
     def get_file_extension(self, file_name, decoded_file):
-        if magic:
+        try:
+            import magic
             file_mime_type = magic.from_buffer(decoded_file, mime=True)
             return file_mime_type.split('/')[-1]
-        else:
+        except ImportError:
             return 'txt'
+
 class FiltersAdminSerializer(serializers.ModelSerializer):
     filter_categories_name = serializers.SerializerMethodField()
     filter_cat_id = serializers.SerializerMethodField()
@@ -141,6 +140,7 @@ class ProvinceAdminSerializer(serializers.ModelSerializer):
 
 
 class InteriveAdminSerializer(serializers.ModelSerializer):
+    file = Base64FileField(max_length=None, use_url=True)
     class Meta:
         model = Interive
         fields = ['resource_interive','status', 'title', 'file', 'link', 'latitude', 'longitude', 'created_time', 'updated_time']
@@ -168,7 +168,7 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
     filter_category_name = serializers.SerializerMethodField(required=False, read_only=True)
     filters_name = serializers.SerializerMethodField(required=False, read_only=True)
     period_filter_name = serializers.SerializerMethodField(required=False, read_only=True)
-    image = Base64FileField(required=False, read_only=True)
+    image = Base64FileField(max_length=None, use_url=True)
     contents_title_list = serializers.ListField(
         child=serializers.CharField(max_length=None,required=False),
         write_only=True,
