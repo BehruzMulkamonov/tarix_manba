@@ -203,6 +203,7 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         write_only=True,
         required=False
     )
+
     link_list = serializers.ListField(
         child=serializers.URLField(max_length=2000, allow_blank=True,required=False),
         write_only=True,

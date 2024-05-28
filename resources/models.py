@@ -109,7 +109,7 @@ class Interive(BaseModel):
         LOCATION = 'LN','Location'
 
 
-    status = models.CharField(max_length=2,
+    status = models.CharField(max_length=20,
                               choices=Status.choices,
                               default=Status.GALLERY)
     title = models.CharField(max_length=155)
