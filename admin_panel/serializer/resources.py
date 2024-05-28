@@ -292,7 +292,7 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
             Attributes.objects.create(resource_attribute=resource, attributes_title=attributes_title,
                                       attributes_description=attributes_description)
         for status,title,file,link,latitude,longitude in zip(status_list,interive_title_list,interive_file_list,link_list,latitude_list,longitude_list):
-            Interive.objects.create(resource_interive=resource,status=status,title=title,file=file,link=link,latitude=latitude,longitude=longitude)
+            Interive.objects.create(resource_interive=resource,status=status,title=title,file=file if file else None,link=link,latitude=latitude,longitude=longitude)
 
 
         return resource
