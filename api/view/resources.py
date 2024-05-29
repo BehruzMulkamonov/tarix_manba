@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
+from admin_panel.serializer.resources import ResourceAdminSerializer
 from resources.models import Category, PeriodFilter, FilterCategories, Filters, Province, Resource
 from resources.serializer import CategorySerializer, PeriodFilterSerializer, FilterCategoriesSerializer, \
     FiltersSerializer, ProvinceSerializer, ResourceSerializer, CatEventSerializer
@@ -106,14 +107,14 @@ def resourceListView(request):
     paginator.page_size = 10
     resources = Resource.objects.all()
     result_page = paginator.paginate_queryset(resources, request)
-    serializer = ResourceSerializer(result_page, many=True)
+    serializer = ResourceAdminSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
 
 @api_view(['GET'])
 def resourceDetailView(request, pk):
     resource = Resource.objects.get(pk=pk)
-    serializer = ResourceSerializer(resource, many=False)
+    serializer = ResourceAdminSerializer(resource, many=False)
     return Response(serializer.data)
 
 

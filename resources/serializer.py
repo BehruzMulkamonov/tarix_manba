@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from admin_panel.serializer.resources import ResourceAdminSerializer
 from resources.models import Category, PeriodFilter, FilterCategories, Filters, Province, Resource, Interive, \
     Attributes, Contents
 
@@ -91,7 +92,7 @@ class CatEventSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    category = ResourceSerializer(many=True,read_only=True)
+    category = ResourceAdminSerializer(many=True,read_only=True)
     class Meta:
         model = Category
         fields = ['id','title', 'icon', 'order', 'category']
