@@ -15,7 +15,13 @@ class ConnectionCategorySerializer(serializers.ModelSerializer):
 
 
 class ConnectionValueSerializer(serializers.ModelSerializer):
-
+    connection_title = serializers.SerializerMethodField()
+    
     class Meta: 
         model = Connection_Value
-        fields = ['id', 'connection_category', 'value']
+        fields = ['id', 'connection_category','connection_title',  'value']
+    
+
+    def get_connection_title(self, obj):
+        name = obj.connection_category.title
+        return name
