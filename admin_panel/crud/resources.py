@@ -303,6 +303,10 @@ def resourceList(request):
     for data in serialized_data:
         if data.get('image'):
             data['image'] = request.build_absolute_uri(data['image'])
+        if data.get('interive_list'):
+            for interive in data['interive_list']:
+                if interive.get('file'):
+                    interive['file'] = request.build_absolute_uri(interive['file'])
     return paginator.get_paginated_response(serialized_data)
 
 

@@ -297,3 +297,52 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
 
         return resource
 
+    def update(self, instance, validated_data):
+        contents_title_list = validated_data.pop('contents_title_list', [])
+        contents_description_list = validated_data.pop('contents_description_list', [])
+        attributes_title_list = validated_data.pop('attributes_title_list', [])
+        attributes_description_list = validated_data.pop('attributes_description_list', [])
+        status_list = validated_data.pop('status_list', [])
+        interive_title_list = validated_data.pop('interive_title_list', [])
+        interive_file_list = validated_data.pop('interive_file_list', [])
+        link_list = validated_data.pop('link_list', [])
+        latitude_list = validated_data.pop('latitude_list', [])
+        longitude_list = validated_data.pop('longitude_list', [])
+
+        instance.category = validated_data.get('category', instance.category)
+        instance.filter_category = validated_data.get('filter_category', instance.filter_category)
+        instance.filters = validated_data.get('filters', instance.filters)
+        instance.period_filter = validated_data.get('period_filter', instance.period_filter)
+        instance.title = validated_data.get('title', instance.title)
+        instance.image = validated_data.get('image', instance.image)
+        instance.content = validated_data.get('content', instance.content)
+        instance.statehood = validated_data.get('statehood', instance.statehood)
+        instance.province = validated_data.get('province', instance.province)
+        instance.save()
+
+        if contents_title_list and contents_description_list:
+            instance.resource_content.all().delete()
+            for contents_title, contents_description in zip(contents_title_list, contents_description_list):
+                Contents.objects.create(resource_content=instance, contents_title=contents_title,
+                                        contents_description=contents_description)
+
+        if attributes_title_list and attributes_description_list:
+            instance.resource_attribute.all().delete()
+            for attributes_title, attributes_description in zip(attributes_title_list, attributes_description_list):
+                Attributes.objects.create(resource_attribute=instance, attributes_title=attributes_title,
+                                          attributes_description=attributes_description)
+
+        if status_list and interive_title_list and interive_file_list and link_list and latitude_list and longitude_list:
+            instance.resource_interive.all().delete()
+            for status, title, file, link, latitude, longitude in zip(status_list, interive_title_list,
+                                                                      interive_file_list, link_list, latitude_list,
+                                                                      longitude_list):
+                Interive.objects.create(resource_interive=instance, status=status, title=title,
+                                        file=file if file else None, link=link, latitude=latitude, longitude=longitude)
+
+        return instance
+
+
+
+
+
