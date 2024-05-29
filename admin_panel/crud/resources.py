@@ -1,4 +1,3 @@
-from rest_framework import generics
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -340,9 +339,7 @@ def updateResource(request, pk):
     return Response(serializer.errors, status=400)
 
 
-class ResoursUpdate(generics.UpdateAPIView):
-    queryset = Resource.objects.all()
-    serializer_class = ResourceAdminSerializer
+
 
 
 @api_view(['DELETE'])

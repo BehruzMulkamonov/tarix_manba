@@ -15,7 +15,7 @@ from admin_panel.crud.resources import ExampleView, categoryList, createCategory
     filterCategoriesList, filterCategoriesDetail, createFilterCategories, updateFilterCategories, \
     deleteFilterCategories, filtersList, filtersDetail, createFilters, updateFilters, deleteFilters, provinceList, \
     provinceDetail, createProvince, updateProvince, deleteProvince, resourceList, resourceDetail, createResource, \
-    updateResource, deleteResource, ResoursUpdate
+    updateResource, deleteResource
 # sliders 
 from admin_panel.crud.sliders import list_sliders, create_slider, sliders_detail, update_slider, delete_slider
 # connection 
@@ -157,7 +157,6 @@ urlpatterns = [
     path('resource/create/', createResource, name='resource-create'),
     path('resource/<int:pk>/update/', updateResource, name='resource-update'),
     path('resource/<int:pk>/delete/', deleteResource, name='resource-delete'),
-    path('resource/<int:pk>/up/', ResoursUpdate.as_view(), name='resource-up'),
 
     # Connection-category
     path('connection_category/', list_connection_category, name='connectin-category-list'),

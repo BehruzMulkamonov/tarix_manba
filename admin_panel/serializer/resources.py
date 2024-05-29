@@ -288,9 +288,17 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
             Contents.objects.create(resource_content=resource, contents_title=contents_title,
                                     contents_description=contents_description)
 
-        for attributes_title, attributes_description in zip(attributes_title_list, attributes_description_list):
-            Attributes.objects.create(resource_attribute=resource, attributes_title=attributes_title,
-                                      attributes_description=attributes_description)
+        # for attributes_title, attributes_description in zip(attributes_title_list, attributes_description_list):
+        #     Attributes.objects.create(resource_attribute=resource, attributes_title=attributes_title,
+        #                               attributes_description=attributes_description)
+        for attributes_title, attributes_description in zip(
+                attributes_title_list or [''] * len(attributes_description_list), attributes_description_list):
+            if attributes_description: 
+                Attributes.objects.create(
+                    resource_attribute=resource,
+                    attributes_title=attributes_title,
+                    attributes_description=attributes_description
+                )
         for status,title,file,link,latitude,longitude in zip(status_list,interive_title_list,interive_file_list,link_list,latitude_list,longitude_list):
             Interive.objects.create(resource_interive=resource,status=status,title=title,file=file if file else None,link=link,latitude=latitude,longitude=longitude)
 
