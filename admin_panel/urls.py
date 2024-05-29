@@ -9,12 +9,13 @@ from admin_panel.crud.library_category import create_library_category, library_c
 from admin_panel.crud.news import  list_news, create_news, news_detail, update_news, delete_news
 # event 
 from admin_panel.crud.event import create_event, event_detail, list_events, update_event, delete_event
-from admin_panel.crud.resources import ExampleView, categoryList, createCategory, categoryDetail, updateCategory, deleteCategory, \
+from admin_panel.crud.resources import ExampleView, categoryList, createCategory, categoryDetail, updateCategory, \
+    deleteCategory, \
     periodFilterList, periodFilterDetail, updatePeriodFilter, deletePeriodFilter, createPeriodFilter, \
     filterCategoriesList, filterCategoriesDetail, createFilterCategories, updateFilterCategories, \
     deleteFilterCategories, filtersList, filtersDetail, createFilters, updateFilters, deleteFilters, provinceList, \
     provinceDetail, createProvince, updateProvince, deleteProvince, resourceList, resourceDetail, createResource, \
-    updateResource, deleteResource
+    updateResource, deleteResource, ResoursUpdate
 # sliders 
 from admin_panel.crud.sliders import list_sliders, create_slider, sliders_detail, update_slider, delete_slider
 # connection 
@@ -156,6 +157,7 @@ urlpatterns = [
     path('resource/create/', createResource, name='resource-create'),
     path('resource/<int:pk>/update/', updateResource, name='resource-update'),
     path('resource/<int:pk>/delete/', deleteResource, name='resource-delete'),
+    path('resource/<int:pk>/up/', ResoursUpdate.as_view(), name='resource-up'),
 
     # Connection-category
     path('connection_category/', list_connection_category, name='connectin-category-list'),

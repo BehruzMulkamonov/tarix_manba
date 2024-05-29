@@ -340,6 +340,11 @@ def updateResource(request, pk):
     return Response(serializer.errors, status=400)
 
 
+class ResoursUpdate(generics.UpdateAPIView):
+    queryset = Resource.objects.all()
+    serializer_class = ResourceAdminSerializer
+
+
 @api_view(['DELETE'])
 def deleteResource(request, pk):
     try:
