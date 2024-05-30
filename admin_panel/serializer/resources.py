@@ -1,5 +1,5 @@
 from itertools import zip_longest
-
+from django.db import transaction
 from django.core.files.base import ContentFile
 from rest_framework import serializers
 from rest_framework.request import Request
@@ -159,6 +159,14 @@ class ContentsAdminSerializer(serializers.ModelSerializer):
         model = Contents
         fields = ['resource_content', 'contents_title', 'contents_description', 'created_time', 'updated_time']
 
+
+
+
+
+
+
+
+
 class ResourceAdminSerializer(serializers.ModelSerializer):
     interive = InteriveAdminSerializer(many=True, read_only=True)
     attributes = AttributesAdminSerializer(many=True, read_only=True)
@@ -172,82 +180,75 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
     period_filter_name = serializers.SerializerMethodField(required=False, read_only=True)
     image = Base64FileField(max_length=None, use_url=True)
     contents_title_list = serializers.ListField(
-        child=serializers.CharField(max_length=None,required=False),
+        child=serializers.CharField(max_length=None, required=False),
         write_only=True,
         required=False
-
     )
     contents_description_list = serializers.ListField(
-        child=serializers.CharField(max_length=None,required=False),
+        child=serializers.CharField(max_length=None, required=False),
         write_only=True,
         required=False
-
     )
     attributes_title_list = serializers.ListField(
-        child=serializers.CharField(max_length=None,required=False),
+        child=serializers.CharField(max_length=None, required=False),
         write_only=True,
         required=False
-
     )
     attributes_description_list = serializers.ListField(
-        child=serializers.CharField(max_length=None,required=False),
+        child=serializers.CharField(max_length=None, required=False),
         write_only=True,
         required=False
-
     )
     status_list = serializers.ListField(
-        child=serializers.CharField(max_length=None,required=False),
+        child=serializers.CharField(max_length=None, required=False),
         write_only=True,
         required=False
     )
     interive_title_list = serializers.ListField(
-        child=serializers.CharField(max_length=None,required=False),
+        child=serializers.CharField(max_length=None, required=False),
         write_only=True,
         required=False
     )
-
     interive_file_list = serializers.ListField(
         child=Base64FileField(max_length=1000, allow_empty_file=False, use_url=False),
         write_only=True,
         required=False
     )
-
     link_list = serializers.ListField(
-        child=serializers.URLField(max_length=2000, allow_blank=True,required=False),
+        child=serializers.URLField(max_length=2000, allow_blank=True, required=False),
         write_only=True,
         required=False
     )
     latitude_list = serializers.ListField(
-        child=serializers.FloatField(max_value=90, min_value=-90,required=False),
+        child=serializers.FloatField(max_value=90, min_value=-90, required=False),
         write_only=True,
         required=False
     )
     longitude_list = serializers.ListField(
-        child=serializers.FloatField(max_value=180, min_value=-180,required=False),
+        child=serializers.FloatField(max_value=180, min_value=-180, required=False),
         write_only=True,
         required=False
     )
-
-
 
     class Meta:
         model = Resource
         fields = (
             'id', 'category', 'filter_category', 'filters', 'period_filter', 'title', 'image', 'content', 'statehood',
-            'province','interive','status_list','interive_title_list',
-            'interive_file_list','link_list','latitude_list','longitude_list',
-            'attributes_title_list', 'attributes_description_list','attributes',
-            'contents_title_list', 'contents_description_list','contents',
-            'interive_list','attributes_list','contents_list',
-            'cat_name','filter_category_name','filters_name','period_filter_name',
-            'created_time', 'updated_time')
-
+            'province', 'interive', 'status_list', 'interive_title_list',
+            'interive_file_list', 'link_list', 'latitude_list', 'longitude_list',
+            'attributes_title_list', 'attributes_description_list', 'attributes',
+            'contents_title_list', 'contents_description_list', 'contents',
+            'interive_list', 'attributes_list', 'contents_list',
+            'cat_name', 'filter_category_name', 'filters_name', 'period_filter_name',
+            'created_time', 'updated_time'
+        )
 
     def get_interive_list(self, obj):
         return InteriveAdminSerializer(obj.resource_interive.all(), many=True).data
 
     def get_attributes_list(self, obj):
         return AttributesAdminSerializer(obj.resource_attribute.all(), many=True).data
+
     def get_contents_list(self, obj):
         return ContentsAdminSerializer(obj.resource_content.all(), many=True).data
 
@@ -271,6 +272,51 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         if period:
             return period.title
 
+    @staticmethod
+    def create_contents(resource, title_list, description_list):
+        if title_list or description_list:
+            for title, description in zip_longest(title_list or [''], description_list or [''], fillvalue=''):
+                Contents.objects.create(resource_content=resource, contents_title=title, contents_description=description)
+        else:
+            Contents.objects.create(resource_content=resource, contents_title='', contents_description='')
+
+    @staticmethod
+    def create_attributes(resource, title_list, description_list):
+        if title_list or description_list:
+            for title, description in zip_longest(title_list or [''], description_list or [''], fillvalue=''):
+                Attributes.objects.create(resource_attribute=resource, attributes_title=title, attributes_description=description)
+        else:
+            Attributes.objects.create(resource_attribute=resource, attributes_title='', attributes_description='')
+
+    @staticmethod
+    def create_interive(resource, status_list, title_list, file_list, link_list, latitude_list, longitude_list):
+        if any([status_list, title_list, file_list, link_list, latitude_list, longitude_list]):
+            for status, title, file, link, latitude, longitude in zip_longest(
+                status_list or [''], title_list or [''], file_list or [None],
+                link_list or [''], latitude_list or [None], longitude_list or [None],
+                fillvalue=''
+            ):
+                Interive.objects.create(
+                    resource_interive=resource,
+                    status=status,
+                    title=title,
+                    file=file,
+                    link=link,
+                    latitude=latitude,
+                    longitude=longitude
+                )
+        else:
+            Interive.objects.create(
+                resource_interive=resource,
+                status='',
+                title='',
+                file=None,
+                link='',
+                latitude=None,
+                longitude=None
+            )
+
+    @transaction.atomic
     def create(self, validated_data):
         contents_title_list = validated_data.pop('contents_title_list', [])
         contents_description_list = validated_data.pop('contents_description_list', [])
@@ -283,65 +329,28 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         latitude_list = validated_data.pop('latitude_list', [])
         longitude_list = validated_data.pop('longitude_list', [])
 
-
         resource = Resource.objects.create(**validated_data)
 
-        # for contents_title, contents_description in zip(contents_title_list, contents_description_list):
-        #     Contents.objects.create(resource_content=resource, contents_title=contents_title,
-        #                             contents_description=contents_description)
-        if contents_title_list or contents_description_list:
-            for contents_title, contents_description in zip_longest(
-                    contents_title_list or [''],
-                    contents_description_list or [''],
-                    fillvalue=''):
-                Contents.objects.create(
-                    resource_content=resource,
-                    contents_title=contents_title,
-                    contents_description=contents_description
-                )
-        else:
-            Contents.objects.create(resource_content=resource, contents_title='', contents_description='')
-
-        if attributes_title_list or attributes_description_list:
-            for attributes_title, attributes_description in zip_longest(
-                    attributes_title_list or [''],
-                    attributes_description_list or [''],
-                    fillvalue=''):
-                Attributes.objects.create(
-                    resource_attribute=resource,
-                    attributes_title=attributes_title,
-                    attributes_description=attributes_description
-                )
-        else:
-            Attributes.objects.create(resource_attribute=resource, attributes_title='', attributes_description='')
-
-        if any([status_list, interive_title_list, interive_file_list, link_list, latitude_list, longitude_list]):
-            for status, title, file, link, latitude, longitude in zip_longest(
-                    status_list or [''],
-                    interive_title_list or [''],
-                    interive_file_list or [None],
-                    link_list or [''],
-                    latitude_list or [None],
-                    longitude_list or [None],
-                    fillvalue=''):
-                Interive.objects.create(
-                    resource_interive=resource,
-                    status=status,
-                    title=title,
-                    file=file,
-                    link=link,
-                    latitude=latitude,
-                    longitude=longitude
-                )
-        else:
-            Interive.objects.create(resource_interive=resource, status='', title='', file=None, link='', latitude=None,
-                                    longitude=None)
-
-
+        self.create_contents(resource, contents_title_list, contents_description_list)
+        self.create_attributes(resource, attributes_title_list, attributes_description_list)
+        self.create_interive(resource, status_list, interive_title_list, interive_file_list, link_list, latitude_list, longitude_list)
 
         return resource
 
+    @transaction.atomic
     def update(self, instance, validated_data):
+        instance.category = validated_data.get('category', instance.category)
+        instance.filter_category = validated_data.get('filter_category', instance)
+        instance.filter_category = validated_data.get('filter_category', instance.filter_category)
+        instance.filters = validated_data.get('filters', instance.filters)
+        instance.period_filter = validated_data.get('period_filter', instance.period_filter)
+        instance.title = validated_data.get('title', instance.title)
+        instance.image = validated_data.get('image', instance.image)
+        instance.content = validated_data.get('content', instance.content)
+        instance.statehood = validated_data.get('statehood', instance.statehood)
+        instance.province = validated_data.get('province', instance.province)
+        instance.save()
+
         contents_title_list = validated_data.pop('contents_title_list', [])
         contents_description_list = validated_data.pop('contents_description_list', [])
         attributes_title_list = validated_data.pop('attributes_title_list', [])
@@ -353,40 +362,13 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         latitude_list = validated_data.pop('latitude_list', [])
         longitude_list = validated_data.pop('longitude_list', [])
 
-        instance.category = validated_data.get('category', instance.category)
-        instance.filter_category = validated_data.get('filter_category', instance.filter_category)
-        instance.filters = validated_data.get('filters', instance.filters)
-        instance.period_filter = validated_data.get('period_filter', instance.period_filter)
-        instance.title = validated_data.get('title', instance.title)
-        instance.image = validated_data.get('image', instance.image)
-        instance.content = validated_data.get('content', instance.content)
-        instance.statehood = validated_data.get('statehood', instance.statehood)
-        instance.province = validated_data.get('province', instance.province)
-        instance.save()
+        instance.resource_content.all().delete()
+        instance.resource_attribute.all().delete()
+        instance.resource_interive.all().delete()
 
-        if contents_title_list and contents_description_list:
-            instance.resource_content.all().delete()
-            for contents_title, contents_description in zip(contents_title_list, contents_description_list):
-                Contents.objects.create(resource_content=instance, contents_title=contents_title,
-                                        contents_description=contents_description)
-
-        if attributes_title_list and attributes_description_list:
-            instance.resource_attribute.all().delete()
-            for attributes_title, attributes_description in zip(attributes_title_list, attributes_description_list):
-                Attributes.objects.create(resource_attribute=instance, attributes_title=attributes_title,
-                                          attributes_description=attributes_description)
-
-        if status_list and interive_title_list and interive_file_list and link_list and latitude_list and longitude_list:
-            instance.resource_interive.all().delete()
-            for status, title, file, link, latitude, longitude in zip(status_list, interive_title_list,
-                                                                      interive_file_list, link_list, latitude_list,
-                                                                      longitude_list):
-                Interive.objects.create(resource_interive=instance, status=status, title=title,
-                                        file=file if file else None, link=link, latitude=latitude, longitude=longitude)
+        self.create_contents(instance, contents_title_list, contents_description_list)
+        self.create_attributes(instance, attributes_title_list, attributes_description_list)
+        self.create_interive(instance, status_list, interive_title_list, interive_file_list, link_list, latitude_list, longitude_list)
 
         return instance
-
-
-
-
 
