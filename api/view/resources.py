@@ -6,7 +6,8 @@ from rest_framework.response import Response
 from admin_panel.serializer.resources import ResourceAdminSerializer
 from resources.models import Category, PeriodFilter, FilterCategories, Filters, Province, Resource
 from resources.serializer import CategorySerializer, PeriodFilterSerializer, FilterCategoriesSerializer, \
-    FiltersSerializer, ProvinceSerializer, ResourceSerializer, CatEventSerializer
+    FiltersSerializer, ProvinceSerializer, ResourceSerializer, CategoryResourceSerializer
+
 
 @api_view(['GET'])
 def categoryListView(request):
@@ -165,30 +166,33 @@ def resourceDetailView(request, pk):
     return Response(serialized_data)
 
 
+
 @api_view(['GET'])
-def catEventListView(request):
-    paginator = PageNumberPagination()
-    paginator.page_size = 10
-    resources = Category.objects.all()
-    result_page = paginator.paginate_queryset(resources, request)
-    serializer = CatEventSerializer(result_page, many=True)
+def catResourceListView(request):
+    category = Category.objects.all()
+    serializer = CategoryResourceSerializer(category, many=True)
     serialized_data = serializer.data
 
     for data in serialized_data:
-        if data.get('file'):
-            data['file'] = request.build_absolute_uri(data['file'])
-
-    return paginator.get_paginated_response(serialized_data)
+        if data.get('icon'):
+            data['icon'] = request.build_absolute_uri(data['icon'])
+    return Response(serialized_data)
 
 
 @api_view(['GET'])
-def cateventDetailView(request, pk):
-    resource = Category.objects.get(pk=pk)
-    serializer = CatEventSerializer(resource, many=False)
+def catResourceDetailView(request, pk):
+    cat = Category.objects.get(pk=pk)
+    resourse = Resource.objects.filter(category=cat)
+    serializer = ResourceAdminSerializer(resourse, many=True)
     serialized_data = serializer.data
 
-    # Check if 'file' key exists in the dictionary
-    if 'file' in serialized_data:
-        serialized_data['file'] = request.build_absolute_uri(serialized_data['file'])
+    for resource in serialized_data:
+        if resource.get('image'):
+            resource['image'] = request.build_absolute_uri(resource['image'])
+        if resource.get('interive_list'):
+            for interive in resource['interive_list']:
+                if interive.get('file'):
+                    interive['file'] = request.build_absolute_uri(interive['file'])
 
     return Response(serialized_data)
+
