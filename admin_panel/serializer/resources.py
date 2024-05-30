@@ -1,3 +1,5 @@
+from itertools import zip_longest
+
 from django.core.files.base import ContentFile
 from rest_framework import serializers
 from rest_framework.request import Request
@@ -284,23 +286,57 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
 
         resource = Resource.objects.create(**validated_data)
 
-        for contents_title, contents_description in zip(contents_title_list, contents_description_list):
-            Contents.objects.create(resource_content=resource, contents_title=contents_title,
-                                    contents_description=contents_description)
+        # for contents_title, contents_description in zip(contents_title_list, contents_description_list):
+        #     Contents.objects.create(resource_content=resource, contents_title=contents_title,
+        #                             contents_description=contents_description)
+        if contents_title_list or contents_description_list:
+            for contents_title, contents_description in zip_longest(
+                    contents_title_list or [''],
+                    contents_description_list or [''],
+                    fillvalue=''):
+                Contents.objects.create(
+                    resource_content=resource,
+                    contents_title=contents_title,
+                    contents_description=contents_description
+                )
+        else:
+            Contents.objects.create(resource_content=resource, contents_title='', contents_description='')
 
-        # for attributes_title, attributes_description in zip(attributes_title_list, attributes_description_list):
-        #     Attributes.objects.create(resource_attribute=resource, attributes_title=attributes_title,
-        #                               attributes_description=attributes_description)
-        for attributes_title, attributes_description in zip(
-                attributes_title_list or [''] * len(attributes_description_list), attributes_description_list):
-            if attributes_description: 
+        if attributes_title_list or attributes_description_list:
+            for attributes_title, attributes_description in zip_longest(
+                    attributes_title_list or [''],
+                    attributes_description_list or [''],
+                    fillvalue=''):
                 Attributes.objects.create(
                     resource_attribute=resource,
                     attributes_title=attributes_title,
                     attributes_description=attributes_description
                 )
-        for status,title,file,link,latitude,longitude in zip(status_list,interive_title_list,interive_file_list,link_list,latitude_list,longitude_list):
-            Interive.objects.create(resource_interive=resource,status=status,title=title,file=file if file else None,link=link,latitude=latitude,longitude=longitude)
+        else:
+            Attributes.objects.create(resource_attribute=resource, attributes_title='', attributes_description='')
+
+        if any([status_list, interive_title_list, interive_file_list, link_list, latitude_list, longitude_list]):
+            for status, title, file, link, latitude, longitude in zip_longest(
+                    status_list or [''],
+                    interive_title_list or [''],
+                    interive_file_list or [None],
+                    link_list or [''],
+                    latitude_list or [None],
+                    longitude_list or [None],
+                    fillvalue=''):
+                Interive.objects.create(
+                    resource_interive=resource,
+                    status=status,
+                    title=title,
+                    file=file,
+                    link=link,
+                    latitude=latitude,
+                    longitude=longitude
+                )
+        else:
+            Interive.objects.create(resource_interive=resource, status='', title='', file=None, link='', latitude=None,
+                                    longitude=None)
+
 
 
         return resource
