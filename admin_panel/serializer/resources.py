@@ -110,9 +110,10 @@ class CategoryAdminSerializer(serializers.ModelSerializer):
 
 
 
+
     class Meta:
         model = Category
-        fields = ('id', 'title', 'icon', 'order', 'interactive', 'created_time', 'updated_time', 'categories',)
+        fields = ('id', 'title', 'icon','image' ,'order', 'interactive', 'created_time', 'updated_time', 'categories',)
         extra_kwargs = {
             'categories': {'read_only': True, 'required': False},
         }
@@ -179,6 +180,7 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
     filters_name = serializers.SerializerMethodField(required=False, read_only=True)
     period_filter_name = serializers.SerializerMethodField(required=False, read_only=True)
     image = Base64FileField(max_length=None, use_url=True)
+    province_name = serializers.SerializerMethodField(required=False, read_only=True)
     contents_title_list = serializers.ListField(
         child=serializers.CharField(max_length=None, required=False),
         write_only=True,
@@ -233,7 +235,7 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Resource
         fields = (
-            'id', 'category', 'filter_category', 'filters', 'period_filter', 'title', 'image', 'content', 'statehood',
+            'id', 'category', 'filter_category', 'filters', 'period_filter', 'title', 'image', 'content', 'province_name','statehood',
             'province', 'interive', 'status_list', 'interive_title_list',
             'interive_file_list', 'link_list', 'latitude_list', 'longitude_list',
             'attributes_title_list', 'attributes_description_list', 'attributes',
@@ -271,6 +273,10 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         period = obj.period_filter
         if period:
             return period.title
+    def get_province_name(self,obj):
+        province = obj.province
+        if province:
+            return province.title
 
     @staticmethod
     def create_contents(resource, title_list, description_list):
