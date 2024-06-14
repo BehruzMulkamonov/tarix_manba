@@ -27,18 +27,35 @@ from rest_framework.pagination import PageNumberPagination
 #             data['icon'] = request.build_absolute_uri(data['icon'])
 #
 #     return paginator.get_paginated_response(serialized_data)
+# @api_view(['GET'])
+# def categoryList(request):
+#     cats = Category.objects.all().order_by("id")
+
+#     user_filter = CategoryFilter(request.GET, queryset=cats)
+#     serialized_data = CategoryAdminSerializer(user_filter.qs, many=True, context={'request': request}).data
+
+#     for data in serialized_data:
+#         if data.get('icon'):
+#             data['icon'] = request.build_absolute_uri(data['icon'])
+
+#     return Response(serialized_data)
+
 @api_view(['GET'])
-def categoryList(request):
+def list_library_categories(request):
+    paginator = PageNumberPagination()
+    paginator.page_size = 10
     cats = Category.objects.all().order_by("id")
+    cat__filter = CategoryFilter(request.GET, queryset=cats)
+    result_page = paginator.paginate_queryset(cat__filter.qs, request)
+    serializer = CategoryAdminSerializer(result_page, many=True, context={'request': request}).data
 
-    user_filter = CategoryFilter(request.GET, queryset=cats)
-    serialized_data = CategoryAdminSerializer(user_filter.qs, many=True, context={'request': request}).data
-
-    for data in serialized_data:
+    for data in serializer:
         if data.get('icon'):
             data['icon'] = request.build_absolute_uri(data['icon'])
 
-    return Response(serialized_data)
+    return paginator.get_paginated_response(serializer)
+
+
 @api_view(['GET'])
 def categoryDetail(request, pk):
     cat = Category.objects.get(pk=pk)
