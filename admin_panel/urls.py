@@ -7,8 +7,7 @@ from admin_panel.crud.library import create_library, library_detail, list_librar
 from admin_panel.crud.library_category import create_library_category, library_category_detail, list_library_categories, update_library_category, delete_library_category
 # news
 from admin_panel.crud.news import  list_news, create_news, news_detail, update_news, delete_news
-# event 
-from admin_panel.crud.event import create_event, event_detail, list_events, update_event, delete_event
+
 from admin_panel.crud.resources import ExampleView, categoryList, createCategory, categoryDetail, updateCategory, deleteCategory, \
     periodFilterList, periodFilterDetail, updatePeriodFilter, deletePeriodFilter, createPeriodFilter, \
     filterCategoriesList, filterCategoriesDetail, createFilterCategories, updateFilterCategories, \
@@ -61,15 +60,7 @@ urlpatterns = [
 
 
 
-    # event 
-    path('event/', list_events, name='list_events'),
-    path('event/create/', create_event, name='create_event'),
-    path('event/<int:pk>/update/', update_event, name='update_event'),
-    path('event/<int:pk>/delete/', delete_event, name='delete_event'),
-    path('events/<int:pk>/detail/', event_detail, name='event-detail'),
-
     
-
     # sliders
     path('sliders/', list_sliders, name='list_sliders'),
     path('sliders/create/', create_slider, name='create_slider'),

@@ -38,15 +38,6 @@ class News(BaseModel):
         return self.title
 
 
-class Event(BaseModel):
-    title = models.CharField(max_length=255)
-    content = models.TextField()
-    image = models.ImageField(upload_to='images/', blank=True, null=True)
-
-    def __str__(self):
-        return self.title
-
-
 class Sliders(BaseModel):
     title = models.CharField(max_length=255)
     file = models.FileField(upload_to='images/', blank=True, null=True)

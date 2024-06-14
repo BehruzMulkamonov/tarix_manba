@@ -5,15 +5,14 @@ from rest_framework.response import Response
 from rest_framework import generics
 from admin_panel.crud.about import AboutFilter
 from admin_panel.crud.connection_value import ConnectionValFilter
-from admin_panel.crud.event import EventFilter
 from admin_panel.crud.feedback import FeedbackFilter
 from admin_panel.crud.library import LibraryFilter
 from admin_panel.crud.library_category import LibraryCatFilter
 from admin_panel.crud.news import NewsFilter
 from admin_panel.crud.sliders import SlidersFilter
 from api.pagination import ResultsSetPagination
-from other_app.models import Comments, Connection, About, Connection_Value, Event, Feedbacks, Library_Category, Library, Sliders, News
-from other_app.serializers import AboutSerializer, CommentSerializer, ConnectionSerializer, ConnectionValueSerializer, EventSerializer,FeedbackSerializer, LibrariesSerializer, NewsSerializer, LibrariesCategorySerializer, SlidersSerializer
+from other_app.models import Comments, Connection, About, Connection_Value,  Feedbacks, Library_Category, Library, Sliders, News
+from other_app.serializers import AboutSerializer, CommentSerializer, ConnectionSerializer, ConnectionValueSerializer, FeedbackSerializer, LibrariesSerializer, NewsSerializer, LibrariesCategorySerializer, SlidersSerializer
 from rest_framework import filters
 from rest_framework.pagination import PageNumberPagination
 
@@ -90,28 +89,6 @@ def about_detail(request, pk):
     serializer = AboutSerializer(about)
     return Response(serializer.data)
     
-# Event
-# Read (O'qish)
-@api_view(['GET'])
-def list_events(request):
-    paginator = PageNumberPagination()
-    paginator.page_size = 10
-    events = Event.objects.all().order_by("id")
-    event_filter = EventFilter(request.GET, queryset=events)
-    result_page = paginator.paginate_queryset(event_filter.qs, request)
-    serializer = EventSerializer(result_page, many=True)
-    return paginator.get_paginated_response(serializer.data)
-
-# Detail
-@api_view(['GET'])
-def event_detail(request, pk):
-    try:
-        event = Event.objects.get(pk=pk)
-    except Event.DoesNotExist:
-        raise Http404
-
-    serializer = EventSerializer(event)
-    return Response(serializer.data)
 
 # News
 # Read (O'qish)

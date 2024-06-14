@@ -1,5 +1,5 @@
 from django.urls import path
-from api.view.other_app import about_detail, connection_value_detail, event_detail, feedbacks_detail, library_category_detail, library_detail, list_abouts, list_connection_value, list_events, list_feedbacks, list_libraries, list_library_categories, list_news, list_sliders, news_detail, sliders_detail 
+from api.view.other_app import about_detail, connection_value_detail,  feedbacks_detail, library_category_detail, library_detail, list_abouts, list_connection_value,  list_feedbacks, list_libraries, list_library_categories, list_news, list_sliders, news_detail, sliders_detail 
 from api.view.resources import categoryListView, categoryDetailView, periodFilterListView, periodFilterDetailView, \
     filterCategoriesListView, filterCategoriesDetailView, filtersListView, filtersDetailView, provinceListView, \
     provinceDetailView, resourceListView, resourceDetailView, catEventListView, cateventDetailView
@@ -17,9 +17,6 @@ urlpatterns = [
     path('abouts/', list_abouts, name='list_abouts'),
     path('abouts/<int:pk>/', about_detail, name='about_detail'),
 
-    # Event
-    path('events/', list_events, name='list_events'),
-    path('events/<int:pk>/', event_detail, name='event_detail'),
 
     # News
     path('news/', list_news, name='list_news'),

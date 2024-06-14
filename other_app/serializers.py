@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Connection_Value, Library, Comments, Library_Category, About, Feedbacks, Connection, Event, News, Sliders
+from .models import Connection_Value, Library, Comments, Library_Category, About, Feedbacks, Connection,  News, Sliders
 
 
 class LibrariesSerializer(serializers.ModelSerializer):
@@ -21,13 +21,6 @@ class NewsSerializer(serializers.ModelSerializer):
     class Meta:
         model = News
         fields = ['id', 'title', 'content', 'file', 'created_time', 'updated_time']
-
-
-class EventSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Event
-        fields = ['id', 'title', 'image', 'created_time', 'updated_time']
 
 
 
