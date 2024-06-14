@@ -41,7 +41,7 @@ from rest_framework.pagination import PageNumberPagination
 #     return Response(serialized_data)
 
 @api_view(['GET'])
-def list_library_categories(request):
+def categoryList(request):
     paginator = PageNumberPagination()
     paginator.page_size = 10
     cats = Category.objects.all().order_by("id")
