@@ -1,4 +1,3 @@
-from rest_framework import generics
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -10,24 +9,36 @@ from resources.models import Category, PeriodFilter, FilterCategories, Filters, 
 from rest_framework.pagination import PageNumberPagination
 
 
-
+#
+# @api_view(['GET'])
+# def categoryList(request):
+#     paginator = PageNumberPagination()
+#     paginator.page_size = 10
+#     cats = Category.objects.all().order_by("id")
+#
+#     user_filter = CategoryFilter(request.GET, queryset=cats)
+#     result_page = paginator.paginate_queryset(user_filter.qs, request)
+#
+#     serializer = CategoryAdminSerializer(result_page, many=True, context={'request': request})  # Context ni uzaytiramiz
+#     serialized_data = serializer.data
+#
+#     for data in serialized_data:
+#         if data.get('icon'):
+#             data['icon'] = request.build_absolute_uri(data['icon'])
+#
+#     return paginator.get_paginated_response(serialized_data)
 @api_view(['GET'])
 def categoryList(request):
-    paginator = PageNumberPagination()
-    paginator.page_size = 10
     cats = Category.objects.all().order_by("id")
 
     user_filter = CategoryFilter(request.GET, queryset=cats)
-    result_page = paginator.paginate_queryset(user_filter.qs, request)
-
-    serializer = CategoryAdminSerializer(result_page, many=True, context={'request': request})  # Context ni uzaytiramiz
-    serialized_data = serializer.data
+    serialized_data = CategoryAdminSerializer(user_filter.qs, many=True, context={'request': request}).data
 
     for data in serialized_data:
         if data.get('icon'):
             data['icon'] = request.build_absolute_uri(data['icon'])
 
-    return paginator.get_paginated_response(serialized_data)
+    return Response(serialized_data)
 @api_view(['GET'])
 def categoryDetail(request, pk):
     cat = Category.objects.get(pk=pk)
@@ -338,6 +349,9 @@ def updateResource(request, pk):
         serializer.save()
         return Response(serializer.data)
     return Response(serializer.errors, status=400)
+
+
+
 
 
 @api_view(['DELETE'])
