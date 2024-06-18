@@ -18,9 +18,17 @@ class NewsFilter(django_filters.FilterSet):
 
 # Create 
 # Create (Yaratish)
+# @api_view(['POST'])
+# def create_news(request):
+#     serializer = NewsAdminSerializer(data=request.data)
+#     if serializer.is_valid():
+#         serializer.save()
+#         return Response(serializer.data, status=201)
+#     return Response(serializer.errors, status=400)
+
 @api_view(['POST'])
 def create_news(request):
-    serializer = NewsAdminSerializer(data=request.data)
+    serializer = NewsAdminSerializer(data=request.data, context={'request': request})
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=201)
@@ -34,7 +42,7 @@ def list_news(request):
     news = News.objects.all().order_by("id")
     news_filter = NewsFilter(request.GET, queryset=news)
     result_page = paginator.paginate_queryset(news_filter.qs, request)
-    serializer = NewsAdminSerializer(result_page, many=True)
+    serializer = NewsAdminSerializer(result_page, many=True, context={'request': request})
     return paginator.get_paginated_response(serializer.data)
 
 # Detail
@@ -45,7 +53,7 @@ def news_detail(request, pk):
     except News.DoesNotExist:
         raise Http404
 
-    serializer = NewsAdminSerializer(news)
+    serializer = NewsAdminSerializer(news, context={'request': request})
     return Response(serializer.data)
 
 
@@ -57,7 +65,7 @@ def update_news(request, pk):
     except News.DoesNotExist:
         return Response({'error': 'News not found'}, status=404)
 
-    serializer = NewsAdminSerializer(news, data=request.data, partial=True)
+    serializer = NewsAdminSerializer(news, data=request.data, partial=True, context={'request': request})
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data)
