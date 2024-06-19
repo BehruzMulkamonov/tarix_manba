@@ -160,7 +160,7 @@ def deletePeriodFilter(request, pk):
 @api_view(['GET'])
 def filterCategoriesList(request):
     paginator = PageNumberPagination()
-    paginator.page_size = 10
+    paginator.page_size = 20
 
     filter_categories = FilterCategories.objects.all()
     filter_sub = FilterCategoriesSubFilter(request.GET,queryset=filter_categories)
