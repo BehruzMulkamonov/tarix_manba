@@ -43,7 +43,7 @@ from rest_framework.pagination import PageNumberPagination
 @api_view(['GET'])
 def categoryList(request):
     paginator = PageNumberPagination()
-    paginator.page_size = 10
+    paginator.page_size = 100
     cats = Category.objects.all().order_by("id")
     cat__filter = CategoryFilter(request.GET, queryset=cats)
     result_page = paginator.paginate_queryset(cat__filter.qs, request)
@@ -106,7 +106,7 @@ def deleteCategory(request, pk):
 @api_view(['GET'])
 def periodFilterList(request):
     paginator = PageNumberPagination()
-    paginator.page_size = 10
+    paginator.page_size = 100
     period_filter = PeriodFilter.objects.all().order_by('id')
     search_filter = PeriodFilterSubFilter(request.GET,queryset=period_filter)
     result_page = paginator.paginate_queryset(search_filter.qs, request)
@@ -160,7 +160,7 @@ def deletePeriodFilter(request, pk):
 @api_view(['GET'])
 def filterCategoriesList(request):
     paginator = PageNumberPagination()
-    paginator.page_size = 10
+    paginator.page_size = 100
 
     filter_categories = FilterCategories.objects.all()
     filter_sub = FilterCategoriesSubFilter(request.GET,queryset=filter_categories)
@@ -216,7 +216,7 @@ def deleteFilterCategories(request, pk):
 @api_view(['GET'])
 def filtersList(request):
     paginator = PageNumberPagination()
-    paginator.page_size = 10
+    paginator.page_size = 100
 
     filters = Filters.objects.all().order_by('id')
     filter_sub = FiltersSubFilter(request.GET, queryset=filters)
@@ -270,7 +270,7 @@ def deleteFilters(request, pk):
 @api_view(['GET'])
 def provinceList(request):
     paginator = PageNumberPagination()
-    paginator.page_size = 10
+    paginator.page_size = 100
     provinces = Province.objects.all().order_by('id')
     provinces_filter = ProvinceFilter(request.GET, queryset=provinces)
     result_page = paginator.paginate_queryset(provinces_filter.qs, request)
