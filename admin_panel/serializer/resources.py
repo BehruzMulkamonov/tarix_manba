@@ -108,9 +108,6 @@ class FilterCategoriesAdminSerializer(serializers.ModelSerializer):
 class CategoryAdminSerializer(serializers.ModelSerializer):
     categories = FilterCategoriesAdminSerializer(many=True, read_only=True)
 
-
-
-
     class Meta:
         model = Category
         fields = ('id', 'title', 'icon','image' ,'order', 'interactive', 'created_time', 'updated_time', 'categories',)
@@ -122,11 +119,6 @@ class CategoryAdminSerializer(serializers.ModelSerializer):
 
     def get_categories(self, obj):
         return obj.categories.all()
-
-
-
-
-
 
 
 
@@ -144,9 +136,11 @@ class ProvinceAdminSerializer(serializers.ModelSerializer):
 
 class InteriveAdminSerializer(serializers.ModelSerializer):
     file = Base64FileField(max_length=None, use_url=True)
+    status_display = serializers.CharField(source='get_status_display', read_only=True)
+
     class Meta:
         model = Interive
-        fields = ['resource_interive','status', 'title', 'file', 'link', 'latitude', 'longitude', 'created_time', 'updated_time']
+        fields = ['resource_interive','status','status_display', 'title', 'file', 'link', 'latitude', 'longitude', 'created_time', 'updated_time']
 
 
 class AttributesAdminSerializer(serializers.ModelSerializer):
@@ -159,12 +153,6 @@ class ContentsAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contents
         fields = ['resource_content', 'contents_title', 'contents_description', 'created_time', 'updated_time']
-
-
-
-
-
-
 
 
 

@@ -9,7 +9,6 @@ from resources.models import Category, PeriodFilter, FilterCategories, Filters, 
 from rest_framework.pagination import PageNumberPagination
 
 
-#
 # @api_view(['GET'])
 # def categoryList(request):
 #     paginator = PageNumberPagination()

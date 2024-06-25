@@ -83,7 +83,7 @@ class Resource(BaseModel):
     title = models.CharField(max_length=255)
     image = models.ImageField(upload_to='media/images/resource',blank=True,null=True)
     content = models.TextField()
-    statehood = models.BooleanField()
+    statehood = models.BooleanField(default=True)
     province = models.ForeignKey(Province, on_delete=models.SET_NULL, null=True,
                                  related_name='select_province')
 
@@ -99,7 +99,6 @@ class Resource(BaseModel):
 
 
 class Interive(BaseModel):
-
 
     class Status(models.TextChoices):
         GALLERY = 'Gl', 'Gallery'
@@ -123,16 +122,6 @@ class Interive(BaseModel):
 
 
 
-
-
-
-
-
-
-
-
-
-
 class Attributes(BaseModel):
     resource_attribute = models.ForeignKey(Resource, on_delete=models.SET_NULL, null=True,
                                            related_name='resource_attribute')
@@ -147,10 +136,3 @@ class Contents(BaseModel):
     contents_title = models.CharField(max_length=255)
     contents_description = models.TextField()
 
-
-
-
-
-# interive_content = models.CharField(max_length=255)  # buni type qilib vedio,audio,
-# interive_title = models.CharField(max_length=255)  # bu ham inline va counti bilan
-# interive_file = models.FileField(upload_to='media/files/resource',blank=True,null=True)
