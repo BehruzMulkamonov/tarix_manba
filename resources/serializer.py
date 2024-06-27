@@ -10,7 +10,7 @@ from resources.models import Category, PeriodFilter, FilterCategories, Filters, 
 class PeriodFilterSerializer(serializers.ModelSerializer):
     class Meta:
         model = PeriodFilter
-        fields = ['id','title', ]
+        fields = ['id', 'title', 'category',]
 
 
 class FilterCategoriesSerializer(serializers.ModelSerializer):
@@ -59,6 +59,9 @@ class ResourceSerializer(serializers.ModelSerializer):
         fields = ['category', 'filter_category', 'filters', 'period_filter', 'title',
                   'image', 'content', 'statehood', 'province','category_name',
                   'filter_category_title',]
+
+    def get_period_filter_title(self, obj):
+        return obj.period_filter.title if obj.period_filter else None
 
     def get_category_name(self, obj):
         return obj.category.title

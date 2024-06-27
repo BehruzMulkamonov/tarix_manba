@@ -26,6 +26,8 @@ class Category(BaseModel):
 
 class PeriodFilter(BaseModel):
     title = models.CharField(max_length=255)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True,
+                                 related_name='category_filter')
 
     class Meta:
         verbose_name = 'Period Filter'
