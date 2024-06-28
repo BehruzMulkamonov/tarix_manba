@@ -99,9 +99,14 @@ def list_news(request):
     news = News.objects.all().order_by("id")
     news_filter = NewsFilter(request.GET, queryset=news)
     result_page = paginator.paginate_queryset(news_filter.qs, request)
-    serializer = NewsSerializer(result_page, many=True)
-    return paginator.get_paginated_response(serializer.data)
+    serializer = NewsSerializer(result_page, many=True, context={'request': request}).data
+    # return paginator.get_paginated_response(serializer.data)
 
+    for data in serializer:
+        if data.get('file'):
+            data['file'] = request.build_absolute_uri(data['file'])
+
+    return paginator.get_paginated_response(serializer)
 # Detail
 @api_view(['GET'])
 def news_detail(request, pk):
