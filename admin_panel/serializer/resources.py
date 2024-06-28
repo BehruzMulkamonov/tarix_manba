@@ -13,8 +13,7 @@ import uuid
 
 import base64
 import six
-import re
-import magic
+# import re
 
 class Base64FileField(serializers.FileField):
     def to_internal_value(self, data):
@@ -41,11 +40,13 @@ class Base64FileField(serializers.FileField):
 
     def get_file_extension(self, header, decoded_file=None):
         # Headerdan fayl kengaytmasini olishga harakat qilamiz
+        import re
         match = re.search(r'data:image/(?P<ext>[^;]+);base64', header)
         if match:
             return match.group('ext').lower()
         
         # Agar headerda kengaytma topilmagan bo'lsa, MIME turidan foydalanamiz
+        import magic
         try:
             file_mime_type = magic.from_buffer(decoded_file, mime=True)
             return file_mime_type.split('/')[-1].lower()
