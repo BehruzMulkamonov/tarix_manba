@@ -37,6 +37,7 @@ class Base64FileField(serializers.FileField):
         return super(Base64FileField, self).to_internal_value(data)
 
     def get_file_extension(self, header, decoded_file=None):
+        import re
         match = re.search(r'data:(?P<mime>[^;]+);base64', header)
         if match:
             mime = match.group('mime')
