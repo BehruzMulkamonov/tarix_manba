@@ -20,6 +20,8 @@ class Base64FileField(serializers.FileField):
         if isinstance(data, six.string_types):
             if 'data:' in data and ';base64,' in data:
                 header, data = data.split(';base64,')
+            else:
+                self.fail('invalid_file')
 
             try:
                 decoded_file = base64.b64decode(data)
@@ -27,42 +29,77 @@ class Base64FileField(serializers.FileField):
                 self.fail('invalid_file')
 
             file_name = str(uuid.uuid4())[:12]
-            file_extension = self.get_file_extension(file_name, decoded_file)
+            file_extension = self.get_file_extension(header, decoded_file)
             complete_file_name = f"{file_name}.{file_extension}"
 
             data = ContentFile(decoded_file, name=complete_file_name)
 
         return super(Base64FileField, self).to_internal_value(data)
-# men yozgan kod
-    # def get_file_extension(self, file_name, decoded_file):
-    #     try:
-    #         import magic
-    #         file_mime_type = magic.from_buffer(decoded_file, mime=True)
-    #         return file_mime_type.split('/')[-1]
-    #     except ImportError:
-    #         return 'txt'
-#chatgpt
-    # def get_file_extension(self, header):
-    #     import re
-    #     match = re.search(r'data:image/(?P<ext>[^;]+);base64', header)
-    #     if match:
-    #         return match.group('ext')
-    #     return 'txt'
-    
+
     def get_file_extension(self, header, decoded_file=None):
-        # Headerdan fayl kengaytmasini olishga harakat qilamiz
-        import re
-        match = re.search(r'data:image/(?P<ext>[^;]+);base64', header)
+        match = re.search(r'data:(?P<mime>[^;]+);base64', header)
         if match:
-            return match.group('ext')
+            mime = match.group('mime')
+            return mime.split('/')[-1]
+
+        # Fallback if the header is missing
+        if decoded_file:
+            try:
+                import magic
+                file_mime_type = magic.from_buffer(decoded_file, mime=True)
+                return file_mime_type.split('/')[-1]
+            except ImportError:
+                return 'txt'
+        return 'txt'
+
+# class Base64FileField(serializers.FileField):
+#     def to_internal_value(self, data):
+#         if isinstance(data, six.string_types):
+#             if 'data:' in data and ';base64,' in data:
+#                 header, data = data.split(';base64,')
+
+#             try:
+#                 decoded_file = base64.b64decode(data)
+#             except TypeError:
+#                 self.fail('invalid_file')
+
+#             file_name = str(uuid.uuid4())[:12]
+#             file_extension = self.get_file_extension(file_name, decoded_file)
+#             complete_file_name = f"{file_name}.{file_extension}"
+
+#             data = ContentFile(decoded_file, name=complete_file_name)
+
+#         return super(Base64FileField, self).to_internal_value(data)
+# # men yozgan kod
+#     # def get_file_extension(self, file_name, decoded_file):
+#     #     try:
+#     #         import magic
+#     #         file_mime_type = magic.from_buffer(decoded_file, mime=True)
+#     #         return file_mime_type.split('/')[-1]
+#     #     except ImportError:
+#     #         return 'txt'
+# #chatgpt
+#     # def get_file_extension(self, header):
+#     #     import re
+#     #     match = re.search(r'data:image/(?P<ext>[^;]+);base64', header)
+#     #     if match:
+#     #         return match.group('ext')
+#     #     return 'txt'
+    
+#     def get_file_extension(self, header, decoded_file=None):
+#         # Headerdan fayl kengaytmasini olishga harakat qilamiz
+#         import re
+#         match = re.search(r'data:image/(?P<ext>[^;]+);base64', header)
+#         if match:
+#             return match.group('ext')
         
-        # Agar headerda kengaytma topilmasa, faylning MIME turidan foydalanamiz
-        try:
-            import magic
-            file_mime_type = magic.from_buffer(decoded_file, mime=True)
-            return file_mime_type.split('/')[-1]
-        except ImportError:
-            return 'txt'
+#         # Agar headerda kengaytma topilmasa, faylning MIME turidan foydalanamiz
+#         try:
+#             import magic
+#             file_mime_type = magic.from_buffer(decoded_file, mime=True)
+#             return file_mime_type.split('/')[-1]
+#         except ImportError:
+#             return 'txt'
 
 class FiltersAdminSerializer(serializers.ModelSerializer):
     filter_categories_name = serializers.SerializerMethodField()
