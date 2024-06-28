@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from admin_panel.serializer.resources import ResourceAdminSerializer
+from admin_panel.serializer.resources import Base64FileField, ResourceAdminSerializer
 from resources.models import Category, PeriodFilter, FilterCategories, Filters, Province, Resource, Interive, \
     Attributes, Contents
 
@@ -52,6 +52,8 @@ class ContentsSerializer(serializers.ModelSerializer):
 class ResourceSerializer(serializers.ModelSerializer):
     category_name = serializers.SerializerMethodField()
     filter_category_title = serializers.SerializerMethodField()
+    image = Base64FileField()
+
     # filters_title = serializers.SerializerMethodField()
 
     class Meta:
