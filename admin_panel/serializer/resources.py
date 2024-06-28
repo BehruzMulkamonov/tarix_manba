@@ -33,7 +33,7 @@ class Base64FileField(serializers.FileField):
             data = ContentFile(decoded_file, name=complete_file_name)
 
         return super(Base64FileField, self).to_internal_value(data)
-
+# men yozgan kod
     # def get_file_extension(self, file_name, decoded_file):
     #     try:
     #         import magic
@@ -41,14 +41,29 @@ class Base64FileField(serializers.FileField):
     #         return file_mime_type.split('/')[-1]
     #     except ImportError:
     #         return 'txt'
-    def get_file_extension(self, header):
+#chatgpt
+    # def get_file_extension(self, header):
+    #     import re
+    #     match = re.search(r'data:image/(?P<ext>[^;]+);base64', header)
+    #     if match:
+    #         return match.group('ext')
+    #     return 'txt'
+    
+    def get_file_extension(self, header, decoded_file=None):
+        # Headerdan fayl kengaytmasini olishga harakat qilamiz
         import re
         match = re.search(r'data:image/(?P<ext>[^;]+);base64', header)
         if match:
             return match.group('ext')
-        return 'txt'
-    
-    
+        
+        # Agar headerda kengaytma topilmasa, faylning MIME turidan foydalanamiz
+        try:
+            import magic
+            file_mime_type = magic.from_buffer(decoded_file, mime=True)
+            return file_mime_type.split('/')[-1]
+        except ImportError:
+            return 'txt'
+
 class FiltersAdminSerializer(serializers.ModelSerializer):
     filter_categories_name = serializers.SerializerMethodField()
     filter_cat_id = serializers.SerializerMethodField()
