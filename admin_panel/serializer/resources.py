@@ -34,14 +34,21 @@ class Base64FileField(serializers.FileField):
 
         return super(Base64FileField, self).to_internal_value(data)
 
-    def get_file_extension(self, file_name, decoded_file):
-        try:
-            import magic
-            file_mime_type = magic.from_buffer(decoded_file, mime=True)
-            return file_mime_type.split('/')[-1]
-        except ImportError:
-            return 'txt'
-
+    # def get_file_extension(self, file_name, decoded_file):
+    #     try:
+    #         import magic
+    #         file_mime_type = magic.from_buffer(decoded_file, mime=True)
+    #         return file_mime_type.split('/')[-1]
+    #     except ImportError:
+    #         return 'txt'
+    def get_file_extension(self, header):
+        import re
+        match = re.search(r'data:image/(?P<ext>[^;]+);base64', header)
+        if match:
+            return match.group('ext')
+        return 'txt'
+    
+    
 class FiltersAdminSerializer(serializers.ModelSerializer):
     filter_categories_name = serializers.SerializerMethodField()
     filter_cat_id = serializers.SerializerMethodField()
