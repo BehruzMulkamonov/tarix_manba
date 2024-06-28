@@ -161,7 +161,7 @@ class InteriveAdminSerializer(serializers.ModelSerializer):
         instance.longitude = validated_data.get('longitude', instance.longitude)
         return super().update(instance, validated_data)
     
-    
+
 class AttributesAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Attributes
@@ -318,16 +318,16 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
                     latitude=latitude,
                     longitude=longitude
                 )
-        else:
-            Interive.objects.create(
-                resource_interive=resource,
-                status='',
-                title='',
-                file=None,
-                link='',
-                latitude=None,
-                longitude=None
-            )
+        # else:
+        #     Interive.objects.create(
+        #         resource_interive=resource,
+        #         status='',
+        #         title='',
+        #         file=None,
+        #         link='',
+        #         latitude=None,
+        #         longitude=None
+        #     )
 
     
 
