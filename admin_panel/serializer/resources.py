@@ -42,7 +42,7 @@ class Base64FileField(serializers.FileField):
             file_mime_type = magic.from_buffer(decoded_file, mime=True)
             return file_mime_type.split('/')[-1]
         except ImportError:
-            return 'txt'
+            return 'jpg'
 
 
 class FiltersAdminSerializer(serializers.ModelSerializer):
