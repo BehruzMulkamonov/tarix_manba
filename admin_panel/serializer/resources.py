@@ -301,33 +301,47 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         else:
             Attributes.objects.create(resource_attribute=resource, attributes_title='', attributes_description='')
 
+    # @staticmethod
+    # def create_interive(resource, status_list, title_list, file_list, link_list, latitude_list, longitude_list):
+    #     if any([status_list, title_list, file_list, link_list, latitude_list, longitude_list]):
+    #         for status, title, file, link, latitude, longitude in zip_longest(
+    #             status_list or [''], title_list or [''], file_list or [None],
+    #             link_list or [''], latitude_list or [None], longitude_list or [None],
+    #             fillvalue=''
+    #         ):
+    #             Interive.objects.create(
+    #                 resource_interive=resource,
+    #                 status=status,
+    #                 title=title,
+    #                 file=file,
+    #                 link=link,
+    #                 latitude=latitude,
+    #                 longitude=longitude
+    #             )
+ 
     @staticmethod
     def create_interive(resource, status_list, title_list, file_list, link_list, latitude_list, longitude_list):
-        if any([status_list, title_list, file_list, link_list, latitude_list, longitude_list]):
-            for status, title, file, link, latitude, longitude in zip_longest(
-                status_list or [''], title_list or [''], file_list or [None],
-                link_list or [''], latitude_list or [None], longitude_list or [None],
-                fillvalue=''
-            ):
-                Interive.objects.create(
-                    resource_interive=resource,
-                    status=status,
-                    title=title,
-                    file=file,
-                    link=link,
-                    latitude=latitude,
-                    longitude=longitude
-                )
-        # else:
-        #     Interive.objects.create(
-        #         resource_interive=resource,
-        #         status='',
-        #         title='',
-        #         file=None,
-        #         link='',
-        #         latitude=None,
-        #         longitude=None
-        #     )
+    # To'ldirish qiymatlarini o'rnatish
+        status_list = status_list or ['']
+        title_list = title_list or ['']
+        file_list = file_list or [None]
+        link_list = link_list or ['']
+        latitude_list = latitude_list or [None]
+        longitude_list = longitude_list or [None]
+
+        # Har bir element uchun zip_longest yordamida ro'yxatlarni birlashtirish
+        for status, title, file, link, latitude, longitude in zip_longest(
+                status_list, title_list, file_list, link_list, latitude_list, longitude_list,
+                fillvalue=''):
+            Interive.objects.create(
+                resource_interive=resource,
+                status=status,
+                title=title,
+                file=file,
+                link=link,
+                latitude=latitude,
+                longitude=longitude
+            )
 
     
 
