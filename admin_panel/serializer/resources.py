@@ -207,44 +207,52 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         child=serializers.CharField(max_length=None, required=False),
         write_only=True,
         required=False
+
     )
-    status_list = serializers.ListField(
-        child=serializers.CharField(max_length=None, required=False),
+
+    interive_data_list = serializers.ListField(
+        child=serializers.DictField(child=serializers.CharField(max_length=None, required=False)),
         write_only=True,
         required=False
     )
-    interive_title_list = serializers.ListField(
-        child=serializers.CharField(max_length=None, required=False),
-        write_only=True,
-        required=False
-    )
-    interive_file_list = serializers.ListField(
-        child=Base64FileField(max_length=1000, allow_empty_file=False, use_url=False),
-        write_only=True,
-        required=False
-    )
-    link_list = serializers.ListField(
-        child=serializers.URLField(max_length=2000, allow_blank=True, required=False),
-        write_only=True,
-        required=False
-    )
-    latitude_list = serializers.ListField(
-        child=serializers.FloatField(max_value=90, min_value=-90, required=False),
-        write_only=True,
-        required=False
-    )
-    longitude_list = serializers.ListField(
-        child=serializers.FloatField(max_value=180, min_value=-180, required=False),
-        write_only=True,
-        required=False
-    )
+
+    # status_list = serializers.ListField(
+    #     child=serializers.CharField(max_length=None, required=False),
+    #     write_only=True,
+    #     required=False
+    # )
+    # interive_title_list = serializers.ListField(
+    #     child=serializers.CharField(max_length=None, required=False),
+    #     write_only=True,
+    #     required=False
+    # )
+    # interive_file_list = serializers.ListField(
+    #     child=Base64FileField(max_length=1000, allow_empty_file=False, use_url=False),
+    #     write_only=True,
+    #     required=False
+    # )
+    # link_list = serializers.ListField(
+    #     child=serializers.URLField(max_length=2000, allow_blank=True, required=False),
+    #     write_only=True,
+    #     required=False
+    # )
+    # latitude_list = serializers.ListField(
+    #     child=serializers.FloatField(max_value=90, min_value=-90, required=False),
+    #     write_only=True,
+    #     required=False
+    # )
+    # longitude_list = serializers.ListField(
+    #     child=serializers.FloatField(max_value=180, min_value=-180, required=False),
+    #     write_only=True,
+    #     required=False
+    # )
+
 
     class Meta:
         model = Resource
         fields = (
             'id', 'category', 'filter_category', 'filters', 'period_filter', 'title', 'image', 'content', 'province_name','statehood',
-            'province', 'interive', 'status_list', 'interive_title_list',
-            'interive_file_list', 'link_list', 'latitude_list', 'longitude_list',
+            'province', 'interive', 'interive_data_list',
             'attributes_title_list', 'attributes_description_list', 'attributes',
             'contents_title_list', 'contents_description_list', 'contents',
             'interive_list', 'attributes_list', 'contents_list',
@@ -301,47 +309,44 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         else:
             Attributes.objects.create(resource_attribute=resource, attributes_title='', attributes_description='')
 
-    # @staticmethod
-    # def create_interive(resource, status_list, title_list, file_list, link_list, latitude_list, longitude_list):
-    #     if any([status_list, title_list, file_list, link_list, latitude_list, longitude_list]):
-    #         for status, title, file, link, latitude, longitude in zip_longest(
-    #             status_list or [''], title_list or [''], file_list or [None],
-    #             link_list or [''], latitude_list or [None], longitude_list or [None],
-    #             fillvalue=''
-    #         ):
-    #             Interive.objects.create(
-    #                 resource_interive=resource,
-    #                 status=status,
-    #                 title=title,
-    #                 file=file,
-    #                 link=link,
-    #                 latitude=latitude,
-    #                 longitude=longitude
-    #             )
- 
-    @staticmethod
-    def create_interive(resource, status_list, title_list, file_list, link_list, latitude_list, longitude_list):
-    # To'ldirish qiymatlarini o'rnatish
-        status_list = status_list or ['']
-        title_list = title_list or ['']
-        file_list = file_list or [None]
-        link_list = link_list or ['']
-        latitude_list = latitude_list or [None]
-        longitude_list = longitude_list or [None]
 
-        # Har bir element uchun zip_longest yordamida ro'yxatlarni birlashtirish
-        for status, title, file, link, latitude, longitude in zip_longest(
-                status_list, title_list, file_list, link_list, latitude_list, longitude_list,
-                fillvalue=''):
+
+    @staticmethod
+    def create_interive(resource, interive_data_list):
+        for interive_data in interive_data_list:
             Interive.objects.create(
                 resource_interive=resource,
-                status=status,
-                title=title,
-                file=file,
-                link=link,
-                latitude=latitude,
-                longitude=longitude
+                status=interive_data.get('status', ''),
+                title=interive_data.get('title', ''),
+                file=interive_data.get('file', None),
+                link=interive_data.get('link', ''),
+                latitude=interive_data.get('latitude', None),
+                longitude=interive_data.get('longitude', None)
             )
+
+    # @staticmethod
+    # def create_interive(resource, status_list, title_list, file_list, link_list, latitude_list, longitude_list):
+    # # To'ldirish qiymatlarini o'rnatish
+    #     status_list = status_list or ['']
+    #     title_list = title_list or ['']
+    #     file_list = file_list or [None]
+    #     link_list = link_list or ['']
+    #     latitude_list = latitude_list or [None]
+    #     longitude_list = longitude_list or [None]
+
+    #     # Har bir element uchun zip_longest yordamida ro'yxatlarni birlashtirish
+    #     for status, title, file, link, latitude, longitude in zip_longest(
+    #             status_list, title_list, file_list, link_list, latitude_list, longitude_list,
+    #             fillvalue=''):
+    #         Interive.objects.create(
+    #             resource_interive=resource,
+    #             status=status,
+    #             title=title,
+    #             file=file,
+    #             link=link,
+    #             latitude=latitude,
+    #             longitude=longitude
+    #         )
 
     
 
@@ -351,20 +356,44 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         contents_description_list = validated_data.pop('contents_description_list', [])
         attributes_title_list = validated_data.pop('attributes_title_list', [])
         attributes_description_list = validated_data.pop('attributes_description_list', [])
-        status_list = validated_data.pop('status_list', [])
-        interive_title_list = validated_data.pop('interive_title_list', [])
-        interive_file_list = validated_data.pop('interive_file_list', [])
-        link_list = validated_data.pop('link_list', [])
-        latitude_list = validated_data.pop('latitude_list', [])
-        longitude_list = validated_data.pop('longitude_list', [])
+        # status_list = validated_data.pop('status_list', [])
+        # interive_title_list = validated_data.pop('interive_title_list', [])
+        # interive_file_list = validated_data.pop('interive_file_list', [])
+        
+        interive_data_list = validated_data.pop('interive_data_list', [])
 
         resource = Resource.objects.create(**validated_data)
 
         self.create_contents(resource, contents_title_list, contents_description_list)
         self.create_attributes(resource, attributes_title_list, attributes_description_list)
-        self.create_interive(resource, status_list, interive_title_list, interive_file_list, link_list, latitude_list, longitude_list)
+        self.create_interive(resource, interive_data_list)
+
 
         return resource
+
+    # @staticmethod
+    # def create_interive(resource, interive_data_list):
+    #     for interive_data in interive_data_list:
+    #         Interive.objects.create(
+    #             resource_interive=resource,
+    #             status=interive_data.get('status', ''),
+    #             title=interive_data.get('title', ''),
+    #             file=interive_data.get('file', None),
+    #             link=interive_data.get('link', ''),
+    #             latitude=interive_data.get('latitude', None),
+    #             longitude=interive_data.get('longitude', None)
+    #         )
+    #     link_list = validated_data.pop('link_list', [])
+    #     latitude_list = validated_data.pop('latitude_list', [])
+    #     longitude_list = validated_data.pop('longitude_list', [])
+
+    #     resource = Resource.objects.create(**validated_data)
+
+    #     self.create_contents(resource, contents_title_list, contents_description_list)
+    #     self.create_attributes(resource, attributes_title_list, attributes_description_list)
+    #     self.create_interive(resource, status_list, interive_title_list, interive_file_list, link_list, latitude_list, longitude_list)
+
+    #     return resource
 
     @transaction.atomic
     def update(self, instance, validated_data):
@@ -384,12 +413,13 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         contents_description_list = validated_data.pop('contents_description_list', [])
         attributes_title_list = validated_data.pop('attributes_title_list', [])
         attributes_description_list = validated_data.pop('attributes_description_list', [])
-        status_list = validated_data.pop('status_list', [])
-        interive_title_list = validated_data.pop('interive_title_list', [])
-        interive_file_list = validated_data.pop('interive_file_list', [])
-        link_list = validated_data.pop('link_list', [])
-        latitude_list = validated_data.pop('latitude_list', [])
-        longitude_list = validated_data.pop('longitude_list', [])
+        interive_data_list = validated_data.pop('interive_data_list', [])
+        # status_list = validated_data.pop('status_list', [])
+        # interive_title_list = validated_data.pop('interive_title_list', [])
+        # interive_file_list = validated_data.pop('interive_file_list', [])
+        # link_list = validated_data.pop('link_list', [])
+        # latitude_list = validated_data.pop('latitude_list', [])
+        # longitude_list = validated_data.pop('longitude_list', [])
 
         instance.resource_content.all().delete()
         instance.resource_attribute.all().delete()
@@ -397,7 +427,7 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
 
         self.create_contents(instance, contents_title_list, contents_description_list)
         self.create_attributes(instance, attributes_title_list, attributes_description_list)
-        self.create_interive(instance, status_list, interive_title_list, interive_file_list, link_list, latitude_list, longitude_list)
+        self.create_interive(instance, interive_data_list)
 
         return instance
 
