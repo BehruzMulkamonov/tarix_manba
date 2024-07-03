@@ -8,9 +8,9 @@ from admin_panel.crud.library_category import create_library_category, library_c
 # news
 from admin_panel.crud.news import  list_news, create_news, news_detail, update_news, delete_news
 
-from admin_panel.crud.resources import ExampleView, categoryList, createCategory, categoryDetail, updateCategory, deleteCategory \
+from admin_panel.crud.resources import  categoryList, createCategory, categoryDetail, updateCategory, deleteCategory \
 
-from admin_panel.crud.resources import ExampleView, categoryList, createCategory, categoryDetail, updateCategory, \
+from admin_panel.crud.resources import  categoryList, createCategory, categoryDetail, updateCategory, \
     deleteCategory, \
     periodFilterList, periodFilterDetail, updatePeriodFilter, deletePeriodFilter, createPeriodFilter, \
     filterCategoriesList, filterCategoriesDetail, createFilterCategories, updateFilterCategories, \
@@ -166,7 +166,5 @@ urlpatterns = [
     path('connection_value/<int:pk>/delete/', delete_connection_value, name='connectin-value-delete'),
 
 
-    # 
-    path('example/', ExampleView.as_view(), name='example'),
-
+    
 ]
