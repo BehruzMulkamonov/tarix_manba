@@ -309,12 +309,15 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         attributes_title_list = validated_data.pop('attributes_title_list', [])
         attributes_description_list = validated_data.pop('attributes_description_list', [])
         interive_data_list = validated_data.pop('interive_data_list', [])
+        filter_ids = validated_data.pop('filter_ids', [])
 
         resource = Resource.objects.create(**validated_data)
 
         self.create_contents(resource, contents_title_list, contents_description_list)
         self.create_attributes(resource, attributes_title_list, attributes_description_list)
         self.create_interive(resource, interive_data_list)
+
+        resource.filters.set(filter_ids)
 
         return resource
 
@@ -337,6 +340,8 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         attributes_title_list = validated_data.pop('attributes_title_list', [])
         attributes_description_list = validated_data.pop('attributes_description_list', [])
         interive_data_list = validated_data.pop('interive_data_list', [])
+        filter_ids = validated_data.pop('filter_ids', [])
+
 
         instance.resource_content.all().delete()
         instance.resource_attribute.all().delete()
@@ -345,5 +350,7 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         self.create_contents(instance, contents_title_list, contents_description_list)
         self.create_attributes(instance, attributes_title_list, attributes_description_list)
         self.create_interive(instance, interive_data_list)
+
+        instance.filters.set(filter_ids)
 
         return instance
