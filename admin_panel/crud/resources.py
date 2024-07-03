@@ -9,35 +9,6 @@ from resources.models import Category, PeriodFilter, FilterCategories, Filters, 
 from rest_framework.pagination import PageNumberPagination
 
 
-# @api_view(['GET'])
-# def categoryList(request):
-#     paginator = PageNumberPagination()
-#     paginator.page_size = 10
-#     cats = Category.objects.all().order_by("id")
-#
-#     user_filter = CategoryFilter(request.GET, queryset=cats)
-#     result_page = paginator.paginate_queryset(user_filter.qs, request)
-#
-#     serializer = CategoryAdminSerializer(result_page, many=True, context={'request': request})  # Context ni uzaytiramiz
-#     serialized_data = serializer.data
-#
-#     for data in serialized_data:
-#         if data.get('icon'):
-#             data['icon'] = request.build_absolute_uri(data['icon'])
-#
-#     return paginator.get_paginated_response(serialized_data)
-# @api_view(['GET'])
-# def categoryList(request):
-#     cats = Category.objects.all().order_by("id")
-
-#     user_filter = CategoryFilter(request.GET, queryset=cats)
-#     serialized_data = CategoryAdminSerializer(user_filter.qs, many=True, context={'request': request}).data
-
-#     for data in serialized_data:
-#         if data.get('icon'):
-#             data['icon'] = request.build_absolute_uri(data['icon'])
-
-#     return Response(serialized_data)
 
 @api_view(['GET'])
 def categoryList(request):
@@ -383,20 +354,3 @@ def deleteResource(request, pk):
 
 
 
-# myapp/views.py
-from rest_framework.views import APIView
-from rest_framework.response import Response
-import pdb
-
-class ExampleView(APIView):
-    def post(self, request, *args, **kwargs):
-        print('data:', request.data)
-        # print(f"Method: {request.method}")
-        # print(f"Path: {request.path}")
-        # print(f"Headers: {request.headers}")
-        # print(f"Body: {request.data}")
-
-        pdb.set_trace()  # breakpoint qo'yish
-
-        # Your logic here
-        return Response({"message": "Request received"})

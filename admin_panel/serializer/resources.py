@@ -215,6 +215,12 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         required=False
     )
 
+    filter_ids = serializers.ListField(
+        child=serializers.IntegerField(), 
+        write_only=True,
+        required=False
+    )
+
     class Meta:
         model = Resource
         fields = (
@@ -224,7 +230,7 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
             'attributes_title_list', 'attributes_description_list', 'attributes',
             'contents_title_list', 'contents_description_list', 'contents',
             'interive_list', 'attributes_list', 'contents_list',
-            'cat_name', 'filter_category_name', 'filters_name', 'period_filter_name',
+            'cat_name', 'filter_category_name', 'filters_name', 'period_filter_name', 'filter_ids'
             'created_time', 'updated_time'
         )
 
