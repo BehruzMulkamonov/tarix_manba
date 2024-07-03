@@ -15,7 +15,9 @@ import base64
 import six
 import re
 
+import logging
 
+logger = logging.getLogger(__name__)
 
 class Base64FileField(serializers.FileField):
     def to_internal_value(self, data):
@@ -215,7 +217,7 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         required=False
     )
 
-    filter_ids = serializers.ListField(
+    filter_list = serializers.ListField(
         child=serializers.IntegerField(), 
         write_only=True,
         required=False
@@ -230,7 +232,7 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
             'attributes_title_list', 'attributes_description_list', 'attributes',
             'contents_title_list', 'contents_description_list', 'contents',
             'interive_list', 'attributes_list', 'contents_list',
-            'cat_name', 'filter_category_name', 'filters_name', 'period_filter_name', 'filter_ids'
+            'cat_name', 'filter_category_name', 'filters_name', 'period_filter_name', 'filter_list',
             'created_time', 'updated_time'
         )
 
@@ -304,22 +306,28 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def create(self, validated_data):
-        contents_title_list = validated_data.pop('contents_title_list', [])
-        contents_description_list = validated_data.pop('contents_description_list', [])
-        attributes_title_list = validated_data.pop('attributes_title_list', [])
-        attributes_description_list = validated_data.pop('attributes_description_list', [])
-        interive_data_list = validated_data.pop('interive_data_list', [])
-        filter_ids = validated_data.pop('filter_ids', [])
+        try:
+            contents_title_list = validated_data.pop('contents_title_list', [])
+            contents_description_list = validated_data.pop('contents_description_list', [])
+            attributes_title_list = validated_data.pop('attributes_title_list', [])
+            attributes_description_list = validated_data.pop('attributes_description_list', [])
+            interive_data_list = validated_data.pop('interive_data_list', [])
+            filter_list = validated_data.pop('filter_list', [])
 
-        resource = Resource.objects.create(**validated_data)
+            resource = Resource.objects.create(**validated_data)
 
-        self.create_contents(resource, contents_title_list, contents_description_list)
-        self.create_attributes(resource, attributes_title_list, attributes_description_list)
-        self.create_interive(resource, interive_data_list)
+            self.create_contents(resource, contents_title_list, contents_description_list)
+            self.create_attributes(resource, attributes_title_list, attributes_description_list)
+            self.create_interive(resource, interive_data_list)
 
-        resource.filters.set(filter_ids)
+            resource.filters.add(*filter_list)
 
-        return resource
+            return resource
+        
+        except Exception as e:
+            logger.error(f'Error creating resource: {e}')
+            raise e
+
 
     @transaction.atomic
     def update(self, instance, validated_data):
@@ -340,17 +348,22 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         attributes_title_list = validated_data.pop('attributes_title_list', [])
         attributes_description_list = validated_data.pop('attributes_description_list', [])
         interive_data_list = validated_data.pop('interive_data_list', [])
-        filter_ids = validated_data.pop('filter_ids', [])
+        filter_list = validated_data.pop('filter_list', [])
 
 
         instance.resource_content.all().delete()
         instance.resource_attribute.all().delete()
         instance.resource_interive.all().delete()
 
+
+
         self.create_contents(instance, contents_title_list, contents_description_list)
         self.create_attributes(instance, attributes_title_list, attributes_description_list)
         self.create_interive(instance, interive_data_list)
 
-        instance.filters.set(filter_ids)
+        instance.filters.clear()
+        instance.filters.add(*filter_list)
+        instance.save()
+
 
         return instance
