@@ -146,6 +146,10 @@ class InteriveAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Interive
         fields = ['resource_interive','status','status_display', 'title', 'file', 'link', 'latitude', 'longitude', 'created_time', 'updated_time']
+        extra_kwargs = {
+            'file': {'required': False, 'allow_null': True},
+        }
+
 
     def create(self, validated_data):
         latitude = validated_data.pop('latitude', None)
@@ -299,7 +303,7 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def create_interive(resource, interive_data_list):
-        for interive_data in interive_data_list:
+         for interive_data in interive_data_list:
             Interive.objects.create(
                 resource_interive=resource,
                 status=interive_data.get('status', ''),
