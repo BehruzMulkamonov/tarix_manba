@@ -263,7 +263,7 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
     def get_filters_name(self, obj):
         filters = obj.filters.all()  # Get all filter objects
         if filters:
-            return [filter.title for filter in filters]  # Return a list of titles
+            return [filter.id for filter in filters]  # Return a list of titles
         return []  # Return an empty list if no filters are found
 
     def get_period_filter_name(self, obj):
