@@ -222,11 +222,11 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         write_only=True,
         required=False
     )
-
+# 'filters',
     class Meta:
         model = Resource
         fields = (
-            'id', 'category', 'filter_category', 'filters', 'period_filter', 'title', 'image', 'content',
+            'id', 'category', 'filter_category',  'period_filter', 'title', 'image', 'content',   
             'province_name', 'statehood',
             'province', 'interive', 'interive_data_list',
             'attributes_title_list', 'attributes_description_list', 'attributes',
@@ -255,10 +255,16 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         if title:
             return title.title
 
+    # def get_filters_name(self, obj):
+    #     filters = obj.filters
+    #     if filters:
+    #         return filters.title
+
     def get_filters_name(self, obj):
-        filters = obj.filters
+        filters = obj.filters.all()  # Get all filter objects
         if filters:
-            return filters.title
+            return [filter.title for filter in filters]  # Return a list of titles
+        return []  # Return an empty list if no filters are found
 
     def get_period_filter_name(self, obj):
         period = obj.period_filter
@@ -320,7 +326,7 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
             self.create_attributes(resource, attributes_title_list, attributes_description_list)
             self.create_interive(resource, interive_data_list)
 
-            resource.filters.add(*filter_list)
+            resource.filters.set(filter_list)
 
             return resource
         
@@ -334,7 +340,7 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         instance.category = validated_data.get('category', instance.category)
         instance.filter_category = validated_data.get('filter_category', instance)
         instance.filter_category = validated_data.get('filter_category', instance.filter_category)
-        instance.filters = validated_data.get('filters', instance.filters)
+
         instance.period_filter = validated_data.get('period_filter', instance.period_filter)
         instance.title = validated_data.get('title', instance.title)
         instance.image = validated_data.get('image', instance.image)
@@ -361,9 +367,7 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         self.create_attributes(instance, attributes_title_list, attributes_description_list)
         self.create_interive(instance, interive_data_list)
 
-        instance.filters.clear()
-        instance.filters.add(*filter_list)
-        instance.save()
+        instance.filters.set(filter_list) 
 
 
         return instance
