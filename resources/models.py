@@ -78,7 +78,7 @@ class Resource(BaseModel):
                                  related_name='category')
     filter_category = models.ForeignKey(FilterCategories, on_delete=models.SET_NULL, null=True,
                                         related_name='filter_category')
-    filters = models.ManyToManyField(Filters,  null=True,
+    filters = models.ManyToManyField(Filters,  blank=True,
                                 related_name='filters')
     period_filter = models.ForeignKey(PeriodFilter, on_delete=models.SET_NULL, null=True,
                                       related_name='period_filter')
