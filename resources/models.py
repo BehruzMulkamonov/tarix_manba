@@ -73,6 +73,32 @@ class Province(BaseModel):
     class Meta:
         verbose_name = 'Province'
         verbose_name_plural = 'Provinces'
+
+
+
+# class Interive(BaseModel):
+
+#     class Status(models.TextChoices):
+#         GALLERY = 'Gl', 'Gallery'
+#         AUDIO = 'AU', 'Audio'
+#         FILE = 'Fl', 'File'
+#         VIRTUAL_REALITY = 'VR', 'Virtual_reality'
+#         VIDEO = 'VD', 'Video'
+#         LOCATION = 'LN','Location'
+
+
+#     status = models.CharField(max_length=20,
+#                               choices=Status.choices,
+#                               default=Status.GALLERY)
+#     title = models.CharField(max_length=155)
+#     file = models.FileField(upload_to='media/files/resource',blank=True,null=True)
+#     link = models.URLField(blank=True, null=True)
+#     latitude = models.CharField(max_length=500, blank=True, null=True)
+#     longitude = models.CharField(max_length=500, blank=True, null=True)
+
+
+
+
 class Resource(BaseModel):
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True,
                                  related_name='category')
@@ -90,6 +116,8 @@ class Resource(BaseModel):
                                  related_name='select_province')
 
 
+
+
     class Meta:
         verbose_name = 'Resource'
         verbose_name_plural = 'Resources'
@@ -98,29 +126,43 @@ class Resource(BaseModel):
         return self.title
 
 
+class Gallery(BaseModel):
+    resource_gallery = models.ForeignKey(Resource, on_delete=models.SET_NULL, null=True,
+                                           related_name='resource_gallery')
+    title = models.CharField(max_length=155)
+    image = models.ImageField(upload_to='media/files/resource',blank=True,null=True)
 
-
-class Interive(BaseModel):
-
-    class Status(models.TextChoices):
-        GALLERY = 'Gl', 'Gallery'
-        AUDIO = 'AU', 'Audio'
-        FILE = 'Fl', 'File'
-        VIRTUAL_REALITY = 'VR', 'Virtual_reality'
-        VIDEO = 'VD', 'Video'
-        LOCATION = 'LN','Location'
-
-
-    status = models.CharField(max_length=20,
-                              choices=Status.choices,
-                              default=Status.GALLERY)
+class File(BaseModel):
+    resource_file = models.ForeignKey(Resource, on_delete=models.SET_NULL, null=True,
+                                           related_name='resource_file')
     title = models.CharField(max_length=155)
     file = models.FileField(upload_to='media/files/resource',blank=True,null=True)
+
+class Audio(BaseModel):
+    resource_audio = models.ForeignKey(Resource, on_delete=models.SET_NULL, null=True,
+                                           related_name='resource_audio')
+    title = models.CharField(max_length=155)
+    file = models.FileField(upload_to='media/files/resource',blank=True,null=True)
+
+class Virtual_reality(BaseModel):
+    resource_virtual_reality = models.ForeignKey(Resource, on_delete=models.SET_NULL, null=True,
+                                           related_name='resource_virtual_reality')
+    title = models.CharField(max_length=155)
+    file = models.FileField(upload_to='media/files/resource',blank=True,null=True)
+
+
+class Video(BaseModel):
+    resource_video = models.ForeignKey(Resource, on_delete=models.SET_NULL, null=True,
+                                           related_name='resource_video')
+    title = models.CharField(max_length=155)
     link = models.URLField(blank=True, null=True)
+
+class Location(BaseModel):
+    resource_location = models.ForeignKey(Resource, on_delete=models.SET_NULL, null=True,
+                                           related_name='resource_location')
+    title = models.CharField(max_length=155)
     latitude = models.CharField(max_length=500, blank=True, null=True)
     longitude = models.CharField(max_length=500, blank=True, null=True)
-    resource_interive = models.ForeignKey(Resource, on_delete=models.SET_NULL, null=True,
-                                           related_name='resource_interive')
 
 
 

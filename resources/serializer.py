@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from admin_panel.serializer.resources import Base64FileField, ResourceAdminSerializer
-from resources.models import Category, PeriodFilter, FilterCategories, Filters, Province, Resource, Interive, \
+from resources.models import Category, PeriodFilter, FilterCategories, Filters, Province, Resource,  \
     Attributes, Contents
 
 
@@ -31,10 +31,10 @@ class ProvinceSerializer(serializers.ModelSerializer):
         fields = ['id','title', ]
 
 
-class InteriveSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Interive
-        fields = ['id','status', 'title', 'file', 'link', 'latitude', 'longitude']
+# class InteriveSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Interive
+#         fields = ['id','status', 'title', 'file', 'link', 'latitude', 'longitude']
 
 
 class AttributesSerializer(serializers.ModelSerializer):
