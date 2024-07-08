@@ -170,7 +170,7 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
 ]
 
 AUTH_USER_MODEL = "user.CustomUser"
-
+FILE_UPLOAD_MAX_MEMORY_SIZE = 52428800
 
 # LOGGING = {
 #     'version': 1,
