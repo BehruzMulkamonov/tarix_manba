@@ -15,59 +15,59 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-# class Base64FileField(serializers.FileField):
-#     def to_internal_value(self, data):
-#         if isinstance(data, six.string_types):
-#             if 'data:' in data and ';base64,' in data:
-#                 header, data = data.split(';base64,')
-
-#             try:
-#                 decoded_file = base64.b64decode(data)
-#             except TypeError:
-#                 self.fail('invalid_file')
-
-#             file_name = str(uuid.uuid4())[:12]
-#             file_extension = self.get_file_extension(file_name, decoded_file)
-#             complete_file_name = f"{file_name}.{file_extension}"
-
-#             data = ContentFile(decoded_file, name=complete_file_name)
-
-#         return super(Base64FileField, self).to_internal_value(data)
-    
-#     def get_file_extension(self, file_name, decoded_file):
-#         try:
-#             import magic
-#             file_mime_type = magic.from_buffer(decoded_file, mime=True)
-#             return file_mime_type.split('/')[-1]
-#         except ImportError:
-#             return 'jpg'
-
 class Base64FileField(serializers.FileField):
     def to_internal_value(self, data):
-        # If data is a base64 string, handle it here.
-        if isinstance(data, str) and data.startswith('data:'):
-            # Get the file format and base64 string
-            format, imgstr = data.split(';base64,') 
+        if isinstance(data, six.string_types):
+            if 'data:' in data and ';base64,' in data:
+                header, data = data.split(';base64,')
 
-            # Handle incorrect padding
-            imgstr += '=' * (4 - len(imgstr) % 4)
-            
             try:
-                # Decode the base64 string
-                decoded_file = base64.b64decode(imgstr)
-            except (TypeError, binascii.Error):
-                raise serializers.ValidationError("Invalid image format")
+                decoded_file = base64.b64decode(data)
+            except TypeError:
+                self.fail('invalid_file')
 
-            # Generate file name
-            file_name = str(uuid.uuid4())[:12]  # 12 characters are more than enough.
-            # Get the file extension from the format part
-            file_extension = format.split('/')[-1]
-            
+            file_name = str(uuid.uuid4())[:12]
+            file_extension = self.get_file_extension(file_name, decoded_file)
             complete_file_name = f"{file_name}.{file_extension}"
-            
+
             data = ContentFile(decoded_file, name=complete_file_name)
 
         return super(Base64FileField, self).to_internal_value(data)
+    
+    def get_file_extension(self, file_name, decoded_file):
+        try:
+            import magic
+            file_mime_type = magic.from_buffer(decoded_file, mime=True)
+            return file_mime_type.split('/')[-1]
+        except ImportError:
+            return 'jpg'
+
+# class Base64FileField(serializers.FileField):
+#     def to_internal_value(self, data):
+#         # If data is a base64 string, handle it here.
+#         if isinstance(data, str) and data.startswith('data:'):
+#             # Get the file format and base64 string
+#             format, imgstr = data.split(';base64,') 
+
+#             # Handle incorrect padding
+#             imgstr += '=' * (4 - len(imgstr) % 4)
+            
+#             try:
+#                 # Decode the base64 string
+#                 decoded_file = base64.b64decode(imgstr)
+#             except (TypeError, binascii.Error):
+#                 raise serializers.ValidationError("Invalid image format")
+
+#             # Generate file name
+#             file_name = str(uuid.uuid4())[:12]  # 12 characters are more than enough.
+#             # Get the file extension from the format part
+#             file_extension = format.split('/')[-1]
+            
+#             complete_file_name = f"{file_name}.{file_extension}"
+            
+#             data = ContentFile(decoded_file, name=complete_file_name)
+
+#         return super(Base64FileField, self).to_internal_value(data)
 
 
 
