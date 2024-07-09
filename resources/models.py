@@ -11,8 +11,8 @@ class BaseModel(models.Model):
 
 class Category(BaseModel):
     title = models.CharField(max_length=255)
-    icon = models.FileField(blank=True, null=True , upload_to="icons/")  # shunga iconca kodi yozilidi
-    image = models.FileField(blank=True, null=True , upload_to="icons/")  # shunga iconca kodi yozilidi
+    icon = models.FileField(blank=True, null=True, upload_to="icons/")  # shunga iconca kodi yozilidi
+    image = models.FileField(blank=True, null=True, upload_to="icons/")  # shunga iconca kodi yozilidi
     order = models.IntegerField()
     interactive = models.BooleanField()
 
@@ -62,8 +62,9 @@ class Filters(BaseModel):
     def __str__(self):
         return self.title
 
+
 class Province(BaseModel):
-    title = models.CharField(max_length=255,blank=True, null=True)
+    title = models.CharField(max_length=255, blank=True, null=True)
     latitude = models.CharField(max_length=500, blank=True, null=True)
     longitude = models.CharField(max_length=500, blank=True, null=True)
 
@@ -75,7 +76,10 @@ class Province(BaseModel):
         verbose_name_plural = 'Provinces'
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> f7e7a38 (resoursee)
 class Interive(BaseModel):
     class Status(models.TextChoices):
         GALLERY = 'Gl', 'Gallery'
@@ -121,8 +125,30 @@ class Resource(BaseModel):
         return self.title
 
 
+<<<<<<< HEAD
 
 
+=======
+# class Interive(BaseModel):
+#     class Status(models.TextChoices):
+#         GALLERY = 'Gl', 'Gallery'
+#         AUDIO = 'AU', 'Audio'
+#         FILE = 'Fl', 'File'
+#         VIRTUAL_REALITY = 'VR', 'Virtual_reality'
+#         VIDEO = 'VD', 'Video'
+#         LOCATION = 'LN', 'Location'
+#
+#     status = models.CharField(max_length=20,
+#                               choices=Status.choices,
+#                               default=Status.GALLERY)
+#     title = models.CharField(max_length=155)
+#     file = models.FileField(upload_to='media/files/resource', blank=True, null=True)
+#     link = models.URLField(blank=True, null=True)
+#     latitude = models.CharField(max_length=500, blank=True, null=True)
+#     longitude = models.CharField(max_length=500, blank=True, null=True)
+#     resource_interive = models.ForeignKey(Resource, on_delete=models.SET_NULL, null=True,
+#                                           related_name='resource_interive')
+>>>>>>> f7e7a38 (resoursee)
 
 
 class Attributes(BaseModel):
@@ -132,10 +158,8 @@ class Attributes(BaseModel):
     attributes_description = models.CharField(max_length=255)
 
 
-
 class Contents(BaseModel):
     resource_content = models.ForeignKey(Resource, on_delete=models.SET_NULL, null=True,
                                          related_name='resource_content')
     contents_title = models.CharField(max_length=255)
     contents_description = models.TextField()
-
