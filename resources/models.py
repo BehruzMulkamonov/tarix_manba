@@ -76,27 +76,23 @@ class Province(BaseModel):
 
 
 
-# class Interive(BaseModel):
+class Interive(BaseModel):
+    class Status(models.TextChoices):
+        GALLERY = 'Gl', 'Gallery'
+        AUDIO = 'AU', 'Audio'
+        FILE = 'Fl', 'File'
+        VIRTUAL_REALITY = 'VR', 'Virtual_reality'
+        VIDEO = 'VD', 'Video'
+        LOCATION = 'LN', 'Location'
 
-#     class Status(models.TextChoices):
-#         GALLERY = 'Gl', 'Gallery'
-#         AUDIO = 'AU', 'Audio'
-#         FILE = 'Fl', 'File'
-#         VIRTUAL_REALITY = 'VR', 'Virtual_reality'
-#         VIDEO = 'VD', 'Video'
-#         LOCATION = 'LN','Location'
-
-
-#     status = models.CharField(max_length=20,
-#                               choices=Status.choices,
-#                               default=Status.GALLERY)
-#     title = models.CharField(max_length=155)
-#     file = models.FileField(upload_to='media/files/resource',blank=True,null=True)
-#     link = models.URLField(blank=True, null=True)
-#     latitude = models.CharField(max_length=500, blank=True, null=True)
-#     longitude = models.CharField(max_length=500, blank=True, null=True)
-
-
+    status = models.CharField(max_length=20,
+                              choices=Status.choices,
+                              default=Status.GALLERY)
+    title = models.CharField(max_length=155)
+    file = models.FileField(upload_to='media/files/resource', blank=True, null=True)
+    link = models.URLField(blank=True, null=True)
+    latitude = models.CharField(max_length=500, blank=True, null=True)
+    longitude = models.CharField(max_length=500, blank=True, null=True)
 
 
 class Resource(BaseModel):
@@ -104,19 +100,18 @@ class Resource(BaseModel):
                                  related_name='category')
     filter_category = models.ForeignKey(FilterCategories, on_delete=models.SET_NULL, null=True,
                                         related_name='filter_category')
-    filters = models.ManyToManyField(Filters,  blank=True,
-                                related_name='filters')
+    filters = models.ManyToManyField(Filters, blank=True,
+                                     related_name='filters')
     period_filter = models.ForeignKey(PeriodFilter, on_delete=models.SET_NULL, null=True,
                                       related_name='period_filter')
     title = models.CharField(max_length=255)
-    image = models.ImageField(upload_to='media/images/resource',blank=True,null=True)
+    image = models.ImageField(upload_to='media/images/resource', blank=True, null=True)
     content = models.TextField()
     statehood = models.BooleanField(default=True)
     province = models.ForeignKey(Province, on_delete=models.SET_NULL, null=True,
                                  related_name='select_province')
-
-
-
+    interive = models.ForeignKey(Interive, on_delete=models.SET_NULL, null=True,
+                                 related_name='interive_resource')
 
     class Meta:
         verbose_name = 'Resource'
@@ -126,43 +121,7 @@ class Resource(BaseModel):
         return self.title
 
 
-class Gallery(BaseModel):
-    resource_gallery = models.ForeignKey(Resource, on_delete=models.SET_NULL, null=True,
-                                           related_name='resource_gallery')
-    title = models.CharField(max_length=155)
-    image = models.ImageField(upload_to='media/files/resource',blank=True,null=True)
 
-class File(BaseModel):
-    resource_file = models.ForeignKey(Resource, on_delete=models.SET_NULL, null=True,
-                                           related_name='resource_file')
-    title = models.CharField(max_length=155)
-    file = models.FileField(upload_to='media/files/resource',blank=True,null=True)
-
-class Audio(BaseModel):
-    resource_audio = models.ForeignKey(Resource, on_delete=models.SET_NULL, null=True,
-                                           related_name='resource_audio')
-    title = models.CharField(max_length=155)
-    file = models.FileField(upload_to='media/files/resource',blank=True,null=True)
-
-class Virtual_reality(BaseModel):
-    resource_virtual_reality = models.ForeignKey(Resource, on_delete=models.SET_NULL, null=True,
-                                           related_name='resource_virtual_reality')
-    title = models.CharField(max_length=155)
-    file = models.FileField(upload_to='media/files/resource',blank=True,null=True)
-
-
-class Video(BaseModel):
-    resource_video = models.ForeignKey(Resource, on_delete=models.SET_NULL, null=True,
-                                           related_name='resource_video')
-    title = models.CharField(max_length=155)
-    link = models.URLField(blank=True, null=True)
-
-class Location(BaseModel):
-    resource_location = models.ForeignKey(Resource, on_delete=models.SET_NULL, null=True,
-                                           related_name='resource_location')
-    title = models.CharField(max_length=155)
-    latitude = models.CharField(max_length=500, blank=True, null=True)
-    longitude = models.CharField(max_length=500, blank=True, null=True)
 
 
 
