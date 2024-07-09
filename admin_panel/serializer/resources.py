@@ -276,6 +276,26 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
     period_filter_name = serializers.SerializerMethodField(required=False, read_only=True)
     image = Base64FileField(max_length=None, use_url=True, allow_null=True)
     province_name = serializers.SerializerMethodField(required=False, read_only=True)
+
+    galleries_title_list = serializers.ListField(child=serializers.CharField(max_length=None, required=False), write_only=True, required=False)
+    galleries_image_list = serializers.ListField(child=Base64FileField(max_length=None, use_url=True, required=False), write_only=True, required=False)
+
+    files_title_list = serializers.ListField(child=serializers.CharField(max_length=None, required=False), write_only=True, required=False)
+    files_file_list = serializers.ListField(child=Base64FileField(max_length=None, use_url=True, required=False), write_only=True, required=False)
+
+    audios_title_list = serializers.ListField(child=serializers.CharField(max_length=None, required=False), write_only=True, required=False)
+    audios_file_list = serializers.ListField(child=Base64FileField(max_length=None, use_url=True, required=False), write_only=True, required=False)
+
+    virtual_realities_title_list = serializers.ListField(child=serializers.CharField(max_length=None, required=False), write_only=True, required=False)
+    virtual_realities_file_list = serializers.ListField(child=Base64FileField(max_length=None, use_url=True, required=False), write_only=True, required=False)
+
+    videos_title_list = serializers.ListField(child=serializers.CharField(max_length=None, required=False), write_only=True, required=False)
+    videos_link_list = serializers.ListField(child=serializers.URLField(required=False), write_only=True, required=False)
+
+    locations_title_list = serializers.ListField(child=serializers.CharField(max_length=None, required=False), write_only=True, required=False)
+    locations_latitude_list = serializers.ListField(child=serializers.CharField(max_length=None, required=False), write_only=True, required=False)
+    locations_longitude_list = serializers.ListField(child=serializers.CharField(max_length=None, required=False), write_only=True, required=False)
+
     contents_title_list = serializers.ListField(child=serializers.CharField(max_length=None, required=False), write_only=True, required=False)
     contents_description_list = serializers.ListField(child=serializers.CharField(max_length=None, required=False), write_only=True, required=False)
     attributes_title_list = serializers.ListField(child=serializers.CharField(max_length=None, required=False), write_only=True, required=False)
@@ -287,11 +307,13 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         model = Resource
         fields = (
             'id', 'category', 'filter_category', 'period_filter', 'title', 'image', 'content', 'province_name', 'statehood',
-            'province',   'attributes_title_list', 'attributes_description_list', 'attributes',
+            'province',   'attributes_title_list', 'attributes_description_list', 'attributes', 'galleries_title_list', 'galleries_image_list',
             'contents_title_list', 'contents_description_list', 'contents', 'galleries', 'files', 'audios', 'virtual_realities', 'videos',
             'locations',  'attributes_list', 'contents_list', 'galleries_list', 'files_list', 'audios_list', 'virtual_realities_list', 
             'videos_list', 'locations_list','cat_name', 'filter_category_name', 'filters_name', 'period_filter_name', 
-            'filter_list', 'created_time', 'updated_time'
+            'filter_list', 'created_time', 'updated_time', 'files_title_list', 'files_file_list', 'audios_title_list', 
+            'audios_file_list', 'virtual_realities_title_list', 'virtual_realities_file_list', 'videos_title_list', 
+            'videos_link_list', 'locations_title_list', 'locations_latitude_list', 'locations_longitude_list'
         )
 
     # def get_interive_list(self, obj):
@@ -363,48 +385,81 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         else:
             Attributes.objects.create(resource_attribute=resource, attributes_title='', attributes_description='')
 
+    # @staticmethod
+    # def create_galleries(resource, galleries_data):
+    #     for gallery_data in galleries_data:
+    #         Gallery.objects.create(resource_gallery=resource, **gallery_data)
     @staticmethod
-    def create_galleries(resource, galleries_data):
-        for gallery_data in galleries_data:
-            Gallery.objects.create(resource_gallery=resource, **gallery_data)
-
-    @staticmethod
-    def create_files(resource, files_data):
-        for file_data in files_data:
-            File.objects.create(resource_file=resource, **file_data)
-
-    @staticmethod
-    def create_audios(resource, audios_data):
-        for audio_data in audios_data:
-            Audio.objects.create(resource_audio=resource, **audio_data)
-
-    @staticmethod
-    def create_virtual_realities(resource, virtual_realities_data):
-        for virtual_reality_data in virtual_realities_data:
-            Virtual_reality.objects.create(resource_virtual_reality=resource, **virtual_reality_data)
-
-    @staticmethod
-    def create_videos(resource, videos_data):
-        for video_data in videos_data:
-            Video.objects.create(resource_video=resource, **video_data)
-
-    @staticmethod
-    def create_locations(resource, locations_data):
-        for location_data in locations_data:
-            Location.objects.create(resource_location=resource, **location_data)
+    def create_galleries(resource, title_list, image_list):
+        if title_list or image_list:
+            for title, image in zip_longest(title_list or [''], image_list or [''], fillvalue=''):
+                Gallery.objects.create(resource_gallery=resource, title=title, image=image)
+        else:
+            Gallery.objects.create(resource_gallery=resource, title='', image=None)
 
     # @staticmethod
-    # def create_interive(resource, interive_data_list):
-    #     for interive_data in interive_data_list:
-    #         Interive.objects.create(
-    #             resource_interive=resource,
-    #             status=interive_data.get('status', ''),
-    #             title=interive_data.get('title', ''),
-    #             file=interive_data.get('file', None),
-    #             link=interive_data.get('link', ''),
-    #             latitude=interive_data.get('latitude', None),
-    #             longitude=interive_data.get('longitude', None)
-    #         )
+    # def create_files(resource, files_data):
+    #     for file_data in files_data:
+    #         File.objects.create(resource_file=resource, **file_data)
+
+    # @staticmethod
+    # def create_audios(resource, audios_data):
+    #     for audio_data in audios_data:
+    #         Audio.objects.create(resource_audio=resource, **audio_data)
+
+    # @staticmethod
+    # def create_virtual_realities(resource, virtual_realities_data):
+    #     for virtual_reality_data in virtual_realities_data:
+    #         Virtual_reality.objects.create(resource_virtual_reality=resource, **virtual_reality_data)
+
+    # @staticmethod
+    # def create_videos(resource, videos_data):
+    #     for video_data in videos_data:
+    #         Video.objects.create(resource_video=resource, **video_data)
+    @staticmethod
+    def create_files(resource, title_list, file_list):
+        if title_list or file_list:
+            for title, file in zip_longest(title_list or [''], file_list or [''], fillvalue=''):
+                File.objects.create(resource_file=resource, title=title, file=file)
+        else:
+            File.objects.create(resource_file=resource, title='', file=None)
+
+    @staticmethod
+    def create_audios(resource, title_list, file_list):
+        if title_list or file_list:
+            for title, file in zip_longest(title_list or [''], file_list or [''], fillvalue=''):
+                Audio.objects.create(resource_audio=resource, title=title, file=file)
+        else:
+            Audio.objects.create(resource_audio=resource, title='', file=None)
+
+    @staticmethod
+    def create_virtual_realities(resource, title_list, file_list):
+        if title_list or file_list:
+            for title, file in zip_longest(title_list or [''], file_list or [''], fillvalue=''):
+                Virtual_reality.objects.create(resource_virtual_reality=resource, title=title, file=file)
+        else:
+            Virtual_reality.objects.create(resource_virtual_reality=resource, title='', file=None)
+
+    @staticmethod
+    def create_videos(resource, title_list, link_list):
+        if title_list or link_list:
+            for title, link in zip_longest(title_list or [''], link_list or [''], fillvalue=''):
+                Video.objects.create(resource_video=resource, title=title, link=link)
+        else:
+            Video.objects.create(resource_video=resource, title='', link=None)
+
+    # @staticmethod
+    # def create_locations(resource, locations_data):
+    #     for location_data in locations_data:
+    #         Location.objects.create(resource_location=resource, **location_data)
+
+    @staticmethod
+    def create_locations(resource, title_list, latitude_list, longitude_list):
+        if title_list or latitude_list or longitude_list:
+            for title, latitude, longitude in zip_longest(title_list or [''], latitude_list or [''], longitude_list or [''], fillvalue=''):
+                Location.objects.create(resource_location=resource, title=title, latitude=latitude, longitude=longitude)
+        else:
+            Location.objects.create(resource_location=resource, title='', latitude='', longitude='')
 
     @transaction.atomic
     def create(self, validated_data):
@@ -413,7 +468,21 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         attributes_title_list = validated_data.pop('attributes_title_list', [])
         attributes_description_list = validated_data.pop('attributes_description_list', [])
         # interive_data_list = validated_data.pop('interive_data_list', [])
+        galleries_title_list = validated_data.pop('galleries_title_list', [])
+        galleries_image_list = validated_data.pop('galleries_image_list', [])
+        files_title_list = validated_data.pop('files_title_list', [])
+        files_file_list = validated_data.pop('files_file_list', [])
+        audios_title_list = validated_data.pop('audios_title_list', [])
+        audios_file_list = validated_data.pop('audios_file_list', [])
+        virtual_realities_title_list = validated_data.pop('virtual_realities_title_list', [])
+        virtual_realities_file_list = validated_data.pop('virtual_realities_file_list', [])
+        videos_title_list = validated_data.pop('videos_title_list', [])
+        videos_link_list = validated_data.pop('videos_link_list', [])
+        locations_title_list = validated_data.pop('locations_title_list', [])
+        locations_latitude_list = validated_data.pop('locations_latitude_list', [])
+        locations_longitude_list = validated_data.pop('locations_longitude_list', [])
         galleries_data = validated_data.pop('galleries', [])
+
         files_data = validated_data.pop('files', [])
         audios_data = validated_data.pop('audios', [])
         virtual_realities_data = validated_data.pop('virtual_realities', [])
@@ -426,12 +495,14 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         self.create_contents(resource, contents_title_list, contents_description_list)
         self.create_attributes(resource, attributes_title_list, attributes_description_list)
         # self.create_interive(resource, interive_data_list)
-        self.create_galleries(resource, galleries_data)
-        self.create_files(resource, files_data)
-        self.create_audios(resource, audios_data)
-        self.create_virtual_realities(resource, virtual_realities_data)
-        self.create_videos(resource, videos_data)
-        self.create_locations(resource, locations_data)
+        # self.create_galleries(resource, galleries_data)
+        self.create_galleries(resource, galleries_title_list, galleries_image_list)
+        self.create_files(resource, files_title_list, files_file_list)
+        self.create_audios(resource, audios_title_list, audios_file_list)
+        self.create_virtual_realities(resource, virtual_realities_title_list, virtual_realities_file_list)
+        self.create_videos(resource, videos_title_list, videos_link_list)
+        self.create_locations(resource, locations_title_list, locations_latitude_list, locations_longitude_list)
+        
         resource.filters.set(filter_list)
 
         return resource
