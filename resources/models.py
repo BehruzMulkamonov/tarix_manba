@@ -76,10 +76,6 @@ class Province(BaseModel):
         verbose_name_plural = 'Provinces'
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> f7e7a38 (resoursee)
 class Interive(BaseModel):
     class Status(models.TextChoices):
         GALLERY = 'Gl', 'Gallery'
@@ -89,9 +85,7 @@ class Interive(BaseModel):
         VIDEO = 'VD', 'Video'
         LOCATION = 'LN', 'Location'
 
-    status = models.CharField(max_length=20,
-                              choices=Status.choices,
-                              default=Status.GALLERY)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.GALLERY)
     title = models.CharField(max_length=155)
     file = models.FileField(upload_to='media/files/resource', blank=True, null=True)
     link = models.URLField(blank=True, null=True)
@@ -125,10 +119,7 @@ class Resource(BaseModel):
         return self.title
 
 
-<<<<<<< HEAD
 
-
-=======
 # class Interive(BaseModel):
 #     class Status(models.TextChoices):
 #         GALLERY = 'Gl', 'Gallery'
@@ -148,7 +139,7 @@ class Resource(BaseModel):
 #     longitude = models.CharField(max_length=500, blank=True, null=True)
 #     resource_interive = models.ForeignKey(Resource, on_delete=models.SET_NULL, null=True,
 #                                           related_name='resource_interive')
->>>>>>> f7e7a38 (resoursee)
+
 
 
 class Attributes(BaseModel):

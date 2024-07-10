@@ -9,7 +9,6 @@ from resources.models import Category, PeriodFilter, FilterCategories, Filters, 
 from rest_framework.pagination import PageNumberPagination
 
 
-
 @api_view(['GET'])
 def categoryList(request):
     paginator = PageNumberPagination()
@@ -78,12 +77,11 @@ def periodFilterList(request):
     paginator = PageNumberPagination()
     paginator.page_size = 100
     period_filter = PeriodFilter.objects.all().order_by('id')
-    search_filter = PeriodFilterSubFilter(request.GET,queryset=period_filter)
+    search_filter = PeriodFilterSubFilter(request.GET, queryset=period_filter)
     result_page = paginator.paginate_queryset(search_filter.qs, request)
     serializer = PeriodFilterAdminSerializer(result_page, many=True)
 
     return paginator.get_paginated_response(serializer.data)
-
 
 
 @api_view(['GET'])
@@ -133,7 +131,7 @@ def filterCategoriesList(request):
     paginator.page_size = 100
 
     filter_categories = FilterCategories.objects.all()
-    filter_sub = FilterCategoriesSubFilter(request.GET,queryset=filter_categories)
+    filter_sub = FilterCategoriesSubFilter(request.GET, queryset=filter_categories)
     result_page = paginator.paginate_queryset(filter_sub.qs, request)
 
     serializer = FilterCategoriesAdminSerializer(result_page, many=True)
@@ -154,8 +152,6 @@ def createFilterCategories(request):
         serializer.save()
         return Response(serializer.data)
     return Response(serializer.errors, status=400)
-
-
 
 
 @api_view(['PUT'])
@@ -294,7 +290,7 @@ def resourceList(request):
     paginator = PageNumberPagination()
     paginator.page_size = 10
     resources = Resource.objects.all().order_by('id')
-    resourcec_filter = ResourceFilter(request.GET,queryset=resources)
+    resourcec_filter = ResourceFilter(request.GET, queryset=resources)
     result_page = paginator.paginate_queryset(resourcec_filter.qs, request)
     serializer = ResourceAdminSerializer(result_page, many=True)
     serialized_data = serializer.data
@@ -338,9 +334,6 @@ def updateResource(request, pk):
     return Response(serializer.errors, status=400)
 
 
-
-
-
 @api_view(['DELETE'])
 def deleteResource(request, pk):
     try:
@@ -350,7 +343,3 @@ def deleteResource(request, pk):
 
     resource.delete()
     return Response(status=204)
-
-
-
-

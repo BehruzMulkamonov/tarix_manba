@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
 from admin_panel.serializer.resources import Base64FileField, ResourceAdminSerializer
-from resources.models import Category, PeriodFilter, FilterCategories, Filters, Province, Resource,  \
-    Attributes, Contents
+from resources.models import Category, PeriodFilter, FilterCategories, Filters, Province, Resource, \
+    Attributes, Contents, Interive
 
 
 class PeriodFilterSerializer(serializers.ModelSerializer):
@@ -29,17 +29,15 @@ class ProvinceSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', ]
 
 
-<<<<<<< HEAD
 # class InteriveSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = Interive
 #         fields = ['id','status', 'title', 'file', 'link', 'latitude', 'longitude']
-=======
+
 class InteriveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Interive
         fields = ['id', 'status', 'title', 'file', 'link', 'latitude', 'longitude']
->>>>>>> f7e7a38 (resoursee)
 
 
 class AttributesSerializer(serializers.ModelSerializer):
@@ -74,12 +72,8 @@ class ResourceSerializer(serializers.ModelSerializer):
         return obj.category.title
 
     def get_filter_category_title(self, obj):
-<<<<<<< HEAD
-        filter_category=obj.filter_category
-   
+        filter_category = obj.filter_category
 
-
-=======
         filter_category = obj.filter_category
     #
     #     if filter_category:
@@ -89,7 +83,6 @@ class ResourceSerializer(serializers.ModelSerializer):
     #
     # def get_filters_title(self, obj):
     #     return obj.filters.title
->>>>>>> f7e7a38 (resoursee)
 
 
 class CategorySerializer(serializers.ModelSerializer):

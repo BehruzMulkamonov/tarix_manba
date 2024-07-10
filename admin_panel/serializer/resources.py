@@ -5,19 +5,16 @@ from rest_framework import serializers
 from rest_framework.request import Request
 import json
 from Config import settings
-from resources.models import Category, PeriodFilter, Filters, Resource, Province,  Attributes, Contents, Interive, FilterCategories
+from resources.models import Category, PeriodFilter, Filters, Resource, Province, Attributes, Contents, Interive, \
+    FilterCategories
 import uuid
 import base64
 import six
 import re
 import logging
-<<<<<<< HEAD
-=======
 
 logger = logging.getLogger(__name__)
->>>>>>> f7e7a38 (resoursee)
 
-logger = logging.getLogger(__name__)
 
 class Base64FileField(serializers.FileField):
     def to_internal_value(self, data):
@@ -37,11 +34,7 @@ class Base64FileField(serializers.FileField):
             data = ContentFile(decoded_file, name=complete_file_name)
 
         return super(Base64FileField, self).to_internal_value(data)
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> f7e7a38 (resoursee)
     def get_file_extension(self, file_name, decoded_file):
         try:
             import magic
@@ -49,10 +42,7 @@ class Base64FileField(serializers.FileField):
             return file_mime_type.split('/')[-1]
         except ImportError:
             return 'jpg'
-<<<<<<< HEAD
-=======
 
->>>>>>> f7e7a38 (resoursee)
 
 # class Base64FileField(serializers.FileField):
 #     def to_internal_value(self, data):
@@ -63,7 +53,7 @@ class Base64FileField(serializers.FileField):
 
 #             # Handle incorrect padding
 #             imgstr += '=' * (4 - len(imgstr) % 4)
-            
+
 #             try:
 #                 # Decode the base64 string
 #                 decoded_file = base64.b64decode(imgstr)
@@ -74,16 +64,13 @@ class Base64FileField(serializers.FileField):
 #             file_name = str(uuid.uuid4())[:12]  # 12 characters are more than enough.
 #             # Get the file extension from the format part
 #             file_extension = format.split('/')[-1]
-            
+
 #             complete_file_name = f"{file_name}.{file_extension}"
-            
+
 #             data = ContentFile(decoded_file, name=complete_file_name)
 
 #         return super(Base64FileField, self).to_internal_value(data)
-<<<<<<< HEAD
 
-
-=======
 # # men yozgan kod
 #     # def get_file_extension(self, file_name, decoded_file):
 #     #     try:
@@ -114,7 +101,7 @@ class Base64FileField(serializers.FileField):
 #             return file_mime_type.split('/')[-1]
 #         except ImportError:
 #             return 'txt'
->>>>>>> f7e7a38 (resoursee)
+
 
 class FiltersAdminSerializer(serializers.ModelSerializer):
     filter_categories_name = serializers.SerializerMethodField()
@@ -194,9 +181,22 @@ class CategoryAdminSerializer(serializers.ModelSerializer):
 
 
 class PeriodFilterAdminSerializer(serializers.ModelSerializer):
+    category_title = serializers.SerializerMethodField()
+    category_id = serializers.SerializerMethodField()
+
     class Meta:
         model = PeriodFilter
-        fields = ('id', 'title', 'created_time', 'updated_time')
+        fields = ('id', 'title', 'category', 'category_title', 'category_id', 'created_time', 'updated_time')
+
+    def get_category_title(self, obj):
+        if obj.category:
+            return obj.category.title
+        return None
+
+    def get_category_id(self, obj):
+        if obj.category:
+            return obj.category.id
+        return None
 
 
 class ProvinceAdminSerializer(serializers.ModelSerializer):
@@ -206,16 +206,12 @@ class ProvinceAdminSerializer(serializers.ModelSerializer):
 
 
 class InteriveAdminSerializer(serializers.ModelSerializer):
-    file = serializers.FileField(max_length=None, use_url=True, allow_null=True)
-    link = serializers.URLField(allow_null=True)
-    latitude = serializers.CharField(max_length=500, allow_null=True)
-    longitude = serializers.CharField(max_length=500, allow_null=True)
-    status_display = serializers.CharField(source='get_status_display', read_only=True)
-
     class Meta:
         model = Interive
-        fields = ['resource_interive', 'status', 'status_display', 'title', 'file', 'link', 'latitude', 'longitude',
-                  'created_time', 'updated_time']
+        fields = '__all__'
+        extra_kwargs = {
+            'file': {'allow_null': True, 'required': False},
+        }
 
 
 class AttributesAdminSerializer(serializers.ModelSerializer):
@@ -324,8 +320,6 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         province = obj.province
         if province:
             return province.title
-
-
 
     @staticmethod
     def create_contents(resource, title_list, description_list):
