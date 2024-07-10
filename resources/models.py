@@ -91,6 +91,8 @@ class Interive(BaseModel):
     link = models.URLField(blank=True, null=True)
     latitude = models.CharField(max_length=500, blank=True, null=True)
     longitude = models.CharField(max_length=500, blank=True, null=True)
+    resource = models.ForeignKey('Resource', on_delete=models.CASCADE, related_name='interive_resource', null=True,
+                                 blank=True)
 
 
 class Resource(BaseModel):
@@ -108,8 +110,6 @@ class Resource(BaseModel):
     statehood = models.BooleanField(default=True)
     province = models.ForeignKey(Province, on_delete=models.SET_NULL, null=True,
                                  related_name='select_province')
-    interive = models.ForeignKey(Interive, on_delete=models.SET_NULL, null=True,
-                                 related_name='interive_resource')
 
     class Meta:
         verbose_name = 'Resource'
@@ -117,7 +117,6 @@ class Resource(BaseModel):
 
     def __str__(self):
         return self.title
-
 
 
 # class Interive(BaseModel):
@@ -139,7 +138,6 @@ class Resource(BaseModel):
 #     longitude = models.CharField(max_length=500, blank=True, null=True)
 #     resource_interive = models.ForeignKey(Resource, on_delete=models.SET_NULL, null=True,
 #                                           related_name='resource_interive')
-
 
 
 class Attributes(BaseModel):

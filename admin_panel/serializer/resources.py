@@ -1,23 +1,20 @@
 from itertools import zip_longest
-from django.db import transaction
 from django.core.files.base import ContentFile
 from rest_framework import serializers
-from rest_framework.request import Request
-import json
-from Config import settings
-from resources.models import Category, PeriodFilter, Filters, Resource, Province, Attributes, Contents, Interive, \
-    FilterCategories
 import uuid
 import base64
 import six
-import re
-import logging
 
-logger = logging.getLogger(__name__)
+from resources.models import Category, PeriodFilter, Filters, \
+        Resource, Province, Attributes, Contents, Interive, \
+        FilterCategories
 
 
 class Base64FileField(serializers.FileField):
     def to_internal_value(self, data):
+        if data in [None, '']:
+            return None
+
         if isinstance(data, six.string_types):
             if 'data:' in data and ';base64,' in data:
                 header, data = data.split(';base64,')
@@ -42,65 +39,6 @@ class Base64FileField(serializers.FileField):
             return file_mime_type.split('/')[-1]
         except ImportError:
             return 'jpg'
-
-
-# class Base64FileField(serializers.FileField):
-#     def to_internal_value(self, data):
-#         # If data is a base64 string, handle it here.
-#         if isinstance(data, str) and data.startswith('data:'):
-#             # Get the file format and base64 string
-#             format, imgstr = data.split(';base64,') 
-
-#             # Handle incorrect padding
-#             imgstr += '=' * (4 - len(imgstr) % 4)
-
-#             try:
-#                 # Decode the base64 string
-#                 decoded_file = base64.b64decode(imgstr)
-#             except (TypeError, binascii.Error):
-#                 raise serializers.ValidationError("Invalid image format")
-
-#             # Generate file name
-#             file_name = str(uuid.uuid4())[:12]  # 12 characters are more than enough.
-#             # Get the file extension from the format part
-#             file_extension = format.split('/')[-1]
-
-#             complete_file_name = f"{file_name}.{file_extension}"
-
-#             data = ContentFile(decoded_file, name=complete_file_name)
-
-#         return super(Base64FileField, self).to_internal_value(data)
-
-# # men yozgan kod
-#     # def get_file_extension(self, file_name, decoded_file):
-#     #     try:
-#     #         import magic
-#     #         file_mime_type = magic.from_buffer(decoded_file, mime=True)
-#     #         return file_mime_type.split('/')[-1]
-#     #     except ImportError:
-#     #         return 'txt'
-# #chatgpt
-#     # def get_file_extension(self, header):
-#     #     import re
-#     #     match = re.search(r'data:image/(?P<ext>[^;]+);base64', header)
-#     #     if match:
-#     #         return match.group('ext')
-#     #     return 'txt'
-
-#     def get_file_extension(self, header, decoded_file=None):
-#         # Headerdan fayl kengaytmasini olishga harakat qilamiz
-#         import re
-#         match = re.search(r'data:image/(?P<ext>[^;]+);base64', header)
-#         if match:
-#             return match.group('ext')
-
-#         # Agar headerda kengaytma topilmasa, faylning MIME turidan foydalanamiz
-#         try:
-#             import magic
-#             file_mime_type = magic.from_buffer(decoded_file, mime=True)
-#             return file_mime_type.split('/')[-1]
-#         except ImportError:
-#             return 'txt'
 
 
 class FiltersAdminSerializer(serializers.ModelSerializer):
@@ -206,11 +144,13 @@ class ProvinceAdminSerializer(serializers.ModelSerializer):
 
 
 class InteriveAdminSerializer(serializers.ModelSerializer):
+    file = Base64FileField(required=False, allow_null=True)  # Boshqa parametrlar kiritilishi mumkin
+
     class Meta:
         model = Interive
-        fields = '__all__'
+        fields = ('id', 'status', 'title', 'file', 'link', 'latitude', 'longitude', 'resource')
         extra_kwargs = {
-            'file': {'allow_null': True, 'required': False},
+            'file': {'required': False, 'allow_null': True},  # Bu qator qo'shilgan
         }
 
 
@@ -227,10 +167,9 @@ class ContentsAdminSerializer(serializers.ModelSerializer):
 
 
 class ResourceAdminSerializer(serializers.ModelSerializer):
-    interive = InteriveAdminSerializer(many=True, read_only=True)
+    interive_resource = InteriveAdminSerializer(many=True, required=False)
     attributes = AttributesAdminSerializer(many=True, read_only=True)
     contents = ContentsAdminSerializer(many=True, read_only=True)
-    interive_list = serializers.SerializerMethodField(required=False, read_only=True)
     attributes_list = serializers.SerializerMethodField(required=False, read_only=True)
     contents_list = serializers.SerializerMethodField(required=False, read_only=True)
     cat_name = serializers.SerializerMethodField(required=False, read_only=True)
@@ -260,12 +199,6 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         required=False
     )
 
-    interive_data_list = serializers.ListField(
-        child=serializers.DictField(child=serializers.CharField(max_length=None, required=False)),
-        write_only=True,
-        required=False
-    )
-
     filter_list = serializers.ListField(
         child=serializers.IntegerField(),
         write_only=True,
@@ -276,18 +209,14 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Resource
         fields = (
-            'id', 'category', 'filter_category', 'period_filter', 'title', 'image', 'content',
-            'province_name', 'statehood',
-            'province', 'interive', 'interive_data_list',
-            'attributes_title_list', 'attributes_description_list', 'attributes',
-            'contents_title_list', 'contents_description_list', 'contents',
-            'interive_list', 'attributes_list', 'contents_list',
-            'cat_name', 'filter_category_name', 'filters_name', 'period_filter_name', 'filter_list',
+            'id', 'category', 'filter_category', 'period_filter', 'filter_list', 'province_name',
+            'title', 'image', 'content', 'statehood', 'province', 'contents', 'attributes',
+            'contents_title_list', 'contents_description_list',
+            'attributes_title_list', 'attributes_description_list',
+            'contents_list', 'attributes_list', 'interive_resource',
+            'cat_name', 'filter_category_name', 'period_filter_name', 'filters_name',
             'created_time', 'updated_time'
         )
-
-    def get_interive_list(self, obj):
-        return InteriveAdminSerializer(obj.resource_interive.all(), many=True).data
 
     def get_attributes_list(self, obj):
         return AttributesAdminSerializer(obj.resource_attribute.all(), many=True).data
@@ -339,33 +268,32 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         else:
             Attributes.objects.create(resource_attribute=resource, attributes_title='', attributes_description='')
 
-    @transaction.atomic
+    # @transaction.atomic
     def create(self, validated_data):
         contents_title_list = validated_data.pop('contents_title_list', [])
         contents_description_list = validated_data.pop('contents_description_list', [])
         attributes_title_list = validated_data.pop('attributes_title_list', [])
         attributes_description_list = validated_data.pop('attributes_description_list', [])
-        interive_data_list = validated_data.pop('interive_data_list', [], None)
+        # interive_data_list = validated_data.pop('interive_data_list', [], None)
         filter_list = validated_data.pop('filter_list', [])
+        interives_data = validated_data.pop('interive_resource', [])
 
         resource = Resource.objects.create(**validated_data)
 
         self.create_contents(resource, contents_title_list, contents_description_list)
         self.create_attributes(resource, attributes_title_list, attributes_description_list)
-        for interive_data in interive_data_list:
-            print("intrative", interive_data)
-            Interive.objects.create(resource_interive=resource, **interive_data)
 
         resource.filters.set(filter_list)
 
+        for interive_data in interives_data:
+            Interive.objects.create(**interive_data, resource=resource)
+
         return resource
 
-    @transaction.atomic
+    # @transaction.atomic
     def update(self, instance, validated_data):
         instance.category = validated_data.get('category', instance.category)
         instance.filter_category = validated_data.get('filter_category', instance)
-        instance.filter_category = validated_data.get('filter_category', instance.filter_category)
-
         instance.period_filter = validated_data.get('period_filter', instance.period_filter)
         instance.title = validated_data.get('title', instance.title)
         instance.image = validated_data.get('image', instance.image)
@@ -378,16 +306,13 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
         contents_description_list = validated_data.pop('contents_description_list', [])
         attributes_title_list = validated_data.pop('attributes_title_list', [])
         attributes_description_list = validated_data.pop('attributes_description_list', [])
-        interive_data_list = validated_data.pop('interive_data_list', [], None)
         filter_list = validated_data.pop('filter_list', [])
 
         instance.resource_content.all().delete()
         instance.resource_attribute.all().delete()
-        instance.resource_interive.all().delete()
 
         self.create_contents(instance, contents_title_list, contents_description_list)
         self.create_attributes(instance, attributes_title_list, attributes_description_list)
-        self.create_interive(instance, interive_data_list)
 
         instance.filters.set(filter_list)
 
